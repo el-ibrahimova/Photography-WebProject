@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Photography.Data
+namespace Photography.Data.Models
 {
+    [Comment("Categories of photos")]
     public class Category
     {
         [Key]
-        [Comment("Category identification")]
+        [Comment("Category identifier")]
         public int Id { get; set; }
 
         [Required]
