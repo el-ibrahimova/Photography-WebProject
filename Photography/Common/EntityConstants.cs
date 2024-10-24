@@ -8,6 +8,7 @@
 
         //Photo
         public const int PhotoTitleMinLength = 3;
+        public const int PhotoTitleMaxLength = 20;
 
     }
 }
