@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using static Photography.Common.EntityConstants;
+using static Photography.Common.EntityConstants.PhotoEntity;
 
 namespace Photography.Data.Models
 {
@@ -12,11 +12,11 @@ namespace Photography.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(PhotoTitleMaxLength)]
+        [MaxLength(TitleMaxLength)]
         [Comment("Title of the photo")]
         public string Title { get; set; } = null!;
 
-        [MaxLength(PhotoDescriptionMaxLength)]
+        [MaxLength(DescriptionMaxLength)]
         [Comment("Description of the photo")]
         public string? Description { get; set; }
     }

@@ -2,15 +2,29 @@
 {
     public static class EntityConstants
     {
-        //Category
-        public const int CategoryNameMinLength = 3;
-        public const int CategoryNameMaxLength = 20;
+        public static class CategoryEntity
+        {
+            public const int NameMinLength = 3;
+            public const int NameMaxLength = 20;
+        }
 
-        //Photo
-        public const int PhotoTitleMinLength = 3;
-        public const int PhotoTitleMaxLength = 20;
-        public const int PhotoDescriptionMinLength = 5;
-        public const int PhotoDescriptionMaxLength = 100;
+        public static class PhotoEntity
+        {
+            public const int TitleMinLength = 3;
+            public const int TitleMaxLength = 20;
+            public const int DescriptionMinLength = 5;
+            public const int DescriptionMaxLength = 100;
+        }
+
+        public static class UserEntity
+        {
+            public const int FirstNameMinLength = 2;
+            public const int FirstNameMaxLength = 20;
+            public const int LastNameMinLength = 3;
+            public const int LastNameMaxLength = 20;
+
+        }
+
 
     }
 }

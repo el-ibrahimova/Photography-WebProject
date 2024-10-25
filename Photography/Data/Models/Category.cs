@@ -11,7 +11,7 @@ namespace Photography.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(Common.EntityConstants.CategoryNameMaxLength)]
+        [MaxLength(Common.EntityConstants.CategoryEntity.NameMaxLength)]
         [Comment("Name of the category")]
         public string Name { get; set; } = null!;
     }
