@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using static Photography.Common.EntityConstants.PhotoEntity;
 
 namespace Photography.Data.Models
 {
+    using static Common.EntityConstants.PhotoEntity;
+
     [Comment("Photo information")]
     public class Photo
     {
@@ -19,5 +20,14 @@ namespace Photography.Data.Models
         [MaxLength(DescriptionMaxLength)]
         [Comment("Description of the photo")]
         public string? Description { get; set; }
+
+        [Required]
+        [Comment("Date of photo uploading")]
+        public DateTime UploadedAt { get; set; }
+
+        [Required]
+        [MaxLength(ImageUrlMaxLength)]
+        [Comment("Photo URL")]
+        public string ImageUrl { get; set; } = null!;
     }
 }
