@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Photography.Data.Models
@@ -29,5 +30,18 @@ namespace Photography.Data.Models
         [MaxLength(ImageUrlMaxLength)]
         [Comment("Photo URL")]
         public string ImageUrl { get; set; } = null!;
+
+        [Required]
+        [Comment("Category identifier")]
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        [Comment("Category of photo")]
+        public Category Category { get; set; } = null!;
+
+        [Comment("Is the photo deleted or not")]
+        public bool IsDeleted { get; set; }
+
+        public IEnumerable<Category> Categories { get; set; } = new HashSet<Category>();
     }
 }
