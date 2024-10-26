@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Photography.Data.Models;
+using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Data
 {

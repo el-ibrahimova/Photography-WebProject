@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Photography.Data.Models
+namespace Photography.Infrastructure.Data.Models
 {
     using static Common.EntityConstants.PhotoEntity;
 

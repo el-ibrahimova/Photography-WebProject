@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Photography.Models;
+
 using System.Diagnostics;
 
 namespace Photography.Controllers
 {
+    using Photography.Core.ViewModels;
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

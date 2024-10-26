@@ -1,4 +1,4 @@
-namespace Photography.Models
+namespace Photography.Core.ViewModels
 {
     public class ErrorViewModel
     {

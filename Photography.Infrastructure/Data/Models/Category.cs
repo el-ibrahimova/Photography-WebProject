@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Photography.Data.Models
+namespace Photography.Infrastructure.Data.Models
 {
     [Comment("Categories of photos")]
     public class Category
