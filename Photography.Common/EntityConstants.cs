@@ -2,8 +2,6 @@
 {
     public static class EntityConstants
     {
-        public const string EntityDateFormat = "dd/MM/yyyy HH:mm";
-
         public static class CategoryEntity
         {
             public const int NameMinLength = 3;
@@ -18,6 +16,8 @@
             public const int DescriptionMaxLength = 100;
             public const int ImageUrlMinLength = 10;
             public const int ImageUrlMaxLength = 100;
+            public const int RatingMinValue = 0;
+            public const int RatingMaxValue = 10;
         }
 
         public static class UserEntity
@@ -29,15 +29,34 @@
             public const int UsernameMinLength = 5;
             public const int UsernameMaxLength = 20;
             public const int PasswordMinLength = 6;
-            public const int PasswordMaxLength= 20;
+            public const int PasswordMaxLength = 20;
             public const int EmailMinLength = 10;
             public const int EmailMaxLength = 25;
             public const int PhoneNumberMinLength = 8;
             public const int PhoneNumberMaxLength = 20;
-            public const string EntityDateFormat = "dd/MM/yyyy HH:mm";
-
         }
 
+        public static class OfferTypeEntity
+        {
+            public const int NameMinLength = 3;
+            public const int NameMaxLength = 30;
+            public const int DescriptionMinLength = 5;
+            public const int DescriptionMaxLength = 200;
+        }
+
+        public static class OfferEntity
+        {
+            public const int NameMinLength = 3;
+            public const int NameMaxLength = 30;
+            public const int DescriptionMinLength = 5;
+            public const int DescriptionMaxLength = 200;
+        }
+
+        public static class OrderEntity
+        {
+            public const int NoteMinLength = 3;
+            public const int NoteMaxLength = 200;
+        }
 
     }
 }
