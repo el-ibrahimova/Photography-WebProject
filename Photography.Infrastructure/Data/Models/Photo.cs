@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Photography.Infrastructure.Data.Enums;
 
 namespace Photography.Infrastructure.Data.Models
 {
@@ -11,7 +12,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Photo identifier")]
-        public int Id { get; set; }
+        public int Id { get; set; } 
 
         [Required]
         [MaxLength(TitleMaxLength)]
@@ -21,6 +22,9 @@ namespace Photography.Infrastructure.Data.Models
         [MaxLength(DescriptionMaxLength)]
         [Comment("Description of the photo")]
         public string? Description { get; set; }
+
+        [Comment("Rating of the photo")]
+        public int Rating { get; set; }
 
         [Required]
         [Comment("Date of photo uploading")]
@@ -39,9 +43,28 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Category of photo")]
         public Category Category { get; set; } = null!;
 
+        [Required]
         [Comment("Is the photo deleted or not")]
         public bool IsDeleted { get; set; }
 
-        public IEnumerable<Category> Categories { get; set; } = new HashSet<Category>();
+        [Required]
+        [Comment("Is the photo selected as favorite")]
+        public bool IsFavorite { get; set; }
+
+        [Required]
+        [Comment("Is the photo private ot public")]
+        public PhotoVisibility  PhotoVisibility { get; set; }
+
+        [Comment("Is the user owner of photo")]
+        public Guid? UserOwner { get; set; }
+
+
+        public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
+
+        public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
+
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+
+        public ICollection<OrderPhoto> OrderPhotos { get; set; }= new HashSet<OrderPhoto>();
     }
 }

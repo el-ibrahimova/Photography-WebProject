@@ -8,7 +8,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Category identifier")]
-        public int Id { get; set; }
+        public int Id { get; set; } 
 
         [Required]
         [MaxLength(Common.EntityConstants.CategoryEntity.NameMaxLength)]

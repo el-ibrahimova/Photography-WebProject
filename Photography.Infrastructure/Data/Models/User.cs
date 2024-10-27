@@ -6,16 +6,9 @@ namespace Photography.Infrastructure.Data.Models
 {
     using static Common.EntityConstants.UserEntity;
 
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>
     {
-        //public User()
-        //{
-        //    this.Id = Guid.NewGuid();
-        //}
-
-        [Key]
-        [Comment("User identifier")]
-        public string Id { get; set; } = null!;
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [MaxLength(FirstNameMaxLength)]
         [Comment("User First Name")]
@@ -29,7 +22,10 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Date of user registration")]
         public DateTime JoinedAt { get; set; }
 
-        public IEnumerable<Photo> Photos { get; set; } = new HashSet<Photo>();
+        public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+
+        public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }
