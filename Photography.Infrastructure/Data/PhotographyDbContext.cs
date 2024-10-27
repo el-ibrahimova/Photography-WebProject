@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Photography.Infrastructure.Data.Configurations;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Data
@@ -12,17 +13,26 @@ namespace Photography.Data
         {
         }
 
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Photo> Photos { get; set; } = null!;
+        public DbSet<Comment> Comments { get; set; } = null!;
+        public DbSet<FavoritePhoto> FavoritePhotos { get; set; }= null!;
+        public DbSet<Offer> Offers { get; set; } = null!;
+        public DbSet<OfferType> OfferTypes { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderPhoto> OrderPhotos { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Photo>()
-                .Property(p => p.IsDeleted)
-                .HasDefaultValue(false);
+            base.OnModelCreating(builder);
 
-            base.OnModelCreating(modelBuilder);
-
+            builder.ApplyConfiguration(new CommentConfiguration());
+            builder.ApplyConfiguration(new FavoritePhotoConfiguration());
+            builder.ApplyConfiguration(new OfferTypeConfiguration());
+            builder.ApplyConfiguration(new OrderConfiguration());
+            builder.ApplyConfiguration(new PhotoConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
         }
     }
 }
