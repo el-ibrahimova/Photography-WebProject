@@ -8,14 +8,14 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Order photo identifier")]
-        public int OrderPhotoId { get; set; }
+        public Guid OrderPhotoId { get; set; }
 
         [Comment("Photo identifier")]
-        public int PhotoId { get; set; }
+        public Guid PhotoId { get; set; }
         public Photo Photo { get; set; } = null!;
 
         [Comment("Order identifier")]
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public Order Order { get; set; } = null!;
 
         public int Count { get; set; }

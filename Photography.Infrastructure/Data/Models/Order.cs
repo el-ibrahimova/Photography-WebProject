@@ -9,19 +9,19 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Order identifier")]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Comment("User identifier")]
         public Guid UserId { get; set; }
 
-        public User User { get; set; }
+        public User User { get; set; } = null!;
 
         [Required]
         [Comment("Offer identifier")]
         public int OfferId { get; set; }
 
-        public Offer Offer { get; set; }
+        public Offer Offer { get; set; } = null!;
 
         
         public Status Status { get; set; }

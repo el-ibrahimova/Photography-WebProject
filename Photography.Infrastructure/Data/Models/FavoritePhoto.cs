@@ -16,7 +16,7 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Photo identifier")]
-        public int PhotoId { get; set; }
+        public Guid PhotoId { get; set; }
 
         [ForeignKey(nameof(PhotoId))]
         public Photo Photo { get; set; } = null!;

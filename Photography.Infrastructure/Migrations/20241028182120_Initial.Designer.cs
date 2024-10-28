@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Photography.Data;
 
 #nullable disable
 
-namespace Photography.Data.Migrations
+namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241028182120_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,6 +227,21 @@ namespace Photography.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PhotoUser", b =>
+                {
+                    b.Property<Guid>("PhotosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserOwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PhotosId", "UserOwnerId");
+
+                    b.HasIndex("UserOwnerId");
+
+                    b.ToTable("PhotoUser");
+                });
+
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -239,8 +257,8 @@ namespace Photography.Data.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasComment("Name of the category");
 
-                    b.Property<int?>("PhotoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -271,8 +289,8 @@ namespace Photography.Data.Migrations
                         .HasDefaultValue(false)
                         .HasComment("Is the comment deleted");
 
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
 
                     b.Property<Guid>("UserId")
@@ -298,8 +316,8 @@ namespace Photography.Data.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.FavoritePhoto", b =>
                 {
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
 
                     b.Property<Guid>("UserId")
@@ -377,12 +395,10 @@ namespace Photography.Data.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Order identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Note")
                         .HasMaxLength(200)
@@ -420,22 +436,20 @@ namespace Photography.Data.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.OrderPhoto", b =>
                 {
-                    b.Property<int>("OrderPhotoId")
+                    b.Property<Guid>("OrderPhotoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Order photo identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderPhotoId"));
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Order identifier");
 
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
 
                     b.HasKey("OrderPhotoId");
@@ -452,12 +466,10 @@ namespace Photography.Data.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int")
@@ -486,8 +498,8 @@ namespace Photography.Data.Migrations
                         .HasDefaultValue(false)
                         .HasComment("Is the photo selected as favorite");
 
-                    b.Property<int>("PhotoVisibility")
-                        .HasColumnType("int")
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit")
                         .HasComment("Is the photo private ot public");
 
                     b.Property<int>("Rating")
@@ -504,18 +516,13 @@ namespace Photography.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("Date of photo uploading");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserOwner")
+                    b.Property<Guid?>("UserOwnerId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Is the user owner of photo");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Photos", t =>
                         {
@@ -549,7 +556,7 @@ namespace Photography.Data.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 10, 26, 23, 8, 1, 548, DateTimeKind.Local).AddTicks(6819))
+                        .HasDefaultValue(new DateTime(2024, 10, 28, 20, 21, 19, 125, DateTimeKind.Local).AddTicks(5602))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -639,6 +646,21 @@ namespace Photography.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PhotoUser", b =>
+                {
+                    b.HasOne("Photography.Infrastructure.Data.Models.Photo", null)
+                        .WithMany()
+                        .HasForeignKey("PhotosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Photography.Infrastructure.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserOwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -745,10 +767,6 @@ namespace Photography.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Photography.Infrastructure.Data.Models.User", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Category");
                 });
 
@@ -773,8 +791,6 @@ namespace Photography.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,7 +20,7 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Photo identifier")]
-        public int PhotoId { get; set; }
+        public Guid PhotoId { get; set; }
 
         public Photo Photo { get; set; } = null!;
 

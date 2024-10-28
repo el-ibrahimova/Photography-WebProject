@@ -12,7 +12,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Photo identifier")]
-        public int Id { get; set; } 
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(TitleMaxLength)]
@@ -53,10 +53,10 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Is the photo private ot public")]
-        public PhotoVisibility  PhotoVisibility { get; set; }
+        public bool  IsPrivate { get; set; }
 
         [Comment("Is the user owner of photo")]
-        public Guid? UserOwner { get; set; }
+        public Guid? UserOwnerId { get; set; }
 
 
         public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
@@ -66,5 +66,7 @@ namespace Photography.Infrastructure.Data.Models
         public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
         public ICollection<OrderPhoto> OrderPhotos { get; set; }= new HashSet<OrderPhoto>();
+
+        public ICollection<User?> UserOwner { get; set; } = new HashSet<User?>();
     }
 }
