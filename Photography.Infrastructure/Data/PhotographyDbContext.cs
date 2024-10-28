@@ -21,6 +21,7 @@ namespace Photography.Data
         public DbSet<OfferType> OfferTypes { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderPhoto> OrderPhotos { get; set; } = null!;
+        public DbSet<PhotoCategory> PhotosCategories { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -33,6 +34,8 @@ namespace Photography.Data
             builder.ApplyConfiguration(new OrderConfiguration());
             builder.ApplyConfiguration(new PhotoConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new PhotoCategoryConfiguration());
         }
     }
 }

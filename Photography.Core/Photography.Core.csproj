@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Photography.Common\Photography.Common.csproj" />
+    <ProjectReference Include="..\Photography.Infrastructure\Photography.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

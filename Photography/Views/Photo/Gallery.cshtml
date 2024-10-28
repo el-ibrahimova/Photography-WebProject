@@ -1,4 +1,5 @@
 ﻿@using Photography.Core.ViewModels.Photo
+@using System.Security.Claims
 @model IEnumerable<GalleryPhotoViewModel>
 
 @{
@@ -9,29 +10,21 @@
 <hr />
 
 <div class="text-center row">
-    @foreach (var p in Model)
+    @foreach (var photo in Model)
     {
-        <div class="card col-4" style="width: 20rem; ">
-            <div class="card-body">
-                <h4 class="card-title mt-1">@p.Title</h4>
-                <h5 class="card-title mt-1">@p.ImageUrl</h5>
-                <h5 class="card-title mt-1">@p.Rating</h5>
+        if (!photo.IsPrivate || photo.UserOwnerId == Guid.Parse((ReadOnlySpan<char>)User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+        {
+            <div class="card col-4" style="width: 20rem; ">
+                <div class="card-body">
+                    <h4 class="card-title mt-1">@photo.Title</h4>
+                    <h5 class="card-title mt-1">@photo.ImageUrl</h5>
+                    <h5 class="card-title mt-1">@photo.Rating</h5>
+                </div>
+
+                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
+                <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими=</a>
             </div>
-
-            <a asp-controller="Photo" asp-action="Details" asp-route-id="@p.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
-            <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@p.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими=</a>
-
-         @*    @if (User?.Identity?.Name == e.Organizer)
-            {
-                <a asp-controller="Seminar" asp-action="Edit" asp-route-id="@e.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Edit</a>
-            }
-            else
-            {
-                <form class="input-group-sm" asp-controller="Seminar" asp-action="Join" asp-route-id="@e.Id">
-                    <input type="submit" value="Subscribe" class="fs-6 btn btn-warning mb-2 w-100 p-3 fw-bold" />
-                </form>
-            } *@
-        </div>
+        }
     }
 </div> 
 

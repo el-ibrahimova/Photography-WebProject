@@ -236,7 +236,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("UserOwnerId");
 
-                    b.ToTable("PhotoUser");
+                    b.ToTable("PhotoUser", (string)null);
                 });
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
@@ -261,7 +261,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("PhotoId");
 
-                    b.ToTable("Categories", t =>
+                    b.ToTable("Categories", null, t =>
                         {
                             t.HasComment("Categories of photos");
                         });
@@ -305,7 +305,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", t =>
+                    b.ToTable("Comments", null, t =>
                         {
                             t.HasComment("Photo comments");
                         });
@@ -325,7 +325,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FavoritePhotos", t =>
+                    b.ToTable("FavoritePhotos", null, t =>
                         {
                             t.HasComment("Favorite photo");
                         });
@@ -354,7 +354,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("OfferTypeId");
 
-                    b.ToTable("Offers", t =>
+                    b.ToTable("Offers", null, t =>
                         {
                             t.HasComment("Offers");
                         });
@@ -384,7 +384,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OfferTypes", t =>
+                    b.ToTable("OfferTypes", null, t =>
                         {
                             t.HasComment("Type of offer");
                         });
@@ -425,7 +425,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", t =>
+                    b.ToTable("Orders", null, t =>
                         {
                             t.HasComment("Order");
                         });
@@ -455,7 +455,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("PhotoId");
 
-                    b.ToTable("OrderPhotos", t =>
+                    b.ToTable("OrderPhotos", null, t =>
                         {
                             t.HasComment("Order photo");
                         });
@@ -521,7 +521,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Photos", t =>
+                    b.ToTable("Photos", null, t =>
                         {
                             t.HasComment("Photo information");
                         });
@@ -593,7 +593,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

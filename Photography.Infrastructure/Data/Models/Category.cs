@@ -14,5 +14,7 @@ namespace Photography.Infrastructure.Data.Models
         [MaxLength(Common.EntityConstants.CategoryEntity.NameMaxLength)]
         [Comment("Name of the category")]
         public string Name { get; set; } = null!;
+
+        public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
     }
 }

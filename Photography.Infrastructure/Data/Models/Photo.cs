@@ -53,7 +53,7 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Is the photo private ot public")]
-        public bool  IsPrivate { get; set; }
+        public bool IsPrivate { get; set; }
 
         [Comment("Is the user owner of photo")]
         public Guid? UserOwnerId { get; set; }
@@ -68,5 +68,7 @@ namespace Photography.Infrastructure.Data.Models
         public ICollection<OrderPhoto> OrderPhotos { get; set; }= new HashSet<OrderPhoto>();
 
         public ICollection<User?> UserOwner { get; set; } = new HashSet<User?>();
+
+        public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
     }
 }
