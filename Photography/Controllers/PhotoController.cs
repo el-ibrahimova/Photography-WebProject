@@ -53,6 +53,12 @@ namespace Photography.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Add(AddPhotoViewModel)
+        {
+
+        }
+
         public async Task<IActionResult> Details()
         {
             return View();

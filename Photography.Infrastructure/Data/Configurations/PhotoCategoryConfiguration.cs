@@ -12,7 +12,6 @@ namespace Photography.Infrastructure.Data.Configurations
 
             builder.HasOne(pc => pc.Photo).WithMany(p => p.PhotosCategories).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(pc => pc.Category).WithMany(c=> c.PhotosCategories).OnDelete(DeleteBehavior.NoAction);
-
         }
     }
 }
