@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.ViewModels.Photo;
 using Photography.Data;
+using Photography.Infrastructure.Data.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Photography.Controllers
@@ -56,6 +57,30 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel)
         {
+
+            //if (ModelState.IsValid)
+            //{
+            //    var photo = new Photo
+            //    {
+            //        Title = model.Title,
+            //        // Други свойства на снимката
+            //    };
+
+            //    // Добавете избраните категории
+            //    foreach (var categoryId in model.SelectedCategoryIds)
+            //    {
+            //        photo.PhotoCategories.Add(new PhotoCategory { CategoryId = categoryId });
+            //    }
+
+            //    _context.Photos.Add(photo);
+            //    await _context.SaveChangesAsync();
+
+            //    return RedirectToAction("Gallery");
+            }
+
+            return View(model);
+
+
 
         }
 
