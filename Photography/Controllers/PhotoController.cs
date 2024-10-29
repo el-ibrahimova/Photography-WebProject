@@ -86,7 +86,6 @@ namespace Photography.Controllers
                 }
             }
 
-
             var photo = new Photo
             {
                 Id=model.Id,
@@ -98,7 +97,6 @@ namespace Photography.Controllers
                 UserOwnerId = model.UserOwnerId,
                 PhotosCategories = model.SelectedCategoryIds.Select(id=> new PhotoCategory(){CategoryId = id}).ToList()
             };
-
           
             await context.Photos.AddAsync(photo);
             await context.SaveChangesAsync();
