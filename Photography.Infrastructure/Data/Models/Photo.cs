@@ -35,13 +35,13 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Photo URL")]
         public string ImageUrl { get; set; } = null!;
 
-        [Required]
-        [Comment("Category identifier")]
-        public int CategoryId { get; set; }
+        //[Required]
+        //[Comment("Category identifier")]
+        //public int CategoryId { get; set; }
 
-        [ForeignKey(nameof(CategoryId))]
-        [Comment("Category of photo")]
-        public Category Category { get; set; } = null!;
+        //[ForeignKey(nameof(CategoryId))]
+        //[Comment("Category of photo")]
+        //public Category Category { get; set; } = null!;
 
         [Required]
         [Comment("Is the photo deleted or not")]
