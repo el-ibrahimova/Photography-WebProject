@@ -5,7 +5,7 @@
         public static class CategoryEntity
         {
             public const int NameMinLength = 3;
-            public const int NameMaxLength = 20;
+            public const int NameMaxLength = 30;
         }
 
         public static class PhotoEntity
@@ -27,7 +27,7 @@
             public const int LastNameMinLength = 3;
             public const int LastNameMaxLength = 20;
             public const int UsernameMinLength = 5;
-            public const int UsernameMaxLength = 20;
+            public const int UsernameMaxLength = 30;
             public const int PasswordMinLength = 6;
             public const int PasswordMaxLength = 20;
             public const int EmailMinLength = 10;

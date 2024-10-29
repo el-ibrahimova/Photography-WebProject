@@ -1,12 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.ViewModels.Photo;
 using Photography.Data;
-using Photography.Infrastructure.Data.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Security.Claims;
 
 namespace Photography.Controllers
 {
@@ -54,9 +51,9 @@ namespace Photography.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(AddPhotoViewModel)
-        {
+        //[HttpPost]
+        //public async Task<IActionResult> Add(AddPhotoViewModel)
+      //{
 
             //if (ModelState.IsValid)
             //{
@@ -76,13 +73,13 @@ namespace Photography.Controllers
             //    await _context.SaveChangesAsync();
 
             //    return RedirectToAction("Gallery");
-            }
+          //}
 
-            return View(model);
+         // return View(model);
 
 
 
-        }
+     // }
 
         public async Task<IActionResult> Details()
         {
