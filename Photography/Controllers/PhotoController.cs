@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Photography.Core.ViewModels.Photo;
 using Photography.Data;
 using System.Security.Claims;
+using Photography.Infrastructure.Data.Models;
+using static Photography.Common.ApplicationConstants;
+using Microsoft.VisualBasic;
+using System.Globalization;
 
 namespace Photography.Controllers
 {
@@ -29,7 +33,7 @@ namespace Photography.Controllers
             }
             var model = await context.Photos
                 .AsNoTracking()
-                .Where(p => !p.IsPrivate || p.UserOwnerId==userIdGuid)
+                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid)
                 .Select(p => new GalleryPhotoViewModel()
                 {
                     Id = p.Id,
@@ -51,35 +55,56 @@ namespace Photography.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Add(AddPhotoViewModel)
-      //{
+        [HttpPost]
+        public async Task<IActionResult> Add(AddPhotoViewModel model)
+        {
+            DateTime uploadedAt;
 
-            //if (ModelState.IsValid)
-            //{
-            //    var photo = new Photo
-            //    {
-            //        Title = model.Title,
-            //        // Други свойства на снимката
-            //    };
+            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out uploadedAt))
+            {
+                ModelState.AddModelError(nameof(model.UploadedAt), $"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
 
-            //    // Добавете избраните категории
-            //    foreach (var categoryId in model.SelectedCategoryIds)
-            //    {
-            //        photo.PhotoCategories.Add(new PhotoCategory { CategoryId = categoryId });
-            //    }
+                model.Categories = await GetCategories();
+                return View(model);
+            }
+            
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await GetCategories();
+                return View(model);
+            }
 
-            //    _context.Photos.Add(photo);
-            //    await _context.SaveChangesAsync();
+            // Проверка на валидност на категориите
+            var validCategories = await context.Categories.Select(c => c.Id).ToListAsync();
+            foreach (var categoryId in model.SelectedCategoryIds)
+            {
+                if (!validCategories.Contains(categoryId))
+                {
+                    ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
+                    model.Categories = await GetCategories();
+                    return View(model);
+                }
+            }
 
-            //    return RedirectToAction("Gallery");
-          //}
 
-         // return View(model);
+            var photo = new Photo
+            {
+                Id=model.Id,
+                Title = model.Title,
+                Description = model.Description,
+                UploadedAt = uploadedAt,
+                ImageUrl = model.ImageUrl,
+                IsPrivate = model.IsPrivate,
+                UserOwnerId = model.UserOwnerId,
+                PhotosCategories = model.SelectedCategoryIds.Select(id=> new PhotoCategory(){CategoryId = id}).ToList()
+            };
 
+          
+            await context.Photos.AddAsync(photo);
+            await context.SaveChangesAsync();
 
-
-     // }
+            return RedirectToAction("Gallery");
+        }
 
         public async Task<IActionResult> Details()
         {

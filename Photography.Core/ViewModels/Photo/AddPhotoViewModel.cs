@@ -30,12 +30,7 @@ namespace Photography.Core.ViewModels.Photo
         [Required(ErrorMessage = PhotoImageUrlRequiredMessage)]
         [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
         public string ImageUrl { get; set; } = null!;
-
-
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int CategoryId { get; set; }
-
+        
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
 
@@ -45,5 +40,7 @@ namespace Photography.Core.ViewModels.Photo
         public Guid? UserOwnerId { get; set; }
 
         public ICollection<User?> UserOwner { get; set; } = new HashSet<User?>();
+
+        public ICollection<int> SelectedCategoryIds { get; set; }= new HashSet<int>();
     }
 }
