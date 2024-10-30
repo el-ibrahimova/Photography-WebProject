@@ -18,11 +18,11 @@
                 <div class="card-body">
                     <h4 class="card-title mt-1">@photo.Title</h4>
                     <img class="card-img-top" src=@photo.ImageUrl alt="Image">
-                    <h5 class="card-title mt-1">@photo.Rating</h5>
+                    <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
 
                 <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
-                <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими=</a>
+                <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими</a>
             </div>
         }
     }
