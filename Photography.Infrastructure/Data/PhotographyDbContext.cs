@@ -23,6 +23,8 @@ namespace Photography.Data
         public DbSet<OrderPhoto> OrderPhotos { get; set; } = null!;
         public DbSet<PhotoCategory> PhotosCategories { get; set; } = null!;
 
+        public DbSet<PhotoRating> PhotosRatings { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

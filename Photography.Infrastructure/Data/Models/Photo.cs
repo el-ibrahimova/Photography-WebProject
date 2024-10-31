@@ -26,6 +26,9 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Rating of the photo")]
         public int Rating { get; set; }
 
+        [Comment("Number of photo votes")]
+        public int VoteCount { get; set; }
+
         [Required]
         [Comment("Date of photo uploading")]
         public DateTime UploadedAt { get; set; }
