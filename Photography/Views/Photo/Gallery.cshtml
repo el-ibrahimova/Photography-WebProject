@@ -12,7 +12,9 @@
 <div class="text-center row">
     @foreach (var photo in Model)
     {
-        if (!photo.IsPrivate || photo.UserOwnerId == Guid.Parse((ReadOnlySpan<char>)User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!photo.IsPrivate || photo.UserOwnerId == Guid.Parse(currentUserId))
         {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">

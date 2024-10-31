@@ -39,7 +39,7 @@ namespace Photography.Core.ViewModels.Photo
 
         public Guid? UserOwnerId { get; set; }
 
-        public ICollection<User?> UserOwner { get; set; } = new HashSet<User?>();
+        public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
 
         public ICollection<int> SelectedCategoryIds { get; set; }= new HashSet<int>();
     }

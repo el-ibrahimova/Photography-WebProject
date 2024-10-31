@@ -35,14 +35,6 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Photo URL")]
         public string ImageUrl { get; set; } = null!;
 
-        //[Required]
-        //[Comment("Category identifier")]
-        //public int CategoryId { get; set; }
-
-        //[ForeignKey(nameof(CategoryId))]
-        //[Comment("Category of photo")]
-        //public Category Category { get; set; } = null!;
-
         [Required]
         [Comment("Is the photo deleted or not")]
         public bool IsDeleted { get; set; }
@@ -59,7 +51,7 @@ namespace Photography.Infrastructure.Data.Models
         public Guid? UserOwnerId { get; set; }
 
 
-        public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
+      //  public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
 

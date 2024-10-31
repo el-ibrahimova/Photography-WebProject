@@ -26,11 +26,13 @@ namespace Photography.Controllers
         public async Task<IActionResult> Gallery()
         {
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid.TryParse(userIdString, out var userIdGuid);
 
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
-            {
-                return Unauthorized();
-            }
+            //if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
+            //{
+            //    return Unauthorized();
+            //}
+
             var model = await context.Photos
                 .AsNoTracking()
                 .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid)
@@ -39,8 +41,8 @@ namespace Photography.Controllers
                     Id = p.Id,
                     Title = p.Title,
                     ImageUrl = p.ImageUrl,
-                    IsPrivate = p.IsPrivate
-
+                    IsPrivate = p.IsPrivate,
+                    UserOwnerId = userIdGuid
                 })
                 .ToListAsync();
 
@@ -52,6 +54,7 @@ namespace Photography.Controllers
         {
             var model = new AddPhotoViewModel();
             model.Categories = await GetCategories();
+            model.UserPhotoOwners = await GetAllUsers();
             return View(model);
         }
 
@@ -65,12 +68,14 @@ namespace Photography.Controllers
                 ModelState.AddModelError(nameof(model.UploadedAt), $"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
 
                 model.Categories = await GetCategories();
+                model.UserPhotoOwners = await GetAllUsers();
                 return View(model);
             }
             
             if (!ModelState.IsValid)
             {
                 model.Categories = await GetCategories();
+                model.UserPhotoOwners = await GetAllUsers();
                 return View(model);
             }
 
@@ -86,6 +91,15 @@ namespace Photography.Controllers
                 }
             }
 
+            var userId = GetUserId();
+         
+            if (model.IsPrivate && string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var userOwnerId = model.UserOwnerId;
+
             var photo = new Photo
             {
                 Id=model.Id,
@@ -94,7 +108,7 @@ namespace Photography.Controllers
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
-                UserOwnerId = model.UserOwnerId,
+                UserOwnerId = model.IsPrivate ? userOwnerId : null, //  save userId only if photo is private
                 PhotosCategories = model.SelectedCategoryIds.Select(id=> new PhotoCategory(){CategoryId = id}).ToList()
             };
           
@@ -124,6 +138,18 @@ namespace Photography.Controllers
                     Name = c.Name
                 })
                 .ToListAsync();
+        }
+
+
+        public async Task<ICollection<UserViewModel>> GetAllUsers()
+        {
+            return await context.Users
+                .AsNoTracking()
+                .Select(u => new UserViewModel()
+                {
+                    Id = Guid.Parse(u.Id),
+                    UserName = u.UserName ?? String.Empty  
+                }).ToListAsync();
         }
 
         private string GetUserId()

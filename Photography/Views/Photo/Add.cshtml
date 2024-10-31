@@ -41,22 +41,29 @@
                     }
                 </div>
             </div>
-
-            <label for="isPrivate">Частна снимка:</label>
-            <input type="checkbox" id="isPrivate" name="IsPrivate" onchange="toggleUserDropdown(this.checked)" />
+            
+            <div class="mb-3">
+                <label for="isPrivate">Частна снимка:</label>
+                <input type="checkbox" id="isPrivate" name="IsPrivate" value="true" onchange="toggleUserDropdown(this.checked)" />
+            </div>
 
             <div class="mb-3" id="userDropdown" style="display: none;">
                 <label asp-for="@Model.UserOwnerId" class="form-label-add-edit">Избери потребител...</label>
                 <select asp-for="@Model.UserOwnerId" class="form-control" aria-required="true">
                     <option disabled selected value="">Избери потребител...</option>
-                    @foreach (var user in Model.UserOwner)
+                    @foreach (var user in Model.UserPhotoOwners)
                     {
-                        <option value="@user?.Id">@user?.UserName</option>
+                        <option value="@user.Id">@user.UserName</option>
                     }
                 </select>
                 <span asp-validation-for="@Model.UserOwnerId" class="text-danger"></span>
             </div>
 
+            
+            
+            
+
+            
             <div class="mb-3">
                 <input class="btn btn-warning mb-2 w-100 p-3 fw-bold" type="submit" value="Добави" />
             </div>
