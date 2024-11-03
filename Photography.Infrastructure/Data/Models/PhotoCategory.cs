@@ -7,13 +7,13 @@ namespace Photography.Infrastructure.Data.Models
     public class PhotoCategory
     {
         [Comment("Photo identifier")]
-        public Guid PhotoId { get; set; }
+        public Guid PhotoId { get; set; } 
 
         [ForeignKey(nameof(PhotoId))]
         public Photo Photo { get; set; } = null!;
 
         [Comment("Category identifier")]
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;

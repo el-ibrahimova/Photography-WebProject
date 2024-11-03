@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Photography.Infrastructure.Data.Models
@@ -9,7 +10,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Rate identifier")]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Comment("Photo identifier")]
         public Guid PhotoId { get; set; }

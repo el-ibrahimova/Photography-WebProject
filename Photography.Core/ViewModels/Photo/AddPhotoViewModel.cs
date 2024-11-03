@@ -41,6 +41,6 @@ namespace Photography.Core.ViewModels.Photo
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
 
-        public ICollection<int> SelectedCategoryIds { get; set; }= new HashSet<int>();
+        public ICollection<Guid> SelectedCategoryIds { get; set; }= new HashSet<Guid>();
     }
 }

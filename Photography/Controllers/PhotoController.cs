@@ -25,7 +25,7 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Gallery()
         {
-            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdString = GetUserId();
             Guid.TryParse(userIdString, out var userIdGuid);
 
             //if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
@@ -118,6 +118,62 @@ namespace Photography.Controllers
             return RedirectToAction("Gallery");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RatePhoto(Guid photoId, int rating)
+        {
+            var userIdString = GetUserId(); // Get the current user's ID
+            Guid.TryParse(userIdString, out var userIdGuid);
+
+            // Check if the user exists in the User table
+            var userExists = await context.Users.AnyAsync(u => u.Id == userIdString);
+            if (!userExists)
+            {
+                return NotFound("User does not exist."); 
+            }
+
+            // Check if the photo exists
+            var photo = await context.Photos.FindAsync(photoId);
+            if (photo == null)
+            {
+                return NotFound("Photo does not exist."); // Handle photo not found
+            }
+
+            // Check if the user already rated the photo
+            var existingRating = await context.PhotosRatings
+                .FirstOrDefaultAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
+
+            if (existingRating != null)
+            {
+                // If it exists, update the rating
+                existingRating.Rating = rating;
+            }
+            else
+            {
+                // If it does not exist, create a new rating
+                var newRating = new PhotoRating
+                {
+                    PhotoId = photoId,
+                    UserId = userIdGuid, // Make sure userId is valid
+                    Rating = rating
+                };
+                await context.PhotosRatings.AddAsync(newRating);
+            }
+
+            // Update the average rating of the photo
+            var ratings = await context.PhotosRatings
+                .Where(r => r.PhotoId == photoId)
+                .ToListAsync();
+
+            
+                photo.Rating = (int)ratings.Average(r => r.Rating);
+            
+         
+
+            await context.SaveChangesAsync(); // Save changes to the database
+
+            return RedirectToAction("Gallery");
+        }
+
         public async Task<IActionResult> Details()
         {
             return View();
@@ -134,7 +190,7 @@ namespace Photography.Controllers
                 .AsNoTracking()
                 .Select(c => new CategoryViewModel()
                 {
-                    Id = c.Id,
+                    Id = c.Id.ToString(),
                     Name = c.Name
                 })
                 .ToListAsync();

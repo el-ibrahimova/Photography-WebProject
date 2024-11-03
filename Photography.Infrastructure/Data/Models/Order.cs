@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Photography.Infrastructure.Data.Enums;
 
@@ -19,7 +20,7 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Offer identifier")]
-        public int OfferId { get; set; }
+        public Guid OfferId { get; set; }
 
         public Offer Offer { get; set; } = null!;
 

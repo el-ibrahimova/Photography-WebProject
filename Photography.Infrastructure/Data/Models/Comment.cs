@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Photography.Infrastructure.Data.Models
@@ -7,8 +8,8 @@ namespace Photography.Infrastructure.Data.Models
     public class Comment
     {
         [Key]
-        [Comment("Comment identifier")]
-        public int Id { get; set; }
+        [Comment("Comment identifier")] 
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Comment("User identifier")]

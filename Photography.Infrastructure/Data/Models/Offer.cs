@@ -9,7 +9,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Offer identifier")]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(NameMaxLength)]
@@ -18,7 +18,7 @@ namespace Photography.Infrastructure.Data.Models
 
         [Required]
         [Comment("Offer type identifier")]
-        public int OfferTypeId { get; set; }
+        public Guid OfferTypeId { get; set; }
 
         public OfferType OfferType { get; set; } = null!;
     }

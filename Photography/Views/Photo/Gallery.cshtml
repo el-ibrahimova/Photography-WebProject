@@ -23,6 +23,20 @@
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
 
+                
+                <form asp-action="RatePhoto" method="post">
+                    <input type="hidden" name="photoId" value="@photo.Id" />
+                    <label>Оцени снимката:</label>
+                    <select name="rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <input type="submit" value="Гласувай" class="btn btn-warning mb-2" />
+                </form>
+                
+
                 <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
                 <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими</a>
             </div>

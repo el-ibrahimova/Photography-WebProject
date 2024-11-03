@@ -8,7 +8,7 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Order photo identifier")]
-        public Guid OrderPhotoId { get; set; }
+        public Guid OrderPhotoId { get; set; } = Guid.NewGuid();
 
         [Comment("Photo identifier")]
         public Guid PhotoId { get; set; }
