@@ -4,9 +4,9 @@ using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Infrastructure.Data.Configurations
 {
-    public class UserConfiguration:IEntityTypeConfiguration<User>
+    public class UserConfiguration:IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(u => u.JoinedAt)
                 .HasDefaultValue(DateTime.Now);

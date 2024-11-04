@@ -9,7 +9,7 @@ namespace Photography.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<OfferType> builder)
         {
             builder.Property(p => p.Price)
-                .HasPrecision(10, 2);
+                .HasPrecision(18, 2);
         }
     }
 }

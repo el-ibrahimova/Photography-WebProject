@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using Photography.Infrastructure.Data.Configurations;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Data
 {
-    public class PhotographyDbContext : IdentityDbContext
+    public class PhotographyDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
-        public PhotographyDbContext(DbContextOptions<PhotographyDbContext> options)
+        public PhotographyDbContext()
+        {
+            
+        }
+        
+        public PhotographyDbContext(DbContextOptions options)
             : base(options)
         {
         }

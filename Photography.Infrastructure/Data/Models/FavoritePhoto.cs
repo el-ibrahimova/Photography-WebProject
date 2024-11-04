@@ -10,10 +10,10 @@ namespace Photography.Infrastructure.Data.Models
     {
         [Required]
         [Comment("User identifier")]
-        public Guid UserId { get; set; }
+        public Guid UserId { get; set; } 
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
         [Required]
         [Comment("Photo identifier")]

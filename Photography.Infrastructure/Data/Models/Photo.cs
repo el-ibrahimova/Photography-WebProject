@@ -12,6 +12,7 @@ namespace Photography.Infrastructure.Data.Models
     public class Photo
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Photo identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -53,9 +54,10 @@ namespace Photography.Infrastructure.Data.Models
 
         [Comment("Is the user owner of photo")]
         public Guid? UserOwnerId { get; set; }
+        
+        [ForeignKey(nameof(UserOwnerId))]
+        public ApplicationUser? Owner { get; set; } 
 
-
-      //  public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
 
@@ -63,8 +65,7 @@ namespace Photography.Infrastructure.Data.Models
 
         public ICollection<OrderPhoto> OrderPhotos { get; set; }= new HashSet<OrderPhoto>();
 
-        public ICollection<User?> UserOwner { get; set; } = new HashSet<User?>();
-
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
+        public ICollection<PhotoRating> Ratings { get; set; } = new HashSet<PhotoRating>();
     }
 }

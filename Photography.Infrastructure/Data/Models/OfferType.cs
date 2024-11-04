@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using static Photography.Common.EntityConstants.OfferTypeEntity;
 
@@ -8,6 +9,7 @@ namespace Photography.Infrastructure.Data.Models
     public class OfferType
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Type identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 

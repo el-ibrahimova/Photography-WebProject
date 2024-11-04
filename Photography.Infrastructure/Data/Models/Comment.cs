@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +9,14 @@ namespace Photography.Infrastructure.Data.Models
     public class Comment
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Comment identifier")] 
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Comment("User identifier")]
-        public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
+        public Guid UserId { get; set; } 
+        public ApplicationUser User { get; set; } = null!;
 
         [Comment("Name of the user")]
         public string Username { get; set; } = null!;

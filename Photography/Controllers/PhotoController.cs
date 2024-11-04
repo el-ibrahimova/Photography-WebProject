@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.ViewModels.Photo;
 using Photography.Data;
-using System.Security.Claims;
 using Photography.Infrastructure.Data.Models;
-using static Photography.Common.ApplicationConstants;
-using Microsoft.VisualBasic;
 using System.Globalization;
+using System.Security.Claims;
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -15,6 +15,7 @@ namespace Photography.Controllers
     public class PhotoController : Controller
     {
         private readonly PhotographyDbContext context;
+
 
         public PhotoController(PhotographyDbContext data)
         {
@@ -102,8 +103,7 @@ namespace Photography.Controllers
 
             var photo = new Photo
             {
-                Id=model.Id,
-                Title = model.Title,
+               Title = model.Title,
                 Description = model.Description,
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
@@ -125,7 +125,7 @@ namespace Photography.Controllers
             Guid.TryParse(userIdString, out var userIdGuid);
 
             // Check if the user exists in the User table
-            var userExists = await context.Users.AnyAsync(u => u.Id == userIdString);
+            var userExists = await context.Users.AnyAsync(u => u.Id == userIdGuid);
             if (!userExists)
             {
                 return NotFound("User does not exist."); 
@@ -153,7 +153,7 @@ namespace Photography.Controllers
                 var newRating = new PhotoRating
                 {
                     PhotoId = photoId,
-                    UserId = userIdGuid, // Make sure userId is valid
+                    UserId = userIdGuid,
                     Rating = rating
                 };
                 await context.PhotosRatings.AddAsync(newRating);
@@ -164,12 +164,16 @@ namespace Photography.Controllers
                 .Where(r => r.PhotoId == photoId)
                 .ToListAsync();
 
-            
+            if (ratings.Any())
+            {
                 photo.Rating = (int)ratings.Average(r => r.Rating);
-            
-         
+            }
+            else
+            {
+                photo.Rating = 0; 
+            }
 
-            await context.SaveChangesAsync(); // Save changes to the database
+            await context.SaveChangesAsync(); 
 
             return RedirectToAction("Gallery");
         }
@@ -203,7 +207,7 @@ namespace Photography.Controllers
                 .AsNoTracking()
                 .Select(u => new UserViewModel()
                 {
-                    Id = Guid.Parse(u.Id),
+                    Id = u.Id,
                     UserName = u.UserName ?? String.Empty  
                 }).ToListAsync();
         }

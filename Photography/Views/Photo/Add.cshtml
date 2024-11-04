@@ -1,8 +1,10 @@
 ﻿@using Photography.Core.ViewModels.Photo
+@using System.Security.Claims
 @model AddPhotoViewModel
 
 @{
     ViewBag.Title = "Добави снимка";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
@@ -51,7 +53,7 @@
                 <label asp-for="@Model.UserOwnerId" class="form-label-add-edit">Избери потребител...</label>
                 <select asp-for="@Model.UserOwnerId" class="form-control" aria-required="true">
                     <option disabled selected value="">Избери потребител...</option>
-                    @foreach (var user in Model.UserPhotoOwners)
+                    @foreach (var user in Model.UserPhotoOwners.Where(u => u.Id.ToString() != currentUserId))
                     {
                         <option value="@user.Id">@user.UserName</option>
                     }
@@ -59,9 +61,6 @@
                 <span asp-validation-for="@Model.UserOwnerId" class="text-danger"></span>
             </div>
 
-            
-            
-            
 
             
             <div class="mb-3">

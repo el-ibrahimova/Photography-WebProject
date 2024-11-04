@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Photography.Infrastructure.Data.Models
@@ -7,6 +8,7 @@ namespace Photography.Infrastructure.Data.Models
     public class OrderPhoto
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Order photo identifier")]
         public Guid OrderPhotoId { get; set; } = Guid.NewGuid();
 

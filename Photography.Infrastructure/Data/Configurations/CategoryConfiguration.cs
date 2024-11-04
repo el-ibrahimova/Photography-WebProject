@@ -11,9 +11,9 @@ namespace Photography.Infrastructure.Data.Configurations
             builder.HasData(this.SeedCategories());
         }
 
-        private ICollection<Category> SeedCategories()
+        private IEnumerable<Category> SeedCategories()
         {
-            List<Category> categories = new List<Category>()
+            IEnumerable<Category> categories = new List<Category>()
             {
                 new Category() { Name = "Животни", },
                 new Category() { Name = "Природа", },

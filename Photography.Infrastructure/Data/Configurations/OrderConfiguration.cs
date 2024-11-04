@@ -9,7 +9,7 @@ namespace Photography.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.Property(p => p.TotalAmount)
-                .HasPrecision(10, 2);
+                .HasPrecision(18, 2);
         }
     }
 }

@@ -12,8 +12,8 @@ using Photography.Data;
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    [Migration("20241029215339_removeCategoryIdFromPhotoEntity")]
-    partial class removeCategoryIdFromPhotoEntity
+    [Migration("20241103192749_InitialWithApplicationUser")]
+    partial class InitialWithApplicationUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,10 +25,11 @@ namespace Photography.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -52,7 +53,7 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,9 +67,8 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -77,10 +77,90 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.ApplicationUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -95,6 +175,22 @@ namespace Photography.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("User First Name");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 11, 3, 21, 27, 47, 404, DateTimeKind.Local).AddTicks(2447))
+                        .HasComment("Date of user registration");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("User Last Name");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -142,114 +238,12 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("PhotoUser", b =>
-                {
-                    b.Property<Guid>("PhotosId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserOwnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PhotosId", "UserOwnerId");
-
-                    b.HasIndex("UserOwnerId");
-
-                    b.ToTable("PhotoUser");
-                });
-
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Category identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -257,12 +251,7 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasComment("Name of the category");
 
-                    b.Property<Guid?>("PhotoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PhotoId");
 
                     b.ToTable("Categories", t =>
                         {
@@ -272,64 +261,62 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("0371863c-bea0-4e75-939e-ebc016fcabf9"),
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("503b7bc1-b1b6-46fa-a955-1f761aa924aa"),
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("49a0f76e-6db0-4621-aa65-cce718e43232"),
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("7b620839-a792-48db-b328-7beb1dd6c491"),
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("87ab7874-e2a4-4a1d-920f-c2c45629186e"),
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("b0713c2a-3b1f-4d6f-acd4-c1678c4c9627"),
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("2f235d36-599c-4752-827d-a0d38170f641"),
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = 8,
+                            Id = new Guid("175deaac-baa2-49b2-97f4-391fd95c457d"),
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = 9,
+                            Id = new Guid("5b31304d-0dfe-4749-b10f-927a601354e5"),
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = 10,
+                            Id = new Guid("2f43aab4-979b-421b-9e4d-85284cd38cd2"),
                             Name = "Пейзажи"
                         });
                 });
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Comment identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -388,12 +375,10 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Offer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Offer identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -401,8 +386,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasComment("Offer name");
 
-                    b.Property<int>("OfferTypeId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("OfferTypeId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Offer type identifier");
 
                     b.HasKey("Id");
@@ -417,12 +402,10 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.OfferType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Type identifier");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
@@ -456,8 +439,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("OfferId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Offer identifier");
 
                     b.Property<DateTime>("OrderDate")
@@ -570,7 +553,13 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Is the user owner of photo");
 
+                    b.Property<int>("VoteCount")
+                        .HasColumnType("int")
+                        .HasComment("Number of photo votes");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserOwnerId");
 
                     b.ToTable("Photos", t =>
                         {
@@ -580,8 +569,8 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoCategory", b =>
                 {
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Category identifier");
 
                     b.Property<Guid>("PhotoId")
@@ -598,146 +587,86 @@ namespace Photography.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.User", b =>
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Rate identifier");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Photo identifier");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int")
+                        .HasComment("Rate");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasComment("User First Name");
-
-                    b.Property<DateTime>("JoinedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 10, 29, 23, 53, 38, 155, DateTimeKind.Local).AddTicks(203))
-                        .HasComment("Date of user registration");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasComment("User Last Name");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("User identifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("PhotoId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PhotosRatings", t =>
+                        {
+                            t.HasComment("Rating for photo");
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PhotoUser", b =>
-                {
-                    b.HasOne("Photography.Infrastructure.Data.Models.Photo", null)
-                        .WithMany()
-                        .HasForeignKey("PhotosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Photography.Infrastructure.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserOwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
-                {
-                    b.HasOne("Photography.Infrastructure.Data.Models.Photo", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("PhotoId");
                 });
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Comment", b =>
@@ -748,7 +677,7 @@ namespace Photography.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Photography.Infrastructure.Data.Models.User", "User")
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -767,7 +696,7 @@ namespace Photography.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Photography.Infrastructure.Data.Models.User", "User")
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -797,7 +726,7 @@ namespace Photography.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Photography.Infrastructure.Data.Models.User", "User")
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -827,6 +756,15 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("Photo");
                 });
 
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
+                {
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "Owner")
+                        .WithMany("Photos")
+                        .HasForeignKey("UserOwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoCategory", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.Category", "Category")
@@ -846,6 +784,36 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("Photo");
                 });
 
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoRating", b =>
+                {
+                    b.HasOne("Photography.Infrastructure.Data.Models.Photo", "Photo")
+                        .WithMany("Ratings")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
+                        .WithMany("Ratings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("Ratings");
+                });
+
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
                 {
                     b.Navigation("PhotosCategories");
@@ -858,8 +826,6 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
                 {
-                    b.Navigation("Categories");
-
                     b.Navigation("Comments");
 
                     b.Navigation("FavoritePhotos");
@@ -867,13 +833,8 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("OrderPhotos");
 
                     b.Navigation("PhotosCategories");
-                });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.User", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Orders");
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

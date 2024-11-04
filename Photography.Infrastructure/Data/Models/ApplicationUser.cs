@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +7,13 @@ namespace Photography.Infrastructure.Data.Models
 {
     using static Common.EntityConstants.UserEntity;
 
-    public class User : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public ApplicationUser()
+        {
+            this.Id = Guid.NewGuid();
+            JoinedAt=DateTime.Now;
+        }
 
         [MaxLength(FirstNameMaxLength)]
         [Comment("User First Name")]
@@ -27,5 +32,6 @@ namespace Photography.Infrastructure.Data.Models
         public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+        public ICollection<PhotoRating> Ratings { get; set; } = new List<PhotoRating>();
     }
 }

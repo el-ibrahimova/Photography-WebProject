@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Photography.Infrastructure.Data.Enums;
@@ -9,14 +10,15 @@ namespace Photography.Infrastructure.Data.Models
     public class Order
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Order identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Comment("User identifier")]
-        public Guid UserId { get; set; }
+        public Guid UserId { get; set; } 
 
-        public User User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
         [Required]
         [Comment("Offer identifier")]
