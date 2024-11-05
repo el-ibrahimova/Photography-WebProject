@@ -2,12 +2,12 @@
 {
     public class GalleryPhotoViewModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = null!;
         public string Title { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public int Rating { get; set; }
         public bool IsPrivate { get; set; }
 
-        public Guid UserOwnerId { get; set; }
+        public string UserOwnerId { get; set; } = null!;
     }
 }

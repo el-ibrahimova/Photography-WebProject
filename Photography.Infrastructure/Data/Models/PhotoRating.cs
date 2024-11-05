@@ -9,7 +9,6 @@ namespace Photography.Infrastructure.Data.Models
     public class PhotoRating
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Rate identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -26,6 +25,6 @@ namespace Photography.Infrastructure.Data.Models
         public ApplicationUser User { get; set; } = null!;
 
         [Comment("Rate")]
-        public int Rating { get; set; }
+        public int Rate { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Photography.Data;
 
@@ -11,9 +12,11 @@ using Photography.Data;
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    partial class PhotographyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241105172719_AddPhotoDeletedAdProperty")]
+    partial class AddPhotoDeletedAdProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +184,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 5, 19, 50, 37, 820, DateTimeKind.Local).AddTicks(6939))
+                        .HasDefaultValue(new DateTime(2024, 11, 5, 19, 27, 15, 537, DateTimeKind.Local).AddTicks(6902))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -258,52 +261,52 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("277dfb7e-4e24-4ea7-a747-c7c5370a2330"),
+                            Id = new Guid("5a660017-e652-4aae-92c7-753f62727e44"),
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = new Guid("353f6765-bd0c-4851-a398-a29748ba9dd3"),
+                            Id = new Guid("94daa770-5a73-4e0a-a51a-23af08670eb3"),
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = new Guid("4f4dc6d6-07e9-4be8-8c85-c1abe288396d"),
+                            Id = new Guid("ce0b7aff-da9d-4001-9168-ab79fe1bb776"),
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = new Guid("59008871-727c-4864-904b-0c2a844a55ea"),
+                            Id = new Guid("d5e6831e-920a-4d49-a60a-7c3e280bb47b"),
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = new Guid("b2163336-3326-46fb-b781-d4eef84d172d"),
+                            Id = new Guid("c44026e0-d9b5-43e6-b7f5-ab4a4f57dcc0"),
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = new Guid("d1185286-06e4-432e-9465-d1f08190f7ee"),
+                            Id = new Guid("f23e2fc5-2c7e-4726-84fe-7396c9be58c6"),
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = new Guid("0936f0b3-62f4-43c7-b554-d8152b655304"),
+                            Id = new Guid("5ec2ed64-b891-49dd-b19e-f3ff8d04e681"),
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = new Guid("b28b6764-a8e5-4bc9-9d4b-4a3086dfd203"),
+                            Id = new Guid("7b5d9a66-1c07-4471-b1f9-89cd8a51c028"),
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = new Guid("04ca5e9d-da73-42fd-baae-94fbd7f6584e"),
+                            Id = new Guid("207e17cc-90ba-4a61-9bb9-a3366b97f595"),
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = new Guid("7ea80550-73ca-41cc-8cae-216b4fd842b5"),
+                            Id = new Guid("5256d5a3-6d45-4276-8ec1-2f509cfc6fc5"),
                             Name = "Пейзажи"
                         });
                 });
@@ -504,6 +507,7 @@ namespace Photography.Infrastructure.Migrations
                         .HasComment("Photo identifier");
 
                     b.Property<DateTime?>("DeletedAt")
+                        .IsRequired()
                         .HasColumnType("datetime2")
                         .HasComment("Date of photo uploading");
 

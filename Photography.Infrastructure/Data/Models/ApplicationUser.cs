@@ -32,6 +32,6 @@ namespace Photography.Infrastructure.Data.Models
         public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
-        public ICollection<PhotoRating> Ratings { get; set; } = new List<PhotoRating>();
+        public ICollection<PhotoRating> PhotosRatings { get; set; } = new List<PhotoRating>();
     }
 }

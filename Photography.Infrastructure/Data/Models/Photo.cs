@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Photography.Infrastructure.Data.Enums;
 
 namespace Photography.Infrastructure.Data.Models
 {
@@ -28,12 +26,12 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Rating of the photo")]
         public int Rating { get; set; }
 
-        [Comment("Number of photo votes")]
-        public int VoteCount { get; set; }
-
         [Required]
         [Comment("Date of photo uploading")]
         public DateTime UploadedAt { get; set; }
+        
+        [Comment("Date of photo uploading")]
+        public DateTime? DeletedAt { get; set; }
 
         [Required]
         [MaxLength(ImageUrlMaxLength)]
@@ -54,18 +52,18 @@ namespace Photography.Infrastructure.Data.Models
 
         [Comment("Is the user owner of photo")]
         public Guid? UserOwnerId { get; set; }
-        
+
         [ForeignKey(nameof(UserOwnerId))]
-        public ApplicationUser? Owner { get; set; } 
+        public ApplicationUser? Owner { get; set; }
 
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
 
         public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
-        public ICollection<OrderPhoto> OrderPhotos { get; set; }= new HashSet<OrderPhoto>();
+        public ICollection<OrderPhoto> OrderPhotos { get; set; } = new HashSet<OrderPhoto>();
 
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
-        public ICollection<PhotoRating> Ratings { get; set; } = new HashSet<PhotoRating>();
+        public ICollection<PhotoRating> PhotosRatings { get; set; } = new HashSet<PhotoRating>();
     }
 }

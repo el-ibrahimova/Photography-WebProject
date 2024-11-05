@@ -2,7 +2,7 @@
 
 namespace Photography.Core.Services
 {
-    public class PhotoService:IPhotoService
+    public class PhotoService:BaseService, IPhotoService
     {
     }
 }

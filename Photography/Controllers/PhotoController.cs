@@ -27,23 +27,22 @@ namespace Photography.Controllers
         public async Task<IActionResult> Gallery()
         {
             var userIdString = GetUserId();
-            Guid.TryParse(userIdString, out var userIdGuid);
 
-            //if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
-            //{
-            //    return Unauthorized();
-            //}
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
+            {
+                return Unauthorized();
+            }
 
             var model = await context.Photos
                 .AsNoTracking()
-                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid)
+                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid && p.IsDeleted==false)
                 .Select(p => new GalleryPhotoViewModel()
                 {
-                    Id = p.Id,
+                    Id = p.Id.ToString(),
                     Title = p.Title,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
-                    UserOwnerId = userIdGuid
+                    UserOwnerId = userIdGuid.ToString()
                 })
                 .ToListAsync();
 
@@ -81,16 +80,16 @@ namespace Photography.Controllers
             }
 
             // Проверка на валидност на категориите
-            var validCategories = await context.Categories.Select(c => c.Id).ToListAsync();
-            foreach (var categoryId in model.SelectedCategoryIds)
-            {
-                if (!validCategories.Contains(categoryId))
-                {
-                    ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
-                    model.Categories = await GetCategories();
-                    return View(model);
-                }
-            }
+            //var validCategories = await context.Categories.Select(c => c.Id).ToListAsync();
+            //foreach (var categoryId in model.SelectedCategoryIds)
+            //{
+            //    if (!validCategories.Contains(categoryId))
+            //    {
+            //        ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
+            //        model.Categories = await GetCategories();
+            //        return View(model);
+            //    }
+            //}
 
             var userId = GetUserId();
          
@@ -108,7 +107,7 @@ namespace Photography.Controllers
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
-                UserOwnerId = model.IsPrivate ? userOwnerId : null, //  save userId only if photo is private
+                UserOwnerId = model.IsPrivate ? userOwnerId : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
                 PhotosCategories = model.SelectedCategoryIds.Select(id=> new PhotoCategory(){CategoryId = id}).ToList()
             };
           
@@ -118,65 +117,61 @@ namespace Photography.Controllers
             return RedirectToAction("Gallery");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RatePhoto(Guid photoId, int rating)
-        {
-            var userIdString = GetUserId(); // Get the current user's ID
-            Guid.TryParse(userIdString, out var userIdGuid);
+        //[HttpPost]
+        //public async Task<IActionResult> RatePhoto(Guid photoId, int rating)
+        //{
+        //    var userIdString = GetUserId(); // Get the current user's ID
+           
+        //  if (!Guid.TryParse(userIdString, out var userIdGuid))
+        //    {
+        //        return BadRequest("Невалидно потребителско ID.");
+        //    }
 
-            // Check if the user exists in the User table
-            var userExists = await context.Users.AnyAsync(u => u.Id == userIdGuid);
-            if (!userExists)
-            {
-                return NotFound("User does not exist."); 
-            }
+        //    // Check if the user exists in the User table
+        //    var userExists = await context.Users.AnyAsync(u => u.Id == userIdGuid);
+        //    if (!userExists)
+        //    {
+        //        return NotFound("Потребителят не съществува."); 
+        //    }
 
-            // Check if the photo exists
-            var photo = await context.Photos.FindAsync(photoId);
-            if (photo == null)
-            {
-                return NotFound("Photo does not exist."); // Handle photo not found
-            }
+        //    // Check if the photo exists
+        //    var photo = await context.Photos.FindAsync(photoId);
+        //    if (photo == null || photo.IsDeleted==true)
+        //    {
+        //        return NotFound("Снимката не съществува."); 
+        //    }
 
-            // Check if the user already rated the photo
-            var existingRating = await context.PhotosRatings
-                .FirstOrDefaultAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
+        //    // Check if the user already rated the photo
+        //    var existingRating = await context.PhotosRatings
+        //        .FirstOrDefaultAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
 
-            if (existingRating != null)
-            {
-                // If it exists, update the rating
-                existingRating.Rating = rating;
-            }
-            else
-            {
-                // If it does not exist, create a new rating
-                var newRating = new PhotoRating
-                {
-                    PhotoId = photoId,
-                    UserId = userIdGuid,
-                    Rating = rating
-                };
-                await context.PhotosRatings.AddAsync(newRating);
-            }
+        //    if (existingRating != null)
+        //    {
+        //        // If it exists, update the rating
+        //        existingRating.Rate = rating;
+        //    }
+        //    else
+        //    {
+        //        // If it does not exist, create a new rating
+        //        var newRating = new PhotoRating
+        //        {
+        //            PhotoId = photoId,
+        //            UserId = userIdGuid,
+        //            Rate = rating
+        //        };
+        //        await context.PhotosRatings.AddAsync(newRating);
+        //    }
+            
+        //    var totalRatings = await context.PhotosRatings
+        //        .Where(r => r.PhotoId == photoId)
+        //        .AverageAsync(r => (double)r.Rate);
 
-            // Update the average rating of the photo
-            var ratings = await context.PhotosRatings
-                .Where(r => r.PhotoId == photoId)
-                .ToListAsync();
+        //    photo.Rating = (int)Math.Round(totalRatings);
 
-            if (ratings.Any())
-            {
-                photo.Rating = (int)ratings.Average(r => r.Rating);
-            }
-            else
-            {
-                photo.Rating = 0; 
-            }
+        //    await context.SaveChangesAsync();
 
-            await context.SaveChangesAsync(); 
-
-            return RedirectToAction("Gallery");
-        }
+        //    return RedirectToAction("Gallery");
+        //}
 
         public async Task<IActionResult> Details()
         {
@@ -207,7 +202,7 @@ namespace Photography.Controllers
                 .AsNoTracking()
                 .Select(u => new UserViewModel()
                 {
-                    Id = u.Id,
+                    Id = u.Id.ToString(),
                     UserName = u.UserName ?? String.Empty  
                 }).ToListAsync();
         }

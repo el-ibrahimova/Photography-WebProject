@@ -1,6 +1,6 @@
 ﻿namespace Photography.Core.Interfaces
 {
-    public interface IPhotoService
+    public interface IPhotoService:IBaseService
     {
     }
 }

@@ -14,7 +14,7 @@
     {
         var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!photo.IsPrivate || photo.UserOwnerId == Guid.Parse(currentUserId))
+        if (!photo.IsPrivate || photo.UserOwnerId == currentUserId)
         {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">
