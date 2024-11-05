@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Photography.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.CodeAnalysis;
 
 namespace Photography.Areas.Identity.Pages.Account
 {
@@ -83,9 +84,15 @@ namespace Photography.Areas.Identity.Pages.Account
         }
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task <IActionResult> OnGetAsync(string returnUrl = null)
         {
+            if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                return RedirectToAction("Gallery", "Photo");
+            }
+
             ReturnUrl = returnUrl;
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

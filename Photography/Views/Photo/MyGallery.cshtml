@@ -1,0 +1,49 @@
+﻿@using Photography.Core.ViewModels.Photo
+@using System.Security.Claims
+@model IEnumerable<MyGalleryPhotoViewModel>
+
+@{
+    ViewBag.Title = "Галерия";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="text-center row">
+    @foreach (var photo in Model)
+    {
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!photo.IsPrivate || photo.UserOwnerId == currentUserId)
+        {
+            <div class="card col-4" style="width: 20rem; ">
+                <div class="card-body">
+                    <h4 class="card-title mt-1">@photo.Title</h4>
+                    <img class="card-img-top" src=@photo.ImageUrl alt="Image">
+                    <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
+                </div>
+
+                
+                <form asp-action="RatePhoto" method="post">
+                    <input type="hidden" name="photoId" value="@photo.Id" />
+                    <label>Оцени снимката:</label>
+                    <select name="rating">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <input type="submit" value="Гласувай" class="btn btn-warning mb-2" />
+                </form>
+                
+
+                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
+                <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими</a>
+            </div>
+        }
+    }
+</div> 
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

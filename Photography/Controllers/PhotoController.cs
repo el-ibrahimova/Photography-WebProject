@@ -6,6 +6,7 @@ using Photography.Core.ViewModels.Photo;
 using Photography.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using static Photography.Common.ApplicationConstants;
 
@@ -26,6 +27,25 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Gallery()
         {
+             var model = await context.Photos
+                .AsNoTracking()
+                .Where(p => !p.IsPrivate || p.IsDeleted==false)
+                .Select(p => new GalleryPhotoViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    ImageUrl = p.ImageUrl,
+                    IsPrivate = p.IsPrivate,
+                    })
+                .ToListAsync();
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> MyGallery()
+        {
             var userIdString = GetUserId();
 
             if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
@@ -36,7 +56,7 @@ namespace Photography.Controllers
             var model = await context.Photos
                 .AsNoTracking()
                 .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid && p.IsDeleted==false)
-                .Select(p => new GalleryPhotoViewModel()
+                .Select(p => new MyGalleryPhotoViewModel()
                 {
                     Id = p.Id.ToString(),
                     Title = p.Title,

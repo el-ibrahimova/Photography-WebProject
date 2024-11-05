@@ -12,9 +12,7 @@
 <div class="text-center row">
     @foreach (var photo in Model)
     {
-        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (!photo.IsPrivate || photo.UserOwnerId == currentUserId)
+        if (!photo.IsPrivate)
         {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">
@@ -24,22 +22,8 @@
                 </div>
 
                 
-                <form asp-action="RatePhoto" method="post">
-                    <input type="hidden" name="photoId" value="@photo.Id" />
-                    <label>Оцени снимката:</label>
-                    <select name="rating">
-                        @for (int i = 1; i <= 10; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                    <input type="submit" value="Гласувай" class="btn btn-warning mb-2" />
-                </form>
-                
-
-                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
-                <a asp-controller="Photo" asp-action="AddToFavorite" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Добави в любими</a>
-            </div>
+               <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
+           </div>
         }
     }
 </div> 
