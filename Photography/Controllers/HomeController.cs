@@ -18,7 +18,7 @@ namespace Photography.Controllers
         {
             if (User?.Identity != null && User.Identity.IsAuthenticated)
             {
-               // return RedirectToAction("All", "Seminar");
+                return RedirectToAction("Gallery", "Photo");
             }
             return View();
         }

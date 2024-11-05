@@ -12,7 +12,7 @@ using static Photography.Common.ApplicationConstants;
 namespace Photography.Controllers
 {
     [Authorize]
-    public class PhotoController : Controller
+    public class PhotoController : BaseController
     {
         private readonly PhotographyDbContext context;
 
