@@ -7,5 +7,8 @@
         public string ImageUrl { get; set; } = null!;
         public int Rating { get; set; }
         public bool IsPrivate { get; set; }
+        public bool IsDeleted { get; set; }
+
+        public string UserId { get; set; } = null!;
     }
 }

@@ -3,7 +3,6 @@
  
 @{
     ViewData["Title"] = "Изтрий снимка";
-    var today = DateTime.Now.ToString("dd-MM-yyyy");
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
@@ -24,6 +23,7 @@
                     <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="Title" />
                     <input type="hidden" asp-for="UserOwnerId" />
+
                     <button type="submit" class="btn btn-danger">Да</button>
                     <a asp-controller="Photo" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Отказ</a>
                 </form>

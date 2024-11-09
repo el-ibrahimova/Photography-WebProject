@@ -12,8 +12,10 @@
 <div class="text-center row">
     @foreach (var photo in Model)
     {
-        if (!photo.IsPrivate)
-        {
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if(!photo.IsPrivate)        @* && !photo.IsDeleted) *@
+    {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">
                     <h4 class="card-title mt-1">@photo.Title</h4>
@@ -21,12 +23,16 @@
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
 
-                
-               <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
-           </div>
+                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
+
+                <form asp-controller="Photo" asp-action="AddToFavorite" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
+                    <input type="hidden" name="id" value="@photo.Id" />
+                    <button type="submit" class="btn btn-success w-100">Добави в любими</button>
+                </form>
+            </div>
         }
     }
-</div> 
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.ViewModels.Photo;
 using Photography.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
 using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
@@ -28,16 +25,16 @@ namespace Photography.Controllers
         public async Task<IActionResult> Gallery()
         {
             var model = await context.Photos
-               .AsNoTracking()
-               .Where(p => !p.IsPrivate || p.IsDeleted == false)
-               .Select(p => new GalleryViewModel()
-               {
-                   Id = p.Id.ToString(),
-                   Title = p.Title,
-                   ImageUrl = p.ImageUrl,
-                   IsPrivate = p.IsPrivate,
-               })
-               .ToListAsync();
+                .AsNoTracking()
+                .Where(p => !p.IsPrivate && p.IsDeleted == false)
+                .Select(p => new GalleryViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    ImageUrl = p.ImageUrl,
+                    IsPrivate = p.IsPrivate,
+                })
+                .ToListAsync();
 
             return View(model);
         }
@@ -83,9 +80,11 @@ namespace Photography.Controllers
         {
             DateTime uploadedAt;
 
-            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out uploadedAt))
+            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out uploadedAt))
             {
-                ModelState.AddModelError(nameof(model.UploadedAt), $"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
+                ModelState.AddModelError(nameof(model.UploadedAt),
+                    $"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
 
                 model.Categories = await GetCategories();
                 model.UserPhotoOwners = await GetAllUsers();
@@ -127,8 +126,12 @@ namespace Photography.Controllers
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
-                UserOwnerId = model.IsPrivate ? userOwnerId : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
-                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id }).ToList()
+                UserOwnerId =
+                    model.IsPrivate
+                        ? userOwnerId
+                        : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
+                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
+                    .ToList()
             };
 
             await context.Photos.AddAsync(photo);
@@ -201,18 +204,16 @@ namespace Photography.Controllers
             bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
             if (!isGuidValid)
             {
-                // invalid id format
                 return this.RedirectToAction(nameof(Gallery));
             }
 
             var photo = await context.Photos
                 .Include(p => p.Owner)
                 .Include(p => p.PhotosCategories)
-                .ThenInclude(p=>p.Category)
-                    .Where(p => p.IsDeleted == false).
-                FirstOrDefaultAsync(p => p.Id == photoGuid);
+                .ThenInclude(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == photoGuid);
 
-            if (photo == null)
+            if (photo == null || photo.IsDeleted == true)
             {
                 return BadRequest();
             }
@@ -226,6 +227,7 @@ namespace Photography.Controllers
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
                 IsFavorite = photo.IsFavorite,
                 IsPrivate = photo.IsPrivate,
+                IsDeleted = photo.IsDeleted,
                 Rating = photo.Rating,
                 UserOwnerId = photo.UserOwnerId,
                 Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
@@ -235,24 +237,105 @@ namespace Photography.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> AddToFavorite()
+        [HttpGet]
+        public async Task<IActionResult> Favorite()
         {
-            return View();
+            var model = await context.FavoritePhotos
+                .AsNoTracking()
+                .Where(fp => fp.UserId.ToString() == GetUserId() && fp.Photo.IsDeleted == false)
+                .Select(fp => new FavoriteViewModel()
+                {
+                    Id = fp.Photo.Id.ToString(),
+                    ImageUrl = fp.Photo.ImageUrl,
+                    Title = fp.Photo.Title,
+                    Rating = fp.Photo.Rating
+                })
+                .ToListAsync();
+
+            return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToFavorite(string id)
+        {
+            Guid photoIdGuid = Guid.Empty;
+
+            bool isPhotoGuidValid = this.IsGuidValid(id, ref photoIdGuid);
+            if (!isPhotoGuidValid)
+            {
+                // invalid id format
+                return this.RedirectToAction(nameof(MyGallery));
+            }
+
+            var photo = await context.Photos
+                .Where(p => p.IsDeleted == false && p.Id == photoIdGuid)
+                .Include(fp => fp.FavoritePhotos)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                return BadRequest();
+            }
+
+            string? userId = GetUserId();
+            Guid userIdGuid = Guid.Empty;
+
+            bool isGuidValid = this.IsGuidValid(userId, ref userIdGuid);
+            if (!isGuidValid)
+            {
+                return this.RedirectToAction(nameof(MyGallery));
+            }
+
+            if (!context.FavoritePhotos.Any(fp => fp.UserId == userIdGuid && fp.PhotoId == photoIdGuid))
+            {
+                photo.FavoritePhotos.Add(new FavoritePhoto()
+                {
+                    UserId = userIdGuid,
+                    PhotoId = photoIdGuid
+                });
+
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Favorite));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromFavorite(string id)
+        {
+            var photo = await context.Photos
+                .Where(p => !p.IsDeleted && p.Id.ToString() == id)
+                .Include(p => p.FavoritePhotos)
+                .FirstOrDefaultAsync();
+
+            var user = await context.FavoritePhotos
+                .Where(u => u.UserId.ToString() == GetUserId())
+                .FirstOrDefaultAsync();
+
+            if (photo == null || user == null)
+            {
+                return BadRequest();
+            }
+
+            context.FavoritePhotos.Remove(user);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Favorite));
+        }
+
         public async Task<IActionResult> Edit()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(string? id)
+        public async Task<IActionResult> Delete(string id)
         {
             Guid photoGuid = Guid.Empty;
             bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
             if (!isGuidValid)
             {
-                // invalid id format
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction(nameof(MyGallery));
             }
 
             var model = await context.Photos
