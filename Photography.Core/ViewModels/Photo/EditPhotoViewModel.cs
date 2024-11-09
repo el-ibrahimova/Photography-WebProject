@@ -1,19 +1,16 @@
-﻿using Photography.Infrastructure.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Photography.Core.ViewModels.Photo
 {
     using static Common.EntityConstants.PhotoEntity;
     using static Common.EntityValidationMessages;
     using static Common.ApplicationConstants;
-    public class AddPhotoViewModel
+    public class EditPhotoViewModel
     {
-        public AddPhotoViewModel()
+        public EditPhotoViewModel()
         {
-            // in this way we set default value for UploadedAt
             this.UploadedAt = DateTime.UtcNow.ToString(EntityDateFormat);
         }
-
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = PhotoTitleRequiredMessage)]
@@ -25,13 +22,13 @@ namespace Photography.Core.ViewModels.Photo
 
 
         [Required(ErrorMessage = PhotoUploadedAtRequiredMessage)]
-        public string UploadedAt { get; set; }
+        public string UploadedAt { get; set; } 
 
 
         [Required(ErrorMessage = PhotoImageUrlRequiredMessage)]
         [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
         public string ImageUrl { get; set; } = null!;
-        
+
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
 
@@ -42,6 +39,6 @@ namespace Photography.Core.ViewModels.Photo
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
 
-        public ICollection<Guid> SelectedCategoryIds { get; set; }= new HashSet<Guid>();
+        public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>();
     }
 }

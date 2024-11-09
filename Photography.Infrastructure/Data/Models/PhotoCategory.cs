@@ -17,5 +17,6 @@ namespace Photography.Infrastructure.Data.Models
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;
-    }
+
+      }
 }

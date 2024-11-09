@@ -130,7 +130,7 @@ namespace Photography.Controllers
                     model.IsPrivate
                         ? userOwnerId
                         : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
-                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
+                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id})
                     .ToList()
             };
 
@@ -323,10 +323,126 @@ namespace Photography.Controllers
             return RedirectToAction(nameof(Favorite));
         }
 
-        public async Task<IActionResult> Edit()
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
         {
-            return View();
+            Guid photoIdGuid = Guid.Empty;
+
+            bool isPhotoGuidValid = this.IsGuidValid(id, ref photoIdGuid);
+            if (!isPhotoGuidValid)
+            {
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            var photo = await context.Photos
+                .Where(p => p.IsDeleted == false && p.Id == photoIdGuid)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                return BadRequest();
+            }
+
+            string userId = GetUserId();
+            Guid userIdGuid = Guid.Empty;
+
+            bool isUserIdGuidValid = this.IsGuidValid(userId, ref userIdGuid);
+            if (!isUserIdGuidValid)
+            {
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            if (photo.UserOwnerId != userIdGuid)
+            {
+                return Unauthorized();
+            }
+
+            var model = new EditPhotoViewModel()
+            {
+                Title = photo.Title,
+                Description = photo.Description,
+                UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
+                ImageUrl = photo.ImageUrl,
+                IsPrivate = photo.IsPrivate,
+                UserOwnerId = photo.UserOwnerId,
+
+            };
+
+            model.Categories = await GetCategories();
+            model.UserPhotoOwners = await GetAllUsers();
+
+            return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPhotoViewModel model)
+        {
+
+            Guid photoIdGuid = Guid.Empty;
+
+            bool isPhotoGuidValid = this.IsGuidValid(model.Id.ToString(), ref photoIdGuid);
+            if (!isPhotoGuidValid)
+            {
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            var photo = await context.Photos
+                .Include(p => p.PhotosCategories) // 
+                .Where(p => p.IsDeleted == false && p.Id == photoIdGuid)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                return BadRequest();
+            }
+
+            string userId = GetUserId();
+            Guid userIdGuid = Guid.Empty;
+
+            bool isUserIdGuidValid = this.IsGuidValid(userId, ref userIdGuid);
+            if (!isUserIdGuidValid)
+            {
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            if (photo.UserOwnerId != userIdGuid)
+            {
+                return Unauthorized();
+            }
+
+            DateTime uploadedAt;
+            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out uploadedAt))
+            {
+                ModelState.AddModelError(nameof(model.UploadedAt), $"Невалидна дата! Датата трябва да бъде във формат: {EntityDateFormat}");
+
+                model.Categories = await GetCategories();
+                model.UserPhotoOwners = await GetAllUsers();
+                model.SelectedCategoryIds = photo.PhotosCategories.Select(pc => pc.CategoryId).ToList();
+                return View(model);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await GetCategories();
+                model.UserPhotoOwners = await GetAllUsers();
+                model.SelectedCategoryIds = photo.PhotosCategories.Select(pc => pc.CategoryId).ToList();
+                return View(model);
+            }
+
+            photo.Title = model.Title;
+            photo.ImageUrl = model.ImageUrl;
+            photo.Description = model.Description;
+            photo.IsPrivate = model.IsPrivate;
+            photo.UserOwnerId = model.UserOwnerId;
+            photo.UploadedAt = DateTime.Now;
+            photo.PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id})
+                .ToList();
+
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { model.Id });
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
@@ -343,12 +459,12 @@ namespace Photography.Controllers
                 .Where(p => p.IsDeleted == false && p.Id == photoGuid)
                 .Select(p => new DeleteViewModel()
                 {
-                    Id=p.Id.ToString(),
+                    Id = p.Id.ToString(),
                     Title = p.Title,
                     UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
                     DeletedAt = null,
                     UserOwnerId = p.UserOwnerId.ToString(),
-                    Owner = p.Owner.UserName 
+                    Owner = p.Owner.UserName
                 })
                 .FirstOrDefaultAsync();
 
@@ -364,7 +480,7 @@ namespace Photography.Controllers
 
             if (photo != null)
             {
-                photo.IsDeleted =true;
+                photo.IsDeleted = true;
                 photo.DeletedAt = DateTime.Now;
 
                 await context.SaveChangesAsync();

@@ -5,6 +5,7 @@
 @{
     ViewBag.Title = "Детайли";
     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
@@ -56,11 +57,13 @@
                 @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name == @Model.Owner.UserName && @Model.IsDeleted==false)
                 {
                     <a asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1" >Изтрий</a>
+                  <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>
+
                 }
 
                 @if (User.IsInRole("Administrator") && @Model.IsDeleted==false)
                 {
-                   <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>
+                 
                 }
                 
             </div>
