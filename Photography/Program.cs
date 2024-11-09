@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Photography.Data;
+using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography
@@ -30,9 +31,12 @@ namespace Photography
                 .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddUserManager<UserManager<ApplicationUser>>();
 
-
+            
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            // add services from Extension method ServiceCollectionExtension
+            builder.Services.AddServices();
 
             var app = builder.Build();
 

@@ -1,6 +1,9 @@
-﻿namespace Photography.Core.Interfaces
+﻿using Photography.Core.ViewModels.Photo;
+
+namespace Photography.Core.Interfaces
 {
-    public interface IPhotoService:IBaseService
+    public interface IPhotoService
     {
+        Task<IEnumerable<GalleryViewModel>> GetGalleryAsync();
     }
 }

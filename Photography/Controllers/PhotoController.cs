@@ -6,6 +6,7 @@ using Photography.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
 using System.Security.Claims;
+using Photography.Core.Interfaces;
 using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
@@ -14,31 +15,22 @@ namespace Photography.Controllers
     public class PhotoController : BaseController
     {
         private readonly PhotographyDbContext context;
+        private readonly IPhotoService photoService;
 
 
-        public PhotoController(PhotographyDbContext data)
+        public PhotoController(PhotographyDbContext data, IPhotoService _photoService)
         {
             context = data;
+            photoService= _photoService;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Gallery()
         {
-            var model = await context.Photos
-                .AsNoTracking()
-                .Where(p => !p.IsPrivate && p.IsDeleted == false)
-                .Select(p => new GalleryViewModel()
-                {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    ImageUrl = p.ImageUrl,
-                    IsPrivate = p.IsPrivate,
-                    Rating = p.Rating
-                })
-                .ToListAsync();
+            var photos = await photoService.GetGalleryAsync();
 
-            return View(model);
+            return View(photos);
         }
 
 
