@@ -263,12 +263,31 @@ namespace Photography.Controllers
                     Id=p.Id.ToString(),
                     Title = p.Title,
                     UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
+                    DeletedAt = null,
                     UserOwnerId = p.UserOwnerId.ToString(),
                     Owner = p.Owner.UserName 
                 })
                 .FirstOrDefaultAsync();
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteViewModel model)
+        {
+            var photo = await context.Photos
+                .Where(p => p.IsDeleted == false && p.Id.ToString() == model.Id)
+                .FirstOrDefaultAsync();
+
+            if (photo != null)
+            {
+                photo.IsDeleted =true;
+                photo.DeletedAt = DateTime.Now;
+
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(MyGallery));
         }
 
         private async Task<ICollection<CategoryViewModel>> GetCategories()
