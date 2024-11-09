@@ -244,9 +244,31 @@ namespace Photography.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Delete()
+        [HttpGet]
+        public async Task<IActionResult> Delete(string? id)
         {
-            return View();
+            Guid photoGuid = Guid.Empty;
+            bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
+            if (!isGuidValid)
+            {
+                // invalid id format
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            var model = await context.Photos
+                .AsNoTracking()
+                .Where(p => p.IsDeleted == false && p.Id == photoGuid)
+                .Select(p => new DeleteViewModel()
+                {
+                    Id=p.Id.ToString(),
+                    Title = p.Title,
+                    UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
+                    UserOwnerId = p.UserOwnerId.ToString(),
+                    Owner = p.Owner.UserName 
+                })
+                .FirstOrDefaultAsync();
+
+            return View(model);
         }
 
         private async Task<ICollection<CategoryViewModel>> GetCategories()
