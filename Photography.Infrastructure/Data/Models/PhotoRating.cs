@@ -21,10 +21,7 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("User identifier")] 
         public Guid UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
+        [ForeignKey(nameof(UserId))] 
         public ApplicationUser User { get; set; } = null!;
-
-        [Comment("Rate")]
-        public int Rate { get; set; }
     }
 }

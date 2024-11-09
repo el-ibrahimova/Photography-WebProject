@@ -5,6 +5,7 @@ using Photography.Core.ViewModels.Photo;
 using Photography.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
+using System.Security.Claims;
 using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
@@ -33,6 +34,7 @@ namespace Photography.Controllers
                     Title = p.Title,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
+                    Rating = p.Rating
                 })
                 .ToListAsync();
 
@@ -98,17 +100,18 @@ namespace Photography.Controllers
                 return View(model);
             }
 
-            // Проверка на валидност на категориите
-            //var validCategories = await context.Categories.Select(c => c.Id).ToListAsync();
-            //foreach (var categoryId in model.SelectedCategoryIds)
-            //{
-            //    if (!validCategories.Contains(categoryId))
-            //    {
-            //        ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
-            //        model.Categories = await GetCategories();
-            //        return View(model);
-            //    }
-            //}
+           var validCategories = await context
+               .Categories.Select(c => c.Id).ToListAsync();
+
+            foreach (var categoryId in model.SelectedCategoryIds)
+            {
+                if (!validCategories.Contains(categoryId))
+                {
+                    ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
+                    model.Categories = await GetCategories();
+                    return View(model);
+                }
+            }
 
             var userId = GetUserId();
 
@@ -140,62 +143,51 @@ namespace Photography.Controllers
             return RedirectToAction("Gallery");
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> RatePhoto(Guid photoId, int rating)
-        //{
-        //    var userIdString = GetUserId(); // Get the current user's ID
+        [HttpPost]
+        public async Task<IActionResult> IncreaseRating(string id)
+        {
+            Guid photoId;
+            if (!Guid.TryParse(id, out photoId))
+            {
+                return BadRequest("Невалидно ID на снимка.");
+            }
 
-        //  if (!Guid.TryParse(userIdString, out var userIdGuid))
-        //    {
-        //        return BadRequest("Невалидно потребителско ID.");
-        //    }
+            var photo = await context
+                .Photos.Where(p => p.Id == photoId && p.IsDeleted==false)
+                .FirstOrDefaultAsync();
 
-        //    // Check if the user exists in the User table
-        //    var userExists = await context.Users.AnyAsync(u => u.Id == userIdGuid);
-        //    if (!userExists)
-        //    {
-        //        return NotFound("Потребителят не съществува."); 
-        //    }
+            if (photo == null)
+            {
+                return NotFound("Снимката не е намерена.");
+            }
 
-        //    // Check if the photo exists
-        //    var photo = await context.Photos.FindAsync(photoId);
-        //    if (photo == null || photo.IsDeleted==true)
-        //    {
-        //        return NotFound("Снимката не съществува."); 
-        //    }
+            var currentUserId = GetUserId();
+            Guid userIdGuid;
+            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            {
+                return Unauthorized("Трябва да сте влезли в профила си.");
+            }
 
-        //    // Check if the user already rated the photo
-        //    var existingRating = await context.PhotosRatings
-        //        .FirstOrDefaultAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
+            bool hasUserRated = await context
+                .PhotosRatings.AnyAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
 
-        //    if (existingRating != null)
-        //    {
-        //        // If it exists, update the rating
-        //        existingRating.Rate = rating;
-        //    }
-        //    else
-        //    {
-        //        // If it does not exist, create a new rating
-        //        var newRating = new PhotoRating
-        //        {
-        //            PhotoId = photoId,
-        //            UserId = userIdGuid,
-        //            Rate = rating
-        //        };
-        //        await context.PhotosRatings.AddAsync(newRating);
-        //    }
+            if (!hasUserRated)
+            {
+                photo.Rating += 1;
 
-        //    var totalRatings = await context.PhotosRatings
-        //        .Where(r => r.PhotoId == photoId)
-        //        .AverageAsync(r => (double)r.Rate);
+                var photoRating = new PhotoRating
+                {
+                    PhotoId = photoId,
+                    UserId = userIdGuid
+                };
+                context.PhotosRatings.Add(photoRating);
 
-        //    photo.Rating = (int)Math.Round(totalRatings);
+                await context.SaveChangesAsync();
+            }
 
-        //    await context.SaveChangesAsync();
-
-        //    return RedirectToAction("Gallery");
-        //}
-
+            return RedirectToAction(nameof(Gallery));
+        }
+        
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string? id)
@@ -248,7 +240,6 @@ namespace Photography.Controllers
                     Id = fp.Photo.Id.ToString(),
                     ImageUrl = fp.Photo.ImageUrl,
                     Title = fp.Photo.Title,
-                    Rating = fp.Photo.Rating
                 })
                 .ToListAsync();
 
@@ -512,7 +503,5 @@ namespace Photography.Controllers
                     UserName = u.UserName ?? String.Empty
                 }).ToListAsync();
         }
-
-
     }
 }

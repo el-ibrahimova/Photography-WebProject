@@ -14,8 +14,8 @@
     {
         var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if(!photo.IsPrivate)        @* && !photo.IsDeleted) *@
-    {
+        if (!photo.IsPrivate)
+        {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">
                     <h4 class="card-title mt-1">@photo.Title</h4>
@@ -23,12 +23,19 @@
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
 
-                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Детайли</a>
+                <form asp-action="IncreaseRating" method="post">
+                    <input type="hidden" name="id" value="@photo.Id" />
+                    <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>  
+                </form>
 
-                <form asp-controller="Photo" asp-action="AddToFavorite" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
+                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
+
+                <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
                     <input type="hidden" name="id" value="@photo.Id" />
                     <button type="submit" class="btn btn-success w-100">Добави в любими</button>
                 </form>
+
+               
             </div>
         }
     }

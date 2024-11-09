@@ -16,11 +16,17 @@
     <div class="col-md-12 text-center">
         <img src="@Model.ImageUrl" class="img-fluid" style="max-width: 100%; height: auto;" />
     </div>
-
+    
+ 
     <div class="col-md-12">
         <div class="card-body">
             <h5 class="card-title">Име: @Model.Title</h5>
-            <h5 class="card-title">Рейтинг: @Model.Rating</h5>
+           
+            @if (!Model.IsPrivate)
+            {
+                <h5 class="card-title">Рейтинг: @Model.Rating</h5>
+            }
+         
             <p class="card-title">@Model.Description</p>
             <hr/>
             <p class="card-text">Добавена на: @Model.UploadedAt</p>
