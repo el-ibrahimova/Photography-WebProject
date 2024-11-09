@@ -1,4 +1,4 @@
-﻿@using Photography.Core.ViewModels.Photo
+﻿@using Photography.Core.ViewModels.Gallery
 @using System.Security.Claims
 @model IEnumerable<GalleryViewModel>
 
@@ -23,7 +23,7 @@
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
 
-                <form asp-action="IncreaseRating" method="post">
+                <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
                     <input type="hidden" name="id" value="@photo.Id" />
                     <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>  
                 </form>

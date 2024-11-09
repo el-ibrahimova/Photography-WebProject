@@ -5,15 +5,14 @@ using Photography.Data;
 
 namespace Photography.Core.Services
 {
-    public class PhotoService:BaseService, IPhotoService
+    public class GalleryService:BaseService, IGalleryService
     {
         private readonly PhotographyDbContext context;
 
-        public PhotoService(PhotographyDbContext data)
+        public GalleryService(PhotographyDbContext data)
         {
             context = data;
         }
-
         public async Task<IEnumerable<GalleryViewModel>> GetGalleryAsync()
         {
             var photos = await context.Photos
@@ -29,6 +28,24 @@ namespace Photography.Core.Services
                 .ToListAsync();
 
             return photos;
+        }
+
+        public async Task<IEnumerable<MyGalleryViewModel>> GetPrivateGalleryAsync(Guid userId)
+        {
+            var model = await context.Photos
+                .AsNoTracking()
+                .Where(p => !p.IsPrivate || p.UserOwnerId == userId && p.IsDeleted == false)
+                .Select(p => new MyGalleryViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    ImageUrl = p.ImageUrl,
+                    IsPrivate = p.IsPrivate,
+                    UserOwnerId = userId.ToString()
+                })
+                .ToListAsync();
+
+            return model;
         }
     }
 }

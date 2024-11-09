@@ -38,13 +38,13 @@
                         @if (!this.User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Gallery">Галерия</a>
+                                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Gallery">Галерия</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="MyGallery">Моята Галерия</a>
+                                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Add">Добави снимка</a>

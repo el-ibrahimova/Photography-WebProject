@@ -7,6 +7,7 @@ using Photography.Infrastructure.Data.Models;
 using System.Globalization;
 using System.Security.Claims;
 using Photography.Core.Interfaces;
+using Photography.Core.ViewModels.Gallery;
 using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
@@ -24,41 +25,8 @@ namespace Photography.Controllers
             photoService= _photoService;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Gallery()
-        {
-            var photos = await photoService.GetGalleryAsync();
+      
 
-            return View(photos);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> MyGallery()
-        {
-            var userIdString = GetUserId();
-
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
-            {
-                return Unauthorized();
-            }
-
-            var model = await context.Photos
-                .AsNoTracking()
-                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid && p.IsDeleted == false)
-                .Select(p => new MyGalleryViewModel()
-                {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    ImageUrl = p.ImageUrl,
-                    IsPrivate = p.IsPrivate,
-                    UserOwnerId = userIdGuid.ToString()
-                })
-                .ToListAsync();
-
-            return View(model);
-        }
 
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -132,7 +100,7 @@ namespace Photography.Controllers
             await context.Photos.AddAsync(photo);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Gallery");
+            return RedirectToAction("Gallery", "Gallery");
         }
 
         [HttpPost]
@@ -176,8 +144,9 @@ namespace Photography.Controllers
 
                 await context.SaveChangesAsync();
             }
+          
 
-            return RedirectToAction(nameof(Gallery));
+            return RedirectToAction("Gallery", "Gallery");
         }
         
         [AllowAnonymous]
@@ -188,7 +157,7 @@ namespace Photography.Controllers
             bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
             if (!isGuidValid)
             {
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction("Gallery", "Gallery");
             }
 
             var photo = await context.Photos
@@ -247,7 +216,7 @@ namespace Photography.Controllers
             if (!isPhotoGuidValid)
             {
                 // invalid id format
-                return this.RedirectToAction(nameof(MyGallery));
+                return this.RedirectToAction("MyGallery", "Gallery");
             }
 
             var photo = await context.Photos
@@ -266,7 +235,7 @@ namespace Photography.Controllers
             bool isGuidValid = this.IsGuidValid(userId, ref userIdGuid);
             if (!isGuidValid)
             {
-                return this.RedirectToAction(nameof(MyGallery));
+                return this.RedirectToAction("MyGallery", "Gallery");
             }
 
             if (!context.FavoritePhotos.Any(fp => fp.UserId == userIdGuid && fp.PhotoId == photoIdGuid))
@@ -314,7 +283,7 @@ namespace Photography.Controllers
             bool isPhotoGuidValid = this.IsGuidValid(id, ref photoIdGuid);
             if (!isPhotoGuidValid)
             {
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction("Gallery", "Gallery");
             }
 
             var photo = await context.Photos
@@ -332,7 +301,7 @@ namespace Photography.Controllers
             bool isUserIdGuidValid = this.IsGuidValid(userId, ref userIdGuid);
             if (!isUserIdGuidValid)
             {
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction("Gallery", "Gallery");
             }
 
             if (photo.UserOwnerId != userIdGuid)
@@ -366,7 +335,7 @@ namespace Photography.Controllers
             bool isPhotoGuidValid = this.IsGuidValid(model.Id.ToString(), ref photoIdGuid);
             if (!isPhotoGuidValid)
             {
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction("Gallery", "Gallery");
             }
 
             var photo = await context.Photos
@@ -385,7 +354,7 @@ namespace Photography.Controllers
             bool isUserIdGuidValid = this.IsGuidValid(userId, ref userIdGuid);
             if (!isUserIdGuidValid)
             {
-                return this.RedirectToAction(nameof(Gallery));
+                return this.RedirectToAction("Gallery", "Gallery");
             }
 
             if (photo.UserOwnerId != userIdGuid)
@@ -434,7 +403,7 @@ namespace Photography.Controllers
             bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
             if (!isGuidValid)
             {
-                return this.RedirectToAction(nameof(MyGallery));
+                return this.RedirectToAction("MyGallery", "Gallery");
             }
 
             var model = await context.Photos
@@ -469,7 +438,7 @@ namespace Photography.Controllers
                 await context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(MyGallery));
+            return RedirectToAction("MyGallery", "Gallery");
         }
 
         private async Task<ICollection<CategoryViewModel>> GetCategories()

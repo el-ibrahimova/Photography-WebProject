@@ -1,4 +1,4 @@
-﻿namespace Photography.Core.ViewModels.Photo
+﻿namespace Photography.Core.ViewModels.Gallery
 {
     public class MyGalleryViewModel
     {

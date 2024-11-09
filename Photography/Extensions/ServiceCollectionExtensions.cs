@@ -8,6 +8,7 @@ namespace Photography.Extensions
         public static void AddServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IPhotoService, PhotoService>();
+            serviceCollection.AddScoped<IGalleryService, GalleryService>();
         }
     }
 }
