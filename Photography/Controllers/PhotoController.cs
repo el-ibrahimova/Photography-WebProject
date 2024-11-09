@@ -27,17 +27,17 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Gallery()
         {
-             var model = await context.Photos
-                .AsNoTracking()
-                .Where(p => !p.IsPrivate || p.IsDeleted==false)
-                .Select(p => new GalleryPhotoViewModel()
-                {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    ImageUrl = p.ImageUrl,
-                    IsPrivate = p.IsPrivate,
-                    })
-                .ToListAsync();
+            var model = await context.Photos
+               .AsNoTracking()
+               .Where(p => !p.IsPrivate || p.IsDeleted == false)
+               .Select(p => new GalleryViewModel()
+               {
+                   Id = p.Id.ToString(),
+                   Title = p.Title,
+                   ImageUrl = p.ImageUrl,
+                   IsPrivate = p.IsPrivate,
+               })
+               .ToListAsync();
 
             return View(model);
         }
@@ -55,8 +55,8 @@ namespace Photography.Controllers
 
             var model = await context.Photos
                 .AsNoTracking()
-                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid && p.IsDeleted==false)
-                .Select(p => new MyGalleryPhotoViewModel()
+                .Where(p => !p.IsPrivate || p.UserOwnerId == userIdGuid && p.IsDeleted == false)
+                .Select(p => new MyGalleryViewModel()
                 {
                     Id = p.Id.ToString(),
                     Title = p.Title,
@@ -91,7 +91,7 @@ namespace Photography.Controllers
                 model.UserPhotoOwners = await GetAllUsers();
                 return View(model);
             }
-            
+
             if (!ModelState.IsValid)
             {
                 model.Categories = await GetCategories();
@@ -112,7 +112,7 @@ namespace Photography.Controllers
             //}
 
             var userId = GetUserId();
-         
+
             if (model.IsPrivate && string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
@@ -122,15 +122,15 @@ namespace Photography.Controllers
 
             var photo = new Photo
             {
-               Title = model.Title,
+                Title = model.Title,
                 Description = model.Description,
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
                 UserOwnerId = model.IsPrivate ? userOwnerId : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
-                PhotosCategories = model.SelectedCategoryIds.Select(id=> new PhotoCategory(){CategoryId = id}).ToList()
+                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id }).ToList()
             };
-          
+
             await context.Photos.AddAsync(photo);
             await context.SaveChangesAsync();
 
@@ -141,7 +141,7 @@ namespace Photography.Controllers
         //public async Task<IActionResult> RatePhoto(Guid photoId, int rating)
         //{
         //    var userIdString = GetUserId(); // Get the current user's ID
-           
+
         //  if (!Guid.TryParse(userIdString, out var userIdGuid))
         //    {
         //        return BadRequest("Невалидно потребителско ID.");
@@ -181,7 +181,7 @@ namespace Photography.Controllers
         //        };
         //        await context.PhotosRatings.AddAsync(newRating);
         //    }
-            
+
         //    var totalRatings = await context.PhotosRatings
         //        .Where(r => r.PhotoId == photoId)
         //        .AverageAsync(r => (double)r.Rate);
@@ -193,12 +193,58 @@ namespace Photography.Controllers
         //    return RedirectToAction("Gallery");
         //}
 
-        public async Task<IActionResult> Details()
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            Guid photoGuid = Guid.Empty;
+            bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
+            if (!isGuidValid)
+            {
+                // invalid id format
+                return this.RedirectToAction(nameof(Gallery));
+            }
+
+            var photo = await context.Photos
+                .Include(p => p.Owner)
+                .Include(p => p.PhotosCategories)
+                .ThenInclude(p=>p.Category)
+                    .Where(p => p.IsDeleted == false).
+                FirstOrDefaultAsync(p => p.Id == photoGuid);
+
+            if (photo == null)
+            {
+                return BadRequest();
+            }
+
+            var model = new DetailsViewModel()
+            {
+                Id = photo.Id.ToString(),
+                Title = photo.Title,
+                ImageUrl = photo.ImageUrl,
+                Description = photo.Description,
+                UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
+                IsFavorite = photo.IsFavorite,
+                IsPrivate = photo.IsPrivate,
+                Rating = photo.Rating,
+                UserOwnerId = photo.UserOwnerId,
+                Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
+                Owner = photo.Owner,
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> AddToFavorite()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Edit()
         {
             return View();
         }
 
-        public async Task<IActionResult> AddToFavorite()
+        public async Task<IActionResult> Delete()
         {
             return View();
         }
@@ -223,13 +269,10 @@ namespace Photography.Controllers
                 .Select(u => new UserViewModel()
                 {
                     Id = u.Id.ToString(),
-                    UserName = u.UserName ?? String.Empty  
+                    UserName = u.UserName ?? String.Empty
                 }).ToListAsync();
         }
 
-        private string GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        }
+
     }
 }

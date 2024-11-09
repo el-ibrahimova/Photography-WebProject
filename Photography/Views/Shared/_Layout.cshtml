@@ -32,7 +32,7 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
 
                         @if (!this.User?.Identity?.IsAuthenticated ?? false)
@@ -44,7 +44,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="MyGallery">Галерия</a>
+                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="MyGallery">Моята Галерия</a>
                             </li>
                             <li class="nav-item">
                                 <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Add">Добави снимка</a>

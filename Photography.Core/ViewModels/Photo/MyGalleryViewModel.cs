@@ -1,6 +1,6 @@
 ﻿namespace Photography.Core.ViewModels.Photo
 {
-    public class MyGalleryPhotoViewModel
+    public class MyGalleryViewModel
     {
         public string Id { get; set; } = null!;
         public string Title { get; set; } = null!;

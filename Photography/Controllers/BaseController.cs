@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Photography.Controllers
 {
@@ -21,6 +22,11 @@ namespace Photography.Controllers
             }
 
             return true;
+        }
+
+        protected string? GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
         }
     }
 }
