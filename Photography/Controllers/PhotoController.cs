@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
 using Photography.Core.ViewModels.Photo;
-using Photography.Data;
-using Photography.Infrastructure.Data.Models;
-using System.Globalization;
-using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {

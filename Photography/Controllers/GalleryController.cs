@@ -5,14 +5,16 @@ using Photography.Core.ViewModels.Gallery;
 
 namespace Photography.Controllers
 {
+    [Authorize]
     public class GalleryController : BaseController
     {
 
         private readonly IGalleryService galleryService;
 
+
         public GalleryController(IGalleryService _galleryService)
         {
-            galleryService= _galleryService;
+            galleryService = _galleryService;
         }
 
         [AllowAnonymous]
@@ -36,7 +38,7 @@ namespace Photography.Controllers
             }
 
             var model = await galleryService.GetPrivateGalleryAsync(userIdGuid);
-           
+
             return View(model);
         }
     }
