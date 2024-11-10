@@ -14,13 +14,11 @@ namespace Photography.Controllers
     [Authorize]
     public class PhotoController : BaseController
     {
-        private readonly PhotographyDbContext context;
         private readonly IPhotoService photoService;
 
 
-        public PhotoController(PhotographyDbContext data, IPhotoService _photoService)
+        public PhotoController( IPhotoService _photoService)
         {
-            context = data;
             photoService = _photoService;
         }
 
