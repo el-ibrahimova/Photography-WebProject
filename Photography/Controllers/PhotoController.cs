@@ -178,26 +178,12 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            Guid photoGuid = Guid.Empty;
-            bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
-            if (!isGuidValid)
-            {
-                return this.RedirectToAction("MyGallery", "Gallery");
-            }
+            var model = await photoService.GetPhotoDelete(id);
 
-            var model = await context.Photos
-                .AsNoTracking()
-                .Where(p => p.IsDeleted == false && p.Id == photoGuid)
-                .Select(p => new DeleteViewModel()
-                {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
-                    DeletedAt = null,
-                    UserOwnerId = p.UserOwnerId.ToString(),
-                    Owner = p.Owner.UserName
-                })
-                .FirstOrDefaultAsync();
+            if (model == null)
+            {
+                return RedirectToAction("MyGallery", "Gallery");
+            }
 
             return View(model);
         }
@@ -205,43 +191,8 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteViewModel model)
         {
-            var photo = await context.Photos
-                .Where(p => p.IsDeleted == false && p.Id.ToString() == model.Id)
-                .FirstOrDefaultAsync();
-
-            if (photo != null)
-            {
-                photo.IsDeleted = true;
-                photo.DeletedAt = DateTime.Now;
-
-                await context.SaveChangesAsync();
-            }
-
+           var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
             return RedirectToAction("MyGallery", "Gallery");
-        }
-
-        private async Task<ICollection<CategoryViewModel>> GetCategories()
-        {
-            return await context.Categories
-                .AsNoTracking()
-                .Select(c => new CategoryViewModel()
-                {
-                    Id = c.Id.ToString(),
-                    Name = c.Name
-                })
-                .ToListAsync();
-        }
-
-
-        public async Task<ICollection<UserViewModel>> GetAllUsers()
-        {
-            return await context.Users
-                .AsNoTracking()
-                .Select(u => new UserViewModel()
-                {
-                    Id = u.Id.ToString(),
-                    UserName = u.UserName ?? String.Empty
-                }).ToListAsync();
-        }
+        }      
     }
 }

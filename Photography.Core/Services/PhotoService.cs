@@ -256,7 +256,35 @@ namespace Photography.Core.Services
             return true;
         }
 
+        public async Task<DeleteViewModel> GetPhotoDelete(string photoId)
+        {
+          return await context.Photos
+                .AsNoTracking()
+                .Where(p => p.IsDeleted == false && p.Id.ToString() == photoId)
+                .Select(p => new DeleteViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
+                    DeletedAt = null,
+                    UserOwnerId = p.UserOwnerId.ToString(),
+                    Owner = p.Owner.UserName
+                })
+                .FirstOrDefaultAsync();
+        }
+        
+        public async Task<Photo> DeletePhotoAsync(string photoId)
+        {
+            var photoToDelete = await context.Photos
+              .FirstOrDefaultAsync(p => p.Id.ToString() == photoId);
 
+            photoToDelete.IsDeleted = true;
+            photoToDelete.DeletedAt = DateTime.Now;
+
+            await context.SaveChangesAsync();
+            return photoToDelete;
+        }
+        
         public async Task<ICollection<CategoryViewModel>> GetCategoriesAsync()
         {
             return await context.Categories
