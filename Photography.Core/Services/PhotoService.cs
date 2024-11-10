@@ -18,6 +18,13 @@ namespace Photography.Core.Services
             context = data;
         }
 
+        public async Task<Photo> GetPhotoByIdAsync(Guid photoIdGuid)
+        {
+            return await context.Photos
+                .Where(p => !p.IsDeleted && p.Id == photoIdGuid)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<AddPhotoViewModel> GetAddPhotoAsync()
         {
             var model = new AddPhotoViewModel()
@@ -73,7 +80,7 @@ namespace Photography.Core.Services
 
             if (photo == null)
             {
-               throw new InvalidOperationException("Снимката не е намерена.");
+                throw new InvalidOperationException("Снимката не е намерена.");
             }
 
             bool hasUserRated = await context
@@ -107,7 +114,7 @@ namespace Photography.Core.Services
                 return null;
             }
 
-           return new DetailsViewModel()
+            return new DetailsViewModel()
             {
                 Id = photo.Id.ToString(),
                 Title = photo.Title,
@@ -124,7 +131,130 @@ namespace Photography.Core.Services
             };
         }
 
+        public async Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(string userId)
+        {
+            return await context.FavoritePhotos
+                 .AsNoTracking()
+                 .Where(fp => fp.UserId.ToString() == userId && fp.Photo.IsDeleted == false)
+                 .Select(fp => new FavoriteViewModel()
+                 {
+                     Id = fp.Photo.Id.ToString(),
+                     ImageUrl = fp.Photo.ImageUrl,
+                     Title = fp.Photo.Title,
+                 })
+                 .ToListAsync();
+        }
 
+        public async Task AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid)
+        {
+            var photo = await context.Photos
+                .Where(p => p.IsDeleted == false && p.Id == photoGuid)
+                .Include(fp => fp.FavoritePhotos)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                throw new ArgumentException("Снимката не съществува");
+            }
+
+            if (!context.FavoritePhotos.Any(fp => fp.UserId == userGuid && fp.PhotoId == photoGuid))
+            {
+                photo.FavoritePhotos.Add(new FavoritePhoto()
+                {
+                    UserId = userGuid,
+                    PhotoId = photoGuid
+                });
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemovePhotoFromFavoritesAsync(string userId, string photoId)
+        {
+            var photo = await context.Photos
+                .Where(p => !p.IsDeleted && p.Id.ToString() == photoId)
+                .Include(p => p.FavoritePhotos)
+                .FirstOrDefaultAsync();
+
+            var user = await context.FavoritePhotos
+                .Where(u => u.UserId.ToString() == userId)
+                .FirstOrDefaultAsync();
+
+            if (photo == null || user == null)
+            {
+                throw new ArgumentException("Снимката или потребителят не съществуват");
+            }
+
+            context.FavoritePhotos.Remove(user);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid)
+        {
+            var photo = await context.Photos
+                .Include(p => p.PhotosCategories) // 
+                .Where(p => p.IsDeleted == false && p.Id == photoGuid)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                throw new ArgumentException("Снимката не съществува");
+            }
+
+            var model = new EditPhotoViewModel()
+            {
+                Title = photo.Title,
+                Description = photo.Description,
+                UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
+                ImageUrl = photo.ImageUrl,
+                IsPrivate = photo.IsPrivate,
+                UserOwnerId = photo.UserOwnerId,
+                Categories = await GetCategoriesAsync(),
+                UserPhotoOwners = await GetAllUsersAsync()
+            };
+
+            return model;
+        }
+
+        public async Task<bool> EditPhotoAsync(EditPhotoViewModel model)
+        {
+            if (!Guid.TryParse(model.Id.ToString(), out Guid photoIdGuid))
+            {
+                return false; 
+            }
+
+            var photo = await context.Photos
+                .Include(p => p.PhotosCategories)
+                .Where(p => !p.IsDeleted && p.Id == photoIdGuid)
+                .FirstOrDefaultAsync();
+
+            if (photo == null)
+            {
+                return false; 
+            }
+
+            if (!Guid.TryParse(model.UserOwnerId.ToString(), out Guid userIdGuid) || photo.UserOwnerId != userIdGuid)
+            {
+                return false; 
+            }
+
+            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime uploadedAt))
+            {
+                return false; 
+            }
+
+            photo.Title = model.Title;
+            photo.ImageUrl = model.ImageUrl;
+            photo.Description = model.Description;
+            photo.IsPrivate = model.IsPrivate;
+            photo.UserOwnerId = model.UserOwnerId;
+            photo.UploadedAt = uploadedAt;
+            photo.PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory { CategoryId = id }).ToList();
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
 
 
         public async Task<ICollection<CategoryViewModel>> GetCategoriesAsync()

@@ -5,7 +5,7 @@ using Photography.Data;
 
 namespace Photography.Core.Services
 {
-    public class GalleryService:BaseService, IGalleryService
+    public class GalleryService: BaseService, IGalleryService
     {
         private readonly PhotographyDbContext context;
 
