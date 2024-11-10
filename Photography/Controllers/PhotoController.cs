@@ -22,83 +22,28 @@ namespace Photography.Controllers
         public PhotoController(PhotographyDbContext data, IPhotoService _photoService)
         {
             context = data;
-            photoService= _photoService;
+            photoService = _photoService;
         }
-
-      
-
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var model = new AddPhotoViewModel();
-            model.Categories = await GetCategories();
-            model.UserPhotoOwners = await GetAllUsers();
+            var model = await photoService.GetAddPhotoAsync();
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            DateTime uploadedAt;
-
-            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out uploadedAt))
-            {
-                ModelState.AddModelError(nameof(model.UploadedAt),
-                    $"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
-
-                model.Categories = await GetCategories();
-                model.UserPhotoOwners = await GetAllUsers();
-                return View(model);
-            }
-
             if (!ModelState.IsValid)
             {
-                model.Categories = await GetCategories();
-                model.UserPhotoOwners = await GetAllUsers();
+                model = await photoService.GetAddPhotoAsync();
                 return View(model);
             }
 
-           var validCategories = await context
-               .Categories.Select(c => c.Id).ToListAsync();
+            var userId = GetUserId() ?? String.Empty;
 
-            foreach (var categoryId in model.SelectedCategoryIds)
-            {
-                if (!validCategories.Contains(categoryId))
-                {
-                    ModelState.AddModelError(nameof(model.SelectedCategoryIds), $"Категория с ID {categoryId} не съществува.");
-                    model.Categories = await GetCategories();
-                    return View(model);
-                }
-            }
-
-            var userId = GetUserId();
-
-            if (model.IsPrivate && string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized();
-            }
-
-            var userOwnerId = model.UserOwnerId;
-
-            var photo = new Photo
-            {
-                Title = model.Title,
-                Description = model.Description,
-                UploadedAt = uploadedAt,
-                ImageUrl = model.ImageUrl,
-                IsPrivate = model.IsPrivate,
-                UserOwnerId =
-                    model.IsPrivate
-                        ? userOwnerId
-                        : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
-                PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id})
-                    .ToList()
-            };
-
-            await context.Photos.AddAsync(photo);
-            await context.SaveChangesAsync();
+            await photoService.AddPhotoAsync(model, userId);
 
             return RedirectToAction("Gallery", "Gallery");
         }
@@ -106,19 +51,10 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> IncreaseRating(string id)
         {
-            Guid photoId;
-            if (!Guid.TryParse(id, out photoId))
+            Guid photoIdGuid;
+            if (!Guid.TryParse(id, out photoIdGuid))
             {
                 return BadRequest("Невалидно ID на снимка.");
-            }
-
-            var photo = await context
-                .Photos.Where(p => p.Id == photoId && p.IsDeleted==false)
-                .FirstOrDefaultAsync();
-
-            if (photo == null)
-            {
-                return NotFound("Снимката не е намерена.");
             }
 
             var currentUserId = GetUserId();
@@ -128,27 +64,11 @@ namespace Photography.Controllers
                 return Unauthorized("Трябва да сте влезли в профила си.");
             }
 
-            bool hasUserRated = await context
-                .PhotosRatings.AnyAsync(r => r.PhotoId == photoId && r.UserId == userIdGuid);
-
-            if (!hasUserRated)
-            {
-                photo.Rating += 1;
-
-                var photoRating = new PhotoRating
-                {
-                    PhotoId = photoId,
-                    UserId = userIdGuid
-                };
-                context.PhotosRatings.Add(photoRating);
-
-                await context.SaveChangesAsync();
-            }
-          
+            await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
 
             return RedirectToAction("Gallery", "Gallery");
         }
-        
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(string? id)
@@ -160,32 +80,7 @@ namespace Photography.Controllers
                 return this.RedirectToAction("Gallery", "Gallery");
             }
 
-            var photo = await context.Photos
-                .Include(p => p.Owner)
-                .Include(p => p.PhotosCategories)
-                .ThenInclude(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == photoGuid);
-
-            if (photo == null || photo.IsDeleted == true)
-            {
-                return BadRequest();
-            }
-
-            var model = new DetailsViewModel()
-            {
-                Id = photo.Id.ToString(),
-                Title = photo.Title,
-                ImageUrl = photo.ImageUrl,
-                Description = photo.Description,
-                UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
-                IsFavorite = photo.IsFavorite,
-                IsPrivate = photo.IsPrivate,
-                IsDeleted = photo.IsDeleted,
-                Rating = photo.Rating,
-                UserOwnerId = photo.UserOwnerId,
-                Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
-                Owner = photo.Owner,
-            };
+            var model = await photoService.GetPhotoDetailsAsync(photoGuid);
 
             return View(model);
         }
@@ -387,7 +282,7 @@ namespace Photography.Controllers
             photo.IsPrivate = model.IsPrivate;
             photo.UserOwnerId = model.UserOwnerId;
             photo.UploadedAt = DateTime.Now;
-            photo.PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id})
+            photo.PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
                 .ToList();
 
             await context.SaveChangesAsync();
