@@ -10,25 +10,25 @@
 </div>
 <hr />
 
-@foreach (var photo in Model)
+@foreach (var order in Model)
 {
     <div class="row align-items-center mb-4 py-3" style="border-bottom: 1px solid #ccc;">
         <div class="col-md-2 text-center">
-            <img src="@photo.ImageUrl" class="img-fluid" style="width: 200px; height: auto; object-fit: contain;" />
+            <img src="@order.ImageUrl" class="img-fluid" style="width: 200px; height: auto; object-fit: contain;" />
         </div>
         <div class="col-md-4 text-start">
-            <h5 class="mb-0">@photo.Title</h5>
+            <h5 class="mb-0">@order.Title</h5>
         </div>
 
         <div>
-            <form asp-controller="Order" asp-action="Remove" asp-route-id="@photo.Id" method="post">
-                <input type="hidden" name="id" value="@photo.Id" />
+            <form asp-controller="Order" asp-action="Remove" asp-route-id="@order.PhotoId" method="post">
+                <input type="hidden" name="id" value="@order.PhotoId" />
                 <button type="submit" class="btn btn-danger mb-2 w-100 button-height">Изтрий</button>
             </form>
         </div>
 
-        <form asp-controller="Order" asp-action="AcceptOrder" asp-route-id="@photo.Id" method="post">
-            <input type="hidden" name="id" value="@photo.Id" />
+        <form asp-controller="Order" asp-action="AcceptOrder" asp-route-id="@order.PhotoId" method="post">
+            <input type="hidden" name="id" value="@order.PhotoId" />
             <button type="submit" class="btn btn-success mb-2 w-100 button-height">Изпрати поръчката</button>
         </form>
     </div>

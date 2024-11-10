@@ -18,10 +18,11 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Offer name")]
         public string Name { get; set; } = null!;
 
-        [Required]
-        [Comment("Offer type identifier")]
-        public Guid OfferTypeId { get; set; }
+        [MaxLength(DescriptionMaxLength)]
+        [Comment("Offer description")]
+        public string? Description { get; set; }
 
-        public OfferType OfferType { get; set; } = null!;
+        [Comment("Offer price")]
+        public decimal Price { get; set; }
     }
 }

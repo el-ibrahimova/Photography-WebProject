@@ -36,14 +36,6 @@
             public const int PhoneNumberMaxLength = 20;
         }
 
-        public static class OfferTypeEntity
-        {
-            public const int NameMinLength = 3;
-            public const int NameMaxLength = 30;
-            public const int DescriptionMinLength = 5;
-            public const int DescriptionMaxLength = 200;
-        }
-
         public static class OfferEntity
         {
             public const int NameMinLength = 3;

@@ -4,12 +4,11 @@ using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Infrastructure.Data.Configurations
 {
-    public class OfferTypeConfiguration:IEntityTypeConfiguration<OfferType>
+    public class OfferConfiguration:IEntityTypeConfiguration<Offer>
     {
-        public void Configure(EntityTypeBuilder<OfferType> builder)
+        public void Configure(EntityTypeBuilder<Offer> builder)
         {
-            builder.Property(p => p.Price)
-                .HasPrecision(18, 2);
+            builder.Property(o => o.Price).HasPrecision(18, 2);
         }
     }
 }
