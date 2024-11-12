@@ -101,6 +101,13 @@ namespace Photography.Core.Services
             }
         }
 
+        public async Task<bool> HasUserRatedAsync(Guid photoIdGuid, Guid userIdGuid)
+        {
+            return await context.PhotosRatings
+                .AnyAsync(r => r.PhotoId == photoIdGuid && r.UserId == userIdGuid);
+        }
+
+
         public async Task<DetailsViewModel> GetPhotoDetailsAsync(Guid photoGuid)
         {
             var photo = await context.Photos

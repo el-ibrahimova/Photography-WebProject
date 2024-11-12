@@ -10,6 +10,7 @@ namespace Photography.Core.Interfaces
         Task<AddPhotoViewModel>GetAddPhotoAsync();
         Task AddPhotoAsync(AddPhotoViewModel model, string userId);
         Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid);
+        Task<bool> HasUserRatedAsync(Guid photoIdGuid, Guid userIdGuid);
         Task<DetailsViewModel> GetPhotoDetailsAsync(Guid photoGuid);
         Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(string userId);
         Task AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid);

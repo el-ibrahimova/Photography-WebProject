@@ -9,6 +9,14 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
+@if (TempData["HasVoted"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> Вече гласувахте за тази снимка.</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="text-center row">
     @foreach (var photo in Model)
     {
@@ -22,25 +30,25 @@
                     <img class="card-img-top" src=@photo.ImageUrl alt="Image">
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
-
-                <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
-                    <input type="hidden" name="id" value="@photo.Id" />
-                    <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>  
-                </form>
-
+                
                 <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
 
-                <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
-                    <input type="hidden" name="id" value="@photo.Id" />
-                    <button type="submit" class="btn btn-success w-100">Добави в любими</button>
-                </form>
+                @if (this.User?.Identity?.IsAuthenticated ?? false)
+                {
+                  <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
+                        <input type="hidden" name="id" value="@photo.Id"/>
+                        <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>
+                    </form>
 
-               
+                    <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
+                        <input type="hidden" name="id" value="@photo.Id"/>
+                        <button type="submit" class="btn btn-success w-100">Добави в любими</button>
+                    </form>
+                }
             </div>
         }
     }
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        }

@@ -56,6 +56,14 @@ namespace Photography.Controllers
                 return Unauthorized("Трябва да сте влезли в профила си.");
             }
 
+            bool hasUserRated = await photoService.HasUserRatedAsync(photoIdGuid, userIdGuid);
+
+            if (hasUserRated)
+            {
+                TempData["HasVoted"] = true;
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
             await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
 
             return RedirectToAction("Gallery", "Gallery");
