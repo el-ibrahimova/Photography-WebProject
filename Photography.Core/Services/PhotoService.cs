@@ -135,6 +135,7 @@ namespace Photography.Core.Services
                 UserOwnerId = photo.UserOwnerId,
                 Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
                 Owner = photo.Owner,
+                PhotoOwner = photo.Owner!.UserName 
             };
         }
 

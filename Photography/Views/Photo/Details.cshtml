@@ -21,6 +21,8 @@
     <div class="col-md-12">
         <div class="card-body">
             <h5 class="card-title">Име: @Model.Title</h5>
+            <p class="card-text">Добавена на: @Model.UploadedAt</p> 
+            <p class="mb-0"><strong>Принадлежи на:</strong> @Model.Owner</p>
 
             @if (!Model.IsPrivate)
             {
@@ -29,7 +31,7 @@
 
             <p class="card-title">@Model.Description</p>
             <hr />
-            <p class="card-text">Добавена на: @Model.UploadedAt</p>
+      
         </div>
 
         <div>
@@ -54,13 +56,8 @@
             <div class="d-flex justify-content-between align-items-center">
                 <a asp-controller="Gallery" asp-action="Gallery" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1">Върни се</a>
 
-                @if (this.User?.Identity?.IsAuthenticated ?? false)
-                {
 
-                }
-
-
-                @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name == @Model.Owner.UserName && @Model.IsDeleted == false)
+                @if (User?.Identity?.IsAuthenticated == true && currentUserId == @Model.UserOwnerId.ToString() && @Model.IsDeleted == false)
                 {
                     <a asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">Изтрий</a>
                     <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>

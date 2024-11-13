@@ -24,6 +24,7 @@ namespace Photography.Core.ViewModels.Photo
         public Guid? UserOwnerId { get; set; }
 
         public ApplicationUser? Owner { get; set; }
+        public string? PhotoOwner { get; set; }
 
         public ICollection<string> Categories { get; set; } = new HashSet<string>();
 
