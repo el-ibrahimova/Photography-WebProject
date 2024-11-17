@@ -9,11 +9,11 @@
 
 @if (Model == null || !Model.Any())
 {
-    <div class="alert alert-warning text-center">
+    <div class="alert text-center">
         Кошницата е празна.
     </div>
 }
-else
+@* else
 {
     @foreach (var order in Model)
     {
@@ -62,7 +62,7 @@ else
 
         @* adding new field with offer and calculating total price *@
 
-        <script>
+    @*    <script>
             document.addEventListener("DOMContentLoaded", () => {
                 // Добавяне на нова услуга
                 document.querySelectorAll(".add-service").forEach(button => {
@@ -144,3 +144,25 @@ else
         </script>
     }
 }
+
+                    
+const orderItems = [];
+
+document.querySelectorAll('.service-row').forEach(row => {
+const offerId = row.querySelector('.service-select').value;
+const quantity = row.querySelector('.quantity-input').value;
+orderItems.push({ OfferId: offerId, Quantity: parseInt(quantity) });
+});
+
+fetch('/Order/UpdateOrder', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(orderItems)
+})
+.then(response => response.json())
+.then(data => {
+console.log('Общата цена е актуализирана:', data.totalPrice);
+});
+ *@

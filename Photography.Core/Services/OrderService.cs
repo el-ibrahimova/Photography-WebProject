@@ -14,38 +14,38 @@ namespace Photography.Core.Services
             context = data;
         }
 
-        
-        public async Task<ICollection<OrderListViewModel>> GetOrderForUserAsync(string userId)
+        public async Task<ICollection<OrderListViewModel>> GetOrdersWithOffers(string userId)
         {
-            return await context.OrderPhotos
-                       .Include(op => op.Photo)
-                       .Include(o => o.Order)
-                       .Include(o=>o.Offer)
-                       .Where(o => o.Order.UserId.ToString() == userId)
-                       .AsNoTracking()
+            
+          return await context.OrderPhotos
+                .Include(op => op.Photo)
+                .Include(o => o.Order)
+                .Include(o => o.Offer)
+                .Where(o => o.Order.UserId.ToString() ==userId )
+                .AsNoTracking()
                 .Select(o => new OrderListViewModel
                 {
                     OrderId = o.OrderId.ToString(),
                     ImageUrl = o.Photo.ImageUrl,
                     PhotoId = o.PhotoId.ToString(),
-                    Offers = o.Select(offer => new OfferViewModel
-                    {
-                        Id = offer.Id,
-                        Name = offer.Name,
-                        Price = offer.Price
-                    }).ToLista()
+                    Count = o.Count,
                 }).ToListAsync();
 
-                  }
-
-        public Task<bool> RemoveOrder(OrderListViewModel model)
+        }
+        public async Task<ICollection<OfferViewModel>> GetOffersAsync()
         {
-            throw new NotImplementedException();
+            return await context.Offers
+                .AsNoTracking()
+                .Select(c => new OfferViewModel()
+                {
+                    Id = c.Id.ToString(),
+                    Name = c.Name,
+                    Description = c.Description,
+                    Price = c.Price
+                })
+                .ToListAsync();
         }
 
-        public Task<bool> AcceptOrder(OrderListViewModel model)
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }
