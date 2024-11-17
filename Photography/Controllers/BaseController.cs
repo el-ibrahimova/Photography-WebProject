@@ -28,5 +28,7 @@ namespace Photography.Controllers
         {
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
         }
+
+      
     }
 }

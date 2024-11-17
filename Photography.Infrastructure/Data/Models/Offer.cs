@@ -18,10 +18,6 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Offer name")]
         public string Name { get; set; } = null!;
 
-        [MaxLength(DescriptionMaxLength)]
-        [Comment("Offer description")]
-        public string? Description { get; set; }
-
         [Comment("Offer price")]
         public decimal Price { get; set; }
     }

@@ -13,6 +13,7 @@ namespace Photography.Core.Services
         private readonly PhotographyDbContext context;
 
         public PhotoService(PhotographyDbContext data)
+            : base(data)
         {
             context = data;
         }

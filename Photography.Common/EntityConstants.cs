@@ -40,14 +40,18 @@
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 30;
-            public const int DescriptionMinLength = 5;
-            public const int DescriptionMaxLength = 200;
         }
 
         public static class OrderEntity
         {
             public const int NoteMinLength = 3;
             public const int NoteMaxLength = 200;
+        }
+
+        public static class Photographer
+        {
+            public const int BrandNameMinLength = 2;
+            public const int BrandNameMaxLength = 30;
         }
 
     }

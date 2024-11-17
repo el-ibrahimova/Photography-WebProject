@@ -21,7 +21,7 @@ namespace Photography.Infrastructure.Data.Configurations
                 new Offer() { Name = "Печат на снимка в размер 13x18", Price = 1.20m},
                 new Offer() { Name = "Печат на снимка в размер А4", Price = 2.00m},
                 new Offer() { Name = "Печат на снимка върху чаша", Price = 12.00m},
-                new Offer() { Name = "Печат на снимка върху тениска", Description = "Възможни са различни размери",Price = 18m}
+                new Offer() { Name = "Печат на снимка върху тениска",Price = 18m}
             };
 
             return offers;

@@ -9,7 +9,8 @@ namespace Photography.Core.Services
     {
         private readonly PhotographyDbContext context;
 
-        public GalleryService(PhotographyDbContext data)
+        public GalleryService(PhotographyDbContext data) 
+            : base(data)
         {
             context = data;
         }

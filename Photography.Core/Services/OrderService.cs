@@ -10,26 +10,27 @@ namespace Photography.Core.Services
         private readonly PhotographyDbContext context;
 
         public OrderService(PhotographyDbContext data)
+        :base(data)
         {
             context = data;
         }
 
         public async Task<ICollection<OrderListViewModel>> GetOrdersWithOffers(string userId)
         {
-            
-          return await context.OrderPhotos
-                .Include(op => op.Photo)
-                .Include(o => o.Order)
-                .Include(o => o.Offer)
-                .Where(o => o.Order.UserId.ToString() ==userId )
-                .AsNoTracking()
-                .Select(o => new OrderListViewModel
-                {
-                    OrderId = o.OrderId.ToString(),
-                    ImageUrl = o.Photo.ImageUrl,
-                    PhotoId = o.PhotoId.ToString(),
-                    Count = o.Count,
-                }).ToListAsync();
+
+            return await context.OrderPhotos
+                  .Include(op => op.Photo)
+                  .Include(o => o.Order)
+                  .Include(o => o.Offer)
+                  .Where(o => o.Order.UserId.ToString() == userId)
+                  .AsNoTracking()
+                  .Select(o => new OrderListViewModel
+                  {
+                      OrderId = o.OrderId.ToString(),
+                      ImageUrl = o.Photo.ImageUrl,
+                      PhotoId = o.PhotoId.ToString(),
+                      Count = o.Count,
+                  }).ToListAsync();
 
         }
         public async Task<ICollection<OfferViewModel>> GetOffersAsync()
@@ -40,12 +41,9 @@ namespace Photography.Core.Services
                 {
                     Id = c.Id.ToString(),
                     Name = c.Name,
-                    Description = c.Description,
                     Price = c.Price
                 })
                 .ToListAsync();
         }
-
-     
     }
 }

@@ -16,9 +16,17 @@ namespace Photography.Controllers
             photoService = _photoService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            bool isPhotographer =  photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
             var model = await photoService.GetAddPhotoAsync();
             return View(model);
         }
@@ -26,6 +34,13 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
+            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
             if (!ModelState.IsValid)
             {
                 model = await photoService.GetAddPhotoAsync();
@@ -38,6 +53,7 @@ namespace Photography.Controllers
 
             return RedirectToAction("Gallery", "Gallery");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> IncreaseRating(string id)
@@ -132,6 +148,13 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
+            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
             Guid photoGuid = Guid.Empty;
             if (!photoService.IsGuidValid(id, ref photoGuid))
             {
@@ -158,6 +181,13 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
+            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
             var result = await photoService.EditPhotoAsync(model);
 
             if (!result)
