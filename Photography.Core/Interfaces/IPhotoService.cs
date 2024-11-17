@@ -21,5 +21,7 @@ namespace Photography.Core.Interfaces
 
         Task<ICollection<CategoryViewModel>> GetCategoriesAsync();
         Task<ICollection<UserViewModel>> GetAllUsersAsync();
+
+        Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync();
     }
 }

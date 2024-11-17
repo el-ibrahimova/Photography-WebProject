@@ -314,5 +314,23 @@ namespace Photography.Core.Services
                       UserName = u.UserName ?? String.Empty
                   }).ToListAsync();
         }
+
+        public async Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync()
+        {
+            var photos = await context.Photos
+                .Where(p => p.IsDeleted == false)
+                .OrderBy(p => p.Rating)
+                .Select(p => new AllPhotosViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    ImageUrl = p.ImageUrl,
+                    UserOwnerId = p.UserOwnerId.ToString(),
+                    UserOwner = p.Owner,
+                    Rating = p.Rating
+                })
+                .ToListAsync();
+
+            return photos;
+        }
     }
 }

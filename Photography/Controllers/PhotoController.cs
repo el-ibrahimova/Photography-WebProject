@@ -21,7 +21,7 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (isPhotographer==false)
+            if (!isPhotographer)
             {
                 return RedirectToAction("Gallery", "Gallery");
             }
@@ -201,6 +201,21 @@ namespace Photography.Controllers
             }
             
             return RedirectToAction(nameof(Details), new { model.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
+            var photos = await photoService.GetAllPhotosAsync();
+
+            return View(photos);
         }
 
 

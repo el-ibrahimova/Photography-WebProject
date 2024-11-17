@@ -1,0 +1,40 @@
+﻿@using Photography.Core.ViewModels.Photo
+@model ICollection<AllPhotosViewModel>
+
+@{
+    ViewBag.Title = "Управление на снимки";
+}
+
+<h2 class="my-4 text-center">Управление на снимки</h2>
+
+<table class="table table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Снимка</th>
+            <th scope="col">Притежател</th>
+            <th scope="col">Рейтинг</th>
+            <th scope="col" class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var photo in Model)
+        {
+            <tr>
+                <td>@photo.ImageUrl</td>
+                <td>@photo.UserOwner</td>
+                <td>@photo.Rating</td>
+                <td class="text-center">
+                    <a asp-action="Details" asp-route-id="@photo.Id" class="btn btn-primary btn-sm me-2">
+                        <i class="bi bi-pencil-square"></i> Детайли
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@photo.Id" class="btn btn-warning btn-sm me-2">
+                        <i class="bi bi-pencil-square"></i> Редактирай
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@photo.Id" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash"></i> Изтрий
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
