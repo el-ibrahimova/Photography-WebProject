@@ -1,10 +1,9 @@
-﻿using System.Globalization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Photography.Core.Interfaces;
-using Photography.Core.ViewModels.Gallery;
 using Photography.Core.ViewModels.Photo;
-using Photography.Data;
+using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
+using System.Globalization;
 
 namespace Photography.Core.Services
 {
@@ -55,7 +54,7 @@ namespace Photography.Core.Services
 
             var photo = new Photo
             {
-                Title = model.Title,
+                TagUser = model.TagUser,
                 Description = model.Description,
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
@@ -124,11 +123,10 @@ namespace Photography.Core.Services
             return new DetailsViewModel()
             {
                 Id = photo.Id.ToString(),
-                Title = photo.Title,
+                TagUser = photo.TagUser,
                 ImageUrl = photo.ImageUrl,
                 Description = photo.Description,
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
-                IsFavorite = photo.IsFavorite,
                 IsPrivate = photo.IsPrivate,
                 IsDeleted = photo.IsDeleted,
                 Rating = photo.Rating,
@@ -148,7 +146,7 @@ namespace Photography.Core.Services
                  {
                      Id = fp.Photo.Id.ToString(),
                      ImageUrl = fp.Photo.ImageUrl,
-                     Title = fp.Photo.Title,
+                     TagUser = fp.Photo.TagUser,
                  })
                  .ToListAsync();
         }
@@ -211,7 +209,7 @@ namespace Photography.Core.Services
 
             var model = new EditPhotoViewModel()
             {
-                Title = photo.Title,
+                TagUser = photo.TagUser,
                 Description = photo.Description,
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
                 ImageUrl = photo.ImageUrl,
@@ -251,7 +249,7 @@ namespace Photography.Core.Services
                 return false; 
             }
 
-            photo.Title = model.Title;
+            photo.TagUser = model.TagUser;
             photo.ImageUrl = model.ImageUrl;
             photo.Description = model.Description;
             photo.IsPrivate = model.IsPrivate;
@@ -272,7 +270,7 @@ namespace Photography.Core.Services
                 .Select(p => new DeleteViewModel()
                 {
                     Id = p.Id.ToString(),
-                    Title = p.Title,
+                    TagUser = p.TagUser,
                     UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
                     DeletedAt = null,
                     UserOwnerId = p.UserOwnerId.ToString(),

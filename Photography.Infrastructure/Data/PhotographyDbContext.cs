@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Photography.Infrastructure.Data.Configurations;
 using Photography.Infrastructure.Data.Models;
 
-namespace Photography.Data
+namespace Photography.Infrastructure.Data
 {
     public class PhotographyDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {

@@ -14,10 +14,9 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Photo identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required]
-        [MaxLength(TitleMaxLength)]
-        [Comment("Title of the photo")]
-        public string Title { get; set; } = null!;
+        [MaxLength(TagUserMaxLength)]
+        [Comment("Tag user")]
+        public string? TagUser { get; set; }
 
         [MaxLength(DescriptionMaxLength)]
         [Comment("Description of the photo")]
@@ -42,9 +41,6 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Is the photo deleted or not")]
         public bool IsDeleted { get; set; }
 
-        [Required]
-        [Comment("Is the photo selected as favorite")]
-        public bool IsFavorite { get; set; }
 
         [Required]
         [Comment("Is the photo private ot public")]

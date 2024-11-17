@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Gallery;
-using Photography.Data;
+using Photography.Infrastructure.Data;
 
 namespace Photography.Core.Services
 {
@@ -20,7 +20,7 @@ namespace Photography.Core.Services
                 .Select(p => new GalleryViewModel()
                 {
                     Id = p.Id.ToString(),
-                    Title = p.Title,
+                    TagUser = p.TagUser,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
                     Rating = p.Rating
@@ -38,7 +38,7 @@ namespace Photography.Core.Services
                 .Select(p => new MyGalleryViewModel()
                 {
                     Id = p.Id.ToString(),
-                    Title = p.Title,
+                    TagUser = p.TagUser,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
                     UserOwnerId = userId.ToString()

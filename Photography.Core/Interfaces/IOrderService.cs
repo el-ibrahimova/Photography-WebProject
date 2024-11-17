@@ -1,5 +1,4 @@
 ﻿using Photography.Core.ViewModels.Order;
-using Photography.Core.ViewModels.Photo;
 
 namespace Photography.Core.Interfaces
 {

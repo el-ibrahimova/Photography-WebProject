@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Photography.Core.Interfaces;
+﻿using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Order;
-using Photography.Core.ViewModels.Photo;
-using Photography.Data;
+using Photography.Infrastructure.Data;
 
 namespace Photography.Core.Services
 {

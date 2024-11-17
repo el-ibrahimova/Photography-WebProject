@@ -6,7 +6,7 @@ namespace Photography.Core.ViewModels.Photo
     {
         public string Id { get; set; } = null!;
 
-        public string Title { get; set; } = null!;
+        public string? TagUser { get; set; } 
         public string? Description { get; set; }
 
         public int Rating { get; set; }
@@ -17,7 +17,6 @@ namespace Photography.Core.ViewModels.Photo
 
         public bool IsDeleted { get; set; }
 
-        public bool IsFavorite { get; set; }
 
         public bool IsPrivate { get; set; }
 

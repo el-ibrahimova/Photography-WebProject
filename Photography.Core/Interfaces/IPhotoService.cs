@@ -1,5 +1,4 @@
-﻿using Photography.Core.ViewModels.Gallery;
-using Photography.Core.ViewModels.Photo;
+﻿using Photography.Core.ViewModels.Photo;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Core.Interfaces

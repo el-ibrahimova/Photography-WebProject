@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Photography.Data;
+using Photography.Infrastructure.Data;
 
 #nullable disable
 
@@ -181,7 +181,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 10, 21, 46, 37, 383, DateTimeKind.Local).AddTicks(6397))
+                        .HasDefaultValue(new DateTime(2024, 11, 17, 9, 39, 48, 266, DateTimeKind.Local).AddTicks(6108))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -258,52 +258,52 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3be16e03-fda1-49fa-9e67-078a4b84a9ba"),
+                            Id = new Guid("a72a41b7-fa6c-4efc-bbef-ad4ffa07fd39"),
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = new Guid("ba54fedb-9caa-4e89-b11a-979fbeeb6541"),
+                            Id = new Guid("1cdea3e7-0f92-4dab-92dc-1e3d6a37a1f8"),
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = new Guid("6cfb4730-8136-4354-b017-02ca3ac34a2b"),
+                            Id = new Guid("7e53213f-0951-437a-9613-a18db925bba9"),
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = new Guid("09dcd4f9-eeb9-4f9f-bdec-6adcabc76f34"),
+                            Id = new Guid("5cc78c54-44f7-4895-8db0-d762968f1001"),
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = new Guid("80287d2e-c344-4861-be81-7e476d139d1d"),
+                            Id = new Guid("8256a07f-e113-4f3c-8725-1c5368c7694d"),
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = new Guid("8800b3ba-4393-483a-8335-6002d7119bcc"),
+                            Id = new Guid("a550a3d7-c39f-4506-bed6-2715b0970675"),
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = new Guid("eef882b4-fb25-4d8d-88a4-c70fd931611d"),
+                            Id = new Guid("9b627dc8-34fd-40fc-b615-ba1fb3a68e3e"),
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = new Guid("916f85ed-c97f-40af-bc9c-053772cc73c3"),
+                            Id = new Guid("75bdf241-2093-455c-b640-869f9b4bf52a"),
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = new Guid("96a4cab3-a1d2-442d-a5f7-cf8f8e0c427f"),
+                            Id = new Guid("7060b10c-0ce1-4c2e-87c9-c071c517b6c3"),
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = new Guid("47bacd1f-e3ae-4a8a-8aa7-c05f2e10a87f"),
+                            Id = new Guid("0ef7c457-fec7-4c00-a334-762e6a84d3f9"),
                             Name = "Пейзажи"
                         });
                 });
@@ -398,6 +398,45 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("Offers", t =>
                         {
                             t.HasComment("Offers");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0f3e9895-7485-411c-a113-001e68455bab"),
+                            Name = "Печат на снимка в размер 9х13",
+                            Price = 0.40m
+                        },
+                        new
+                        {
+                            Id = new Guid("a22e5e73-4ee9-4f2f-99e4-c5c168c16595"),
+                            Name = "Печат на снимка в размер 10x15",
+                            Price = 0.45m
+                        },
+                        new
+                        {
+                            Id = new Guid("14de24dc-e762-4ec8-801d-f101e811239f"),
+                            Name = "Печат на снимка в размер 13x18",
+                            Price = 1.20m
+                        },
+                        new
+                        {
+                            Id = new Guid("eea06896-0a27-4fc8-9fcf-b7fc4be1077d"),
+                            Name = "Печат на снимка в размер А4",
+                            Price = 2.00m
+                        },
+                        new
+                        {
+                            Id = new Guid("d134ca62-15d6-4db3-9854-a093d8bb3160"),
+                            Name = "Печат на снимка върху чаша",
+                            Price = 12.00m
+                        },
+                        new
+                        {
+                            Id = new Guid("a5c2d5e5-3252-4e5e-b1c2-c77695b98140"),
+                            Description = "Възможни са различни размери",
+                            Name = "Печат на снимка върху тениска",
+                            Price = 18m
                         });
                 });
 
@@ -501,12 +540,6 @@ namespace Photography.Infrastructure.Migrations
                         .HasDefaultValue(false)
                         .HasComment("Is the photo deleted or not");
 
-                    b.Property<bool>("IsFavorite")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Is the photo selected as favorite");
-
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit")
                         .HasComment("Is the photo private ot public");
@@ -517,11 +550,10 @@ namespace Photography.Infrastructure.Migrations
                         .HasDefaultValue(0)
                         .HasComment("Rating of the photo");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
+                    b.Property<string>("TagUser")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
-                        .HasComment("Title of the photo");
+                        .HasComment("Tag user");
 
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2")

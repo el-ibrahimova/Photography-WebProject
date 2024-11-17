@@ -9,6 +9,7 @@ namespace Photography.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.Property(p => p.IsDeleted)
+                .IsRequired(true)
                 .HasDefaultValue(false);
         }
     }

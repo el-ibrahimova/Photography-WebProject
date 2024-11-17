@@ -1,11 +1,10 @@
-﻿using Photography.Infrastructure.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Photography.Core.ViewModels.Photo
 {
+    using static Common.ApplicationConstants;
     using static Common.EntityConstants.PhotoEntity;
     using static Common.EntityValidationMessages;
-    using static Common.ApplicationConstants;
     public class AddPhotoViewModel
     {
         public AddPhotoViewModel()
@@ -16,9 +15,8 @@ namespace Photography.Core.ViewModels.Photo
 
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = PhotoTitleRequiredMessage)]
-        [StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]
-        public string Title { get; set; } = null!;
+        [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength)]
+        public string? TagUser { get; set; } 
 
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string? Description { get; set; }

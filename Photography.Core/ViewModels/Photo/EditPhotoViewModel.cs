@@ -13,9 +13,8 @@ namespace Photography.Core.ViewModels.Photo
         }
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = PhotoTitleRequiredMessage)]
-        [StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]
-        public string Title { get; set; } = null!;
+        [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength)]
+        public string? TagUser { get; set; } 
 
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string? Description { get; set; }

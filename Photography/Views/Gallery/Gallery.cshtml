@@ -11,8 +11,8 @@
 
 @if (TempData["HasVoted"] != null)
 {
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong> Вече гласувахте за тази снимка.</strong>
+    <div id="voteAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> Вече гласувахте за тази снимка!</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
@@ -26,22 +26,22 @@
         {
             <div class="card col-4" style="width: 20rem; ">
                 <div class="card-body">
-                    <h4 class="card-title mt-1">@photo.Title</h4>
+                    <h4 class="card-title mt-1">@photo.TagUser</h4>
                     <img class="card-img-top" src=@photo.ImageUrl alt="Image">
                     <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
                 </div>
-                
+
                 <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
 
-                @if (this.User?.Identity?.IsAuthenticated ?? false)
+                @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                  <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
-                        <input type="hidden" name="id" value="@photo.Id"/>
+                    <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
+                        <input type="hidden" name="id" value="@photo.Id" />
                         <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>
                     </form>
 
                     <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
-                        <input type="hidden" name="id" value="@photo.Id"/>
+                        <input type="hidden" name="id" value="@photo.Id" />
                         <button type="submit" class="btn btn-success w-100">Добави в любими</button>
                     </form>
                 }
@@ -49,6 +49,26 @@
         }
     }
 </div>
-        @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-        }
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+
+    @*  script for hiding alert after 3 seconds *@
+    <script>
+        document.addEventListener("DOMContentLoaded",
+            function() {
+                var alert = document.getElementById("voteAlert");
+                if (alert) {
+
+                    setTimeout(function() {
+                            var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
+                            bsAlert.close();
+                        },
+                        3000);
+                }
+            });
+    
+        
+    </script>
+}

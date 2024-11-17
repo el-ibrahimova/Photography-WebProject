@@ -14,14 +14,14 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title text-center">@Model.Title</h3>
+                <h3 class="card-title text-center">@Model.TagUser</h3>
                 <p class="mb-0"><strong>Принадлежи на:</strong> @Model.Owner</p>
-                <p class="text-danger mt-3">Сигурни ли сте, че искате да изтриете снимката @(Model.Title)?</p>
+                <p class="text-danger mt-3">Сигурни ли сте, че искате да изтриете снимката @(Model.TagUser)?</p>
             </div>
             <div class="card-footer">
                 <form asp-action="Delete" method="post">
                     <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="Title" />
+                    <input type="hidden" asp-for="TagUser" />
                     <input type="hidden" asp-for="UserOwnerId" />
 
                     <button type="submit" class="btn btn-danger">Да</button>

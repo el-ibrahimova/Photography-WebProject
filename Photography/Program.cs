@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Photography.Data;
 using Photography.Extensions;
+using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography

@@ -10,8 +10,8 @@
 
         public static class PhotoEntity
         {
-            public const int TitleMinLength = 3;
-            public const int TitleMaxLength = 20;
+            public const int TagUserMinLength = 3;
+            public const int TagUserMaxLength = 20;
             public const int DescriptionMinLength = 5;
             public const int DescriptionMaxLength = 100;
             public const int ImageUrlMinLength = 10;

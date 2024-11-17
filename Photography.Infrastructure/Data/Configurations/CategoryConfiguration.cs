@@ -8,7 +8,7 @@ namespace Photography.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.HasData(this.SeedCategories());
+            builder.HasData(SeedCategories());
         }
 
         private IEnumerable<Category> SeedCategories()

@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Photography.Data;
+using Photography.Infrastructure.Data;
 
 #nullable disable
 
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    [Migration("20241103192749_InitialWithApplicationUser")]
-    partial class InitialWithApplicationUser
+    [Migration("20241117073952_Initial3")]
+    partial class Initial3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,7 +184,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 3, 21, 27, 47, 404, DateTimeKind.Local).AddTicks(2447))
+                        .HasDefaultValue(new DateTime(2024, 11, 17, 9, 39, 48, 266, DateTimeKind.Local).AddTicks(6108))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -261,52 +261,52 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0371863c-bea0-4e75-939e-ebc016fcabf9"),
+                            Id = new Guid("a72a41b7-fa6c-4efc-bbef-ad4ffa07fd39"),
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = new Guid("503b7bc1-b1b6-46fa-a955-1f761aa924aa"),
+                            Id = new Guid("1cdea3e7-0f92-4dab-92dc-1e3d6a37a1f8"),
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = new Guid("49a0f76e-6db0-4621-aa65-cce718e43232"),
+                            Id = new Guid("7e53213f-0951-437a-9613-a18db925bba9"),
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = new Guid("7b620839-a792-48db-b328-7beb1dd6c491"),
+                            Id = new Guid("5cc78c54-44f7-4895-8db0-d762968f1001"),
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = new Guid("87ab7874-e2a4-4a1d-920f-c2c45629186e"),
+                            Id = new Guid("8256a07f-e113-4f3c-8725-1c5368c7694d"),
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = new Guid("b0713c2a-3b1f-4d6f-acd4-c1678c4c9627"),
+                            Id = new Guid("a550a3d7-c39f-4506-bed6-2715b0970675"),
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = new Guid("2f235d36-599c-4752-827d-a0d38170f641"),
+                            Id = new Guid("9b627dc8-34fd-40fc-b615-ba1fb3a68e3e"),
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = new Guid("175deaac-baa2-49b2-97f4-391fd95c457d"),
+                            Id = new Guid("75bdf241-2093-455c-b640-869f9b4bf52a"),
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = new Guid("5b31304d-0dfe-4749-b10f-927a601354e5"),
+                            Id = new Guid("7060b10c-0ce1-4c2e-87c9-c071c517b6c3"),
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = new Guid("2f43aab4-979b-421b-9e4d-85284cd38cd2"),
+                            Id = new Guid("0ef7c457-fec7-4c00-a334-762e6a84d3f9"),
                             Name = "Пейзажи"
                         });
                 });
@@ -380,51 +380,66 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Offer identifier");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("Offer description");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
                         .HasComment("Offer name");
 
-                    b.Property<Guid>("OfferTypeId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Offer type identifier");
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasComment("Offer price");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OfferTypeId");
 
                     b.ToTable("Offers", t =>
                         {
                             t.HasComment("Offers");
                         });
-                });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.OfferType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Type identifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Type description");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OfferTypes", t =>
+                    b.HasData(
+                        new
                         {
-                            t.HasComment("Type of offer");
+                            Id = new Guid("0f3e9895-7485-411c-a113-001e68455bab"),
+                            Name = "Печат на снимка в размер 9х13",
+                            Price = 0.40m
+                        },
+                        new
+                        {
+                            Id = new Guid("a22e5e73-4ee9-4f2f-99e4-c5c168c16595"),
+                            Name = "Печат на снимка в размер 10x15",
+                            Price = 0.45m
+                        },
+                        new
+                        {
+                            Id = new Guid("14de24dc-e762-4ec8-801d-f101e811239f"),
+                            Name = "Печат на снимка в размер 13x18",
+                            Price = 1.20m
+                        },
+                        new
+                        {
+                            Id = new Guid("eea06896-0a27-4fc8-9fcf-b7fc4be1077d"),
+                            Name = "Печат на снимка в размер А4",
+                            Price = 2.00m
+                        },
+                        new
+                        {
+                            Id = new Guid("d134ca62-15d6-4db3-9854-a093d8bb3160"),
+                            Name = "Печат на снимка върху чаша",
+                            Price = 12.00m
+                        },
+                        new
+                        {
+                            Id = new Guid("a5c2d5e5-3252-4e5e-b1c2-c77695b98140"),
+                            Description = "Възможни са различни размери",
+                            Name = "Печат на снимка върху тениска",
+                            Price = 18m
                         });
                 });
 
@@ -450,8 +465,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier")
@@ -471,14 +486,6 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.OrderPhoto", b =>
                 {
-                    b.Property<Guid>("OrderPhotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Order photo identifier");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Order identifier");
@@ -487,9 +494,18 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
 
-                    b.HasKey("OrderPhotoId");
+                    b.Property<Guid>("OfferId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("OrderId");
+                    b.Property<int>("Count")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1)
+                        .HasComment("Count of ordered photos");
+
+                    b.HasKey("OrderId", "PhotoId", "OfferId");
+
+                    b.HasIndex("OfferId");
 
                     b.HasIndex("PhotoId");
 
@@ -505,6 +521,10 @@ namespace Photography.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of photo uploading");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
@@ -523,12 +543,6 @@ namespace Photography.Infrastructure.Migrations
                         .HasDefaultValue(false)
                         .HasComment("Is the photo deleted or not");
 
-                    b.Property<bool>("IsFavorite")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Is the photo selected as favorite");
-
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit")
                         .HasComment("Is the photo private ot public");
@@ -539,11 +553,10 @@ namespace Photography.Infrastructure.Migrations
                         .HasDefaultValue(0)
                         .HasComment("Rating of the photo");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
+                    b.Property<string>("TagUser")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
-                        .HasComment("Title of the photo");
+                        .HasComment("Tag user");
 
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2")
@@ -552,10 +565,6 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<Guid?>("UserOwnerId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Is the user owner of photo");
-
-                    b.Property<int>("VoteCount")
-                        .HasColumnType("int")
-                        .HasComment("Number of photo votes");
 
                     b.HasKey("Id");
 
@@ -597,10 +606,6 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<Guid>("PhotoId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Photo identifier");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int")
-                        .HasComment("Rate");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier")
@@ -707,17 +712,6 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Offer", b =>
-                {
-                    b.HasOne("Photography.Infrastructure.Data.Models.OfferType", "OfferType")
-                        .WithMany()
-                        .HasForeignKey("OfferTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OfferType");
-                });
-
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Order", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.Offer", "Offer")
@@ -739,6 +733,12 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.OrderPhoto", b =>
                 {
+                    b.HasOne("Photography.Infrastructure.Data.Models.Offer", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Photography.Infrastructure.Data.Models.Order", "Order")
                         .WithMany("OrderPhotos")
                         .HasForeignKey("OrderId")
@@ -750,6 +750,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasForeignKey("PhotoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Offer");
 
                     b.Navigation("Order");
 
@@ -787,13 +789,13 @@ namespace Photography.Infrastructure.Migrations
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoRating", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.Photo", "Photo")
-                        .WithMany("Ratings")
+                        .WithMany("PhotosRatings")
                         .HasForeignKey("PhotoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
-                        .WithMany("Ratings")
+                        .WithMany("PhotosRatings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -811,7 +813,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.Navigation("Photos");
 
-                    b.Navigation("Ratings");
+                    b.Navigation("PhotosRatings");
                 });
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Category", b =>
@@ -834,7 +836,7 @@ namespace Photography.Infrastructure.Migrations
 
                     b.Navigation("PhotosCategories");
 
-                    b.Navigation("Ratings");
+                    b.Navigation("PhotosRatings");
                 });
 #pragma warning restore 612, 618
         }
