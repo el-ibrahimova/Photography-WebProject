@@ -20,7 +20,6 @@ namespace Photography.Infrastructure.Data
 
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Photo> Photos { get; set; } = null!;
-        public DbSet<Comment> Comments { get; set; } = null!;
         public DbSet<FavoritePhoto> FavoritePhotos { get; set; }= null!;
         public DbSet<Offer> Offers { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
@@ -34,7 +33,6 @@ namespace Photography.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfiguration(new CommentConfiguration());
             builder.ApplyConfiguration(new FavoritePhotoConfiguration());
             builder.ApplyConfiguration(new OrderConfiguration());
             builder.ApplyConfiguration(new PhotoConfiguration());

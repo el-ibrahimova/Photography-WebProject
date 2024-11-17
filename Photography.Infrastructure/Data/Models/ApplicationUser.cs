@@ -28,8 +28,6 @@ namespace Photography.Infrastructure.Data.Models
 
         public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
-        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
-
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
         public ICollection<PhotoRating> PhotosRatings { get; set; } = new List<PhotoRating>();
     }

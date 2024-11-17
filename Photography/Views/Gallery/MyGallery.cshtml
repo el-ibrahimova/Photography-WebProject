@@ -28,6 +28,11 @@
                     <input type="hidden" name="id" value="@photo.Id" />
                     <button type="submit" class="btn btn-success w-100">Добави в любими</button>
                 </form>
+                
+                <form asp-controller="Order" asp-action="OrderList" method="post">
+                    <input type="hidden" name="id" value="@photo.Id" />
+                    <button type="submit" class="btn btn-success w-100">Добави в кошница</button>
+                </form>
             </div>
         }
     }

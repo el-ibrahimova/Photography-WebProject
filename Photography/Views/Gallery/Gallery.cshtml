@@ -20,8 +20,6 @@
 <div class="text-center row">
     @foreach (var photo in Model)
     {
-        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         if (!photo.IsPrivate)
         {
             <div class="card col-4" style="width: 20rem; ">
@@ -43,6 +41,11 @@
                     <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
                         <input type="hidden" name="id" value="@photo.Id" />
                         <button type="submit" class="btn btn-success w-100">Добави в любими</button>
+                    </form>
+
+                    <form asp-controller="Order" asp-action="OrderList" method="post">
+                        <input type="hidden" name="id" value="@photo.Id" />
+                        <button type="submit" class="btn btn-success w-100">Добави в кошница</button>
                     </form>
                 }
             </div>

@@ -19,13 +19,7 @@ namespace Photography.Infrastructure.Data.Models
 
         public ApplicationUser User { get; set; } = null!;
 
-        [Required]
-        [Comment("Offer identifier")]
-        public Guid OfferId { get; set; }
-
-        public Offer Offer { get; set; } = null!;
-
-        
+      
         public Status Status { get; set; }
 
         public DateTime OrderDate { get; set; }
