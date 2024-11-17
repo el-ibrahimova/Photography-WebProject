@@ -16,13 +16,12 @@ namespace Photography.Controllers
             photoService = _photoService;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            bool isPhotographer =  photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
+            if (isPhotographer==false)
             {
                 return RedirectToAction("Gallery", "Gallery");
             }
@@ -34,9 +33,9 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer =await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
+            if (isPhotographer==false)
             {
                 return RedirectToAction("Gallery", "Gallery");
             }
@@ -148,7 +147,7 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
             if (!isPhotographer)
             {
@@ -181,7 +180,7 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
-            bool isPhotographer = photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer =await photoService.IsUserPhotographerAsync(GetUserId());
 
             if (!isPhotographer)
             {

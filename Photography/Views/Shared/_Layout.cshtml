@@ -18,12 +18,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Photography</title>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
 
     <link rel="stylesheet" href="~/css/myCssTheme.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    <link rel="icon" type="image/png" sizes="25x10" href="~/images/nies-logo.png">
+    <link rel="icon" type="image/png" sizes="5x2" href="~/images/nies-logo.png">
 </head>
 
 <body>
@@ -39,13 +37,16 @@
                         <li class="nav-item">
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Gallery">Галерия</a>
+                        </li>
 
-                        @if (!this.User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            @if(baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                        @if (this.User?.Identity?.IsAuthenticated ?? false){
+                       
+                            @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="managerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="photographerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Фотограф
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="photographerDropdown">
@@ -56,18 +57,12 @@
                             }
 
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Gallery">Галерия</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
                                 <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
                             </li>
-                          <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Favorite">Любими</a>
                             </li>
-                         
+
                             <li class="nav-item">
                                 <a class="navbar-brand" asp-area="" asp-controller="Order" asp-action="OrderList">Кошница</a>
                             </li>
@@ -77,7 +72,7 @@
                             <button class="btn btn-secondary my-2 my-sm-0" type="submit">Търси</button>
                         </form>
 
-                        
+
                     </ul>
 
                     <partial name="_LoginPartial" />

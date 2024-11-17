@@ -1,6 +1,10 @@
 ﻿@using Photography.Core.ViewModels.Photo
 @using System.Security.Claims
+@using Photography.Core.Interfaces
+@using Photography.Extensions
 @model DetailsViewModel
+
+@inject IBaseService baseService
 
 @{
     ViewBag.Title = "Детайли";
@@ -60,19 +64,17 @@
                 @if (User?.Identity?.IsAuthenticated == true && currentUserId == @Model.UserOwnerId.ToString() && @Model.IsDeleted == false)
                 {
                     <a asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">Изтрий</a>
-                    <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>
+
+                    @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                    {
+                        <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>
+                    }
 
                     <form asp-controller="Photo" asp-action="AddToFavorite" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
                         <input type="hidden" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-success w-100">Добави в любими</button>
                     </form>
                 }
-
-                @if (User.IsInRole("Administrator") && @Model.IsDeleted == false)
-                {
-
-                }
-
             </div>
         </div>
     </div>

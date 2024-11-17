@@ -21,11 +21,7 @@
         </div>
       
         <div class="d-flex flex-column align-items-end">
-            <form asp-controller="Order" asp-action="OrderList" asp-route-id="@photo.Id" method="post" >
-                <input type="hidden" name="id" value="@photo.Id" />
-                <button type="submit" class="btn btn-success mb-2 w-100 button-height">Поръчай</button>
-            </form>
-
+           
             <form asp-controller="Photo" asp-action="RemoveFromFavorite" asp-route-id="@photo.Id" method="post">
                 <input type="hidden" name="id" value="@photo.Id" />
                 <button type="submit" class="btn btn-danger mb-2 w-100 button-height">Премахни от любими</button>

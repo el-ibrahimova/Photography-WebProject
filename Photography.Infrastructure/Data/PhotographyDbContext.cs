@@ -27,6 +27,7 @@ namespace Photography.Infrastructure.Data
         public DbSet<PhotoCategory> PhotosCategories { get; set; } = null!;
 
         public DbSet<PhotoRating> PhotosRatings { get; set; } = null!;
+        public DbSet<Photographer> Photographers { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -4,7 +4,7 @@ using Photography.Infrastructure.Data;
 
 namespace Photography.Core.Services
 {
-    public class BaseService:IBaseService
+    public class BaseService : IBaseService
     {
         private readonly PhotographyDbContext context;
 
@@ -12,6 +12,7 @@ namespace Photography.Core.Services
         {
             context = data;
         }
+
         public bool IsGuidValid(string? id, ref Guid parsedGuid)
         {
             // non-existing parameter in the URL
@@ -31,15 +32,14 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public bool IsUserPhotographerAsync(string? userId)
+        public async Task<bool> IsUserPhotographerAsync(string? userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return false;
             }
 
-            bool result =  context.Users
-                .Any(p => p.Id.ToString().ToLower() == userId);
+            bool result = await this.context.Photographers.AnyAsync(m => m.UserId.ToString().ToLower() == userId);
 
             return result;
         }
