@@ -2,13 +2,13 @@
 {
     public static class EntityConstants
     {
-        public static class CategoryEntity
+        public static class Category
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 30;
         }
 
-        public static class PhotoEntity
+        public static class Photo
         {
             public const int TagUserMinLength = 3;
             public const int TagUserMaxLength = 20;
@@ -20,7 +20,7 @@
             public const int RatingMaxValue = 10;
         }
 
-        public static class UserEntity
+        public static class User
         {
             public const int FirstNameMinLength = 2;
             public const int FirstNameMaxLength = 20;
@@ -36,13 +36,13 @@
             public const int PhoneNumberMaxLength = 20;
         }
 
-        public static class OfferEntity
+        public static class Offer
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 30;
         }
 
-        public static class OrderEntity
+        public static class Order
         {
             public const int NoteMinLength = 3;
             public const int NoteMaxLength = 200;

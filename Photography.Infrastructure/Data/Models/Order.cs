@@ -24,7 +24,7 @@ namespace Photography.Infrastructure.Data.Models
 
         public DateTime OrderDate { get; set; }
 
-        [MaxLength(Common.EntityConstants.OrderEntity.NoteMaxLength)]
+        [MaxLength(Common.EntityConstants.Order.NoteMaxLength)]
         public string? Note { get; set; }
 
         public decimal TotalAmount { get; set; }

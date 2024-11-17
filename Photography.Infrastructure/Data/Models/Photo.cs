@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Photography.Infrastructure.Data.Models
 {
-    using static Common.EntityConstants.PhotoEntity;
+    using static Common.EntityConstants.Photo;
 
     [Comment("Photo information")]
     public class Photo

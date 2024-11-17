@@ -2,7 +2,7 @@
 
 namespace Photography.Core.ViewModels.Photo
 {
-    using static Common.EntityConstants.PhotoEntity;
+    using static Common.EntityConstants.Photo;
     using static Common.EntityValidationMessages;
     using static Common.ApplicationConstants;
     public class EditPhotoViewModel

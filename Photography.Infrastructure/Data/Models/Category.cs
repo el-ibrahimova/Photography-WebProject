@@ -13,7 +13,7 @@ namespace Photography.Infrastructure.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        [MaxLength(Common.EntityConstants.CategoryEntity.NameMaxLength)]
+        [MaxLength(Common.EntityConstants.Category.NameMaxLength)]
         [Comment("Name of the category")]
         public string Name { get; set; } = null!;
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using static Photography.Common.EntityConstants.OfferEntity;
+using static Photography.Common.EntityConstants.Offer;
 
 namespace Photography.Infrastructure.Data.Models
 {

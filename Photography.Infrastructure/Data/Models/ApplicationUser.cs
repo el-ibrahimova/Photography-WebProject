@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Photography.Infrastructure.Data.Models
 {
-    using static Common.EntityConstants.UserEntity;
+    using static Common.EntityConstants.User;
 
     public class ApplicationUser : IdentityUser<Guid>
     {

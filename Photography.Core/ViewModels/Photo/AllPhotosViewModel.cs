@@ -8,7 +8,6 @@ namespace Photography.Core.ViewModels.Photo
         public string Id { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public int Rating { get; set; }
-        public string UserOwnerId { get; set; } = null!;
         public ApplicationUser UserOwner { get; set; } = null!;
     }
 }

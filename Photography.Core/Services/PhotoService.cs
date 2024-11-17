@@ -319,12 +319,11 @@ namespace Photography.Core.Services
         {
             var photos = await context.Photos
                 .Where(p => p.IsDeleted == false)
-                .OrderBy(p => p.Rating)
+                .OrderByDescending(p => p.Rating)
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),
                     ImageUrl = p.ImageUrl,
-                    UserOwnerId = p.UserOwnerId.ToString(),
                     UserOwner = p.Owner,
                     Rating = p.Rating
                 })
