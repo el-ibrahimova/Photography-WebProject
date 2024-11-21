@@ -10,5 +10,7 @@ namespace Photography.Core.ViewModels.Category
         [Required(ErrorMessage =CategoryNameRequiredMessage )]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
         public string Name { get; set; } = null!;
+
+        public bool IsDeleted { get; set; }
     }
 }

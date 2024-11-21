@@ -1,0 +1,42 @@
+﻿@using Photography.Core.ViewModels.Category
+@model IEnumerable<AllCategoryViewModel>
+
+@{
+    ViewBag.Title = "Управление на категории";
+}
+
+<h2 class="my-4 text-center">Управление на категории</h2>
+
+
+<div class="d-flex justify-content-end mb-4">
+    <a asp-action="Add" class="btn btn-success btn-lg">
+        <i class="bi bi-plus-circle"></i> Добави нова категория
+    </a>
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead class="table-light">
+    <tr>
+        <th scope="col">Име на категория</th>
+        <th scope="col">Брой снимки в тази категория</th>
+       
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var category in Model)
+    {
+        <tr>
+            <td>@category.Name</td>
+            <td>@category.PhotosCategories.Count()</td>
+            <td class="text-center">
+                <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-warning btn-sm me-2">
+                    <i class="bi bi-pencil-square"></i> Редактирай
+                </a>
+                <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> Изтрий
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

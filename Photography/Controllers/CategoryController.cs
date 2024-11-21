@@ -5,6 +5,7 @@ using Photography.Core.Interfaces;
 using Photography.Core.Services;
 using Photography.Core.ViewModels.Category;
 using Photography.Core.ViewModels.Photo;
+using CategoryFormViewModel = Photography.Core.ViewModels.Category.CategoryFormViewModel;
 
 namespace Photography.Controllers
 {
@@ -17,9 +18,20 @@ namespace Photography.Controllers
         {
             categoryService=_categoryService;
         }
-        public IActionResult Manage()
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
         {
-            return View();
+            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
+            var categories = await categoryService.GetAllCategoriesAsync();
+
+            return View(categories);
         }
 
 
@@ -72,7 +84,7 @@ namespace Photography.Controllers
                 return RedirectToAction("Manage", "Category");
             }
 
-            var model = await categoryService.GetCategoryToEditAsync(categoryGuid);
+            var model = await categoryService.GetCategoryToEditAsync(id);
             if (model == null)
             {
                 return BadRequest();
@@ -82,7 +94,7 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditCategoryViewModel model)
+        public async Task<IActionResult> Edit(CategoryFormViewModel model)
         {
             bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
@@ -100,10 +112,25 @@ namespace Photography.Controllers
 
             return RedirectToAction("Manage", "Category");
         }
-        public IActionResult Remove()
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
         {
-            return View();
+            var model = await categoryService.GetCategoryDelete(id);
+
+            if (model == null)
+            {
+                return RedirectToAction("Manage", "Category");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(CategoryFormViewModel model)
+        {
+            var categoryToDelete = await categoryService.DeleteCategoryAsync(model.Id);
+            return RedirectToAction("Manage", "Category");
         }
     }
-
 }

@@ -8,6 +8,9 @@ namespace Photography.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
+            builder.Property(c => c.IsDeleted)
+                .HasDefaultValue(false);
+
             builder.HasData(SeedCategories());
         }
 
@@ -15,16 +18,16 @@ namespace Photography.Infrastructure.Data.Configurations
         {
             IEnumerable<Category> categories = new List<Category>()
             {
-                new Category() { Name = "Животни", },
-                new Category() { Name = "Природа", },
-                new Category() { Name = "Храна и напитки", },
-                new Category() { Name = "Семейна фотография", },
-                new Category() { Name = "Спорт", },
-                new Category() { Name = "Архитектура", },
-                new Category() { Name = "Пътуваня и дестинации", },
-                new Category() { Name = "Черно-бяла фотография", },
-                new Category() { Name = "Мода", },
-                new Category() { Name = "Пейзажи", }
+                new Category() { Name = "Животни", IsDeleted = false},
+                new Category() { Name = "Природа", IsDeleted = false },
+                new Category() { Name = "Храна и напитки", IsDeleted = false},
+                new Category() { Name = "Семейна фотография", IsDeleted = false },
+                new Category() { Name = "Спорт", IsDeleted = false},
+                new Category() { Name = "Архитектура", IsDeleted = false},
+                new Category() { Name = "Пътуваня и дестинации",IsDeleted = false },
+                new Category() { Name = "Черно-бяла фотография", IsDeleted = false},
+                new Category() { Name = "Мода", IsDeleted = false },
+                new Category() { Name = "Пейзажи",IsDeleted = false }
             };
 
             return categories;

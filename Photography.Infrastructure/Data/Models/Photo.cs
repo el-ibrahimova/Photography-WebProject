@@ -55,7 +55,6 @@ namespace Photography.Infrastructure.Data.Models
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
 
-        public ICollection<OrderPhoto> OrderPhotos { get; set; } = new HashSet<OrderPhoto>();
 
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
         public ICollection<PhotoRating> PhotosRatings { get; set; } = new HashSet<PhotoRating>();

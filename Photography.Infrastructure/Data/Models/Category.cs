@@ -17,6 +17,9 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Name of the category")]
         public string Name { get; set; } = null!;
 
+        [Comment("Is category deleted")]
+        public bool IsDeleted { get; set; }
+
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
     }
 }

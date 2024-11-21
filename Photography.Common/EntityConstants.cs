@@ -36,23 +36,11 @@
             public const int PhoneNumberMaxLength = 20;
         }
 
-        public static class Offer
-        {
-            public const int NameMinLength = 3;
-            public const int NameMaxLength = 30;
-        }
-
-        public static class Order
-        {
-            public const int NoteMinLength = 3;
-            public const int NoteMaxLength = 200;
-        }
-
+        
         public static class Photographer
         {
             public const int BrandNameMinLength = 2;
             public const int BrandNameMaxLength = 30;
         }
-
     }
 }

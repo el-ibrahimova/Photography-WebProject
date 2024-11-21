@@ -5,7 +5,7 @@ namespace Photography.Core.ViewModels.Category
     using static Common.EntityConstants.Category;
     using static Common.EntityValidationMessages;
 
-    public class EditCategoryViewModel
+    public class CategoryFormViewModel
     {
         public string Id { get; set; } = null!;
 

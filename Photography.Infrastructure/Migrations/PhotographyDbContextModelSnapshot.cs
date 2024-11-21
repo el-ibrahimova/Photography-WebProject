@@ -181,7 +181,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 17, 18, 6, 42, 686, DateTimeKind.Local).AddTicks(161))
+                        .HasDefaultValue(new DateTime(2024, 11, 21, 21, 30, 31, 583, DateTimeKind.Local).AddTicks(6373))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -242,6 +242,12 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Category identifier");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasComment("Is category deleted");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -258,52 +264,62 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("67400629-8496-40b7-855c-21aa7e151581"),
+                            Id = new Guid("032f66c1-ca21-49c6-ae27-e5dcdc149879"),
+                            IsDeleted = false,
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = new Guid("fc65fe79-3d5b-4ee1-b12f-f87fafef17bc"),
+                            Id = new Guid("def1d6da-e599-4f6c-8803-3c19744b1145"),
+                            IsDeleted = false,
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = new Guid("3b7e844f-d46a-4130-bbfe-7898e687c275"),
+                            Id = new Guid("d0b0b66a-e4e6-4192-86e8-0a1e2abc804b"),
+                            IsDeleted = false,
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = new Guid("6f5886d5-e7af-48ba-a92c-adc3860a352d"),
+                            Id = new Guid("effc6304-7efa-4b84-a5a0-5fe813521b6f"),
+                            IsDeleted = false,
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = new Guid("abaa7e56-f5d5-45da-aac9-97ff5e5ad4f6"),
+                            Id = new Guid("d533d7b9-b12c-4e21-a0da-b6dc17a31272"),
+                            IsDeleted = false,
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = new Guid("9d18eb2f-b3ad-404b-94da-b179521159b1"),
+                            Id = new Guid("26d6c4df-6201-404e-8cda-c6c6cae1122d"),
+                            IsDeleted = false,
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = new Guid("9d63db2b-590b-441c-8e69-bdcb83ca3f3e"),
+                            Id = new Guid("da592ebf-895c-4913-9a3d-0d095db87dc9"),
+                            IsDeleted = false,
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = new Guid("38b699eb-77c4-4d83-8267-3c1699c44011"),
+                            Id = new Guid("f4227f6c-8eff-47c5-88f9-2226aaa10a06"),
+                            IsDeleted = false,
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = new Guid("05afc4d9-9f76-442d-867d-a289ff7f6af4"),
+                            Id = new Guid("cc652f85-ba78-47bf-a889-1563b9f720f8"),
+                            IsDeleted = false,
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = new Guid("c33b3b32-b793-4ed5-9378-d364b470037f"),
+                            Id = new Guid("243ed5dd-fa46-4510-bd19-8c22af08a3cc"),
+                            IsDeleted = false,
                             Name = "Пейзажи"
                         });
                 });
@@ -325,136 +341,6 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("FavoritePhotos", t =>
                         {
                             t.HasComment("Favorite photo");
-                        });
-                });
-
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Offer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Offer identifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasComment("Offer name");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
-                        .HasComment("Offer price");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Offers", t =>
-                        {
-                            t.HasComment("Offers");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("4a000f1c-39e7-4834-9d51-7a532f2fbe12"),
-                            Name = "Печат на снимка в размер 9х13",
-                            Price = 0.40m
-                        },
-                        new
-                        {
-                            Id = new Guid("07c105c0-02d4-40e5-9b63-3ff4371251f5"),
-                            Name = "Печат на снимка в размер 10x15",
-                            Price = 0.45m
-                        },
-                        new
-                        {
-                            Id = new Guid("f02de878-3ce2-4874-8f61-be0fb16222dc"),
-                            Name = "Печат на снимка в размер 13x18",
-                            Price = 1.20m
-                        },
-                        new
-                        {
-                            Id = new Guid("860dc8cb-cef3-4e70-aab9-48057030867d"),
-                            Name = "Печат на снимка в размер А4",
-                            Price = 2.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("2105fef6-33c3-4155-acc5-d1e6a637bfea"),
-                            Name = "Печат на снимка върху чаша",
-                            Price = 12.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("4244343c-ce8c-4ce2-8b1b-53dbd882005e"),
-                            Name = "Печат на снимка върху тениска",
-                            Price = 18m
-                        });
-                });
-
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Order identifier");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("User identifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders", t =>
-                        {
-                            t.HasComment("Order");
-                        });
-                });
-
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.OrderPhoto", b =>
-                {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Order identifier");
-
-                    b.Property<Guid>("PhotoId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Photo identifier");
-
-                    b.Property<Guid>("OfferId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Count")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1)
-                        .HasComment("Count of ordered photos");
-
-                    b.HasKey("OrderId", "PhotoId", "OfferId");
-
-                    b.HasIndex("OfferId");
-
-                    b.HasIndex("PhotoId");
-
-                    b.ToTable("OrderPhotos", t =>
-                        {
-                            t.HasComment("Order photo");
                         });
                 });
 
@@ -663,44 +549,6 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Order", b =>
-                {
-                    b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.OrderPhoto", b =>
-                {
-                    b.HasOne("Photography.Infrastructure.Data.Models.Offer", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Photography.Infrastructure.Data.Models.Order", "Order")
-                        .WithMany("OrderPhotos")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Photography.Infrastructure.Data.Models.Photo", "Photo")
-                        .WithMany("OrderPhotos")
-                        .HasForeignKey("PhotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Offer");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Photo");
-                });
-
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "Owner")
@@ -761,8 +609,6 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("Photos");
 
                     b.Navigation("PhotosRatings");
@@ -773,16 +619,9 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("PhotosCategories");
                 });
 
-            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Order", b =>
-                {
-                    b.Navigation("OrderPhotos");
-                });
-
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
                 {
                     b.Navigation("FavoritePhotos");
-
-                    b.Navigation("OrderPhotos");
 
                     b.Navigation("PhotosCategories");
 

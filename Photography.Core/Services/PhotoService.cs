@@ -199,7 +199,7 @@ namespace Photography.Core.Services
         public async Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid)
         {
             var photo = await context.Photos
-                .Include(p => p.PhotosCategories) // 
+                .Include(p => p.PhotosCategories)  
                 .Where(p => p.IsDeleted == false && p.Id == photoGuid)
                 .FirstOrDefaultAsync();
 
@@ -296,6 +296,7 @@ namespace Photography.Core.Services
         {
             return await context.Categories
                 .AsNoTracking()
+                .Where(c=>c.IsDeleted==false)
                 .Select(c => new CategoryViewModel()
                 {
                     Id = c.Id.ToString(),
