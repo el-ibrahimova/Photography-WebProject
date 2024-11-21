@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Photography.Core.Interfaces;
+using Photography.Core.Services;
 using Photography.Core.ViewModels.Category;
+using Photography.Core.ViewModels.Photo;
 
 namespace Photography.Controllers
 {
@@ -53,9 +56,49 @@ namespace Photography.Controllers
             return RedirectToAction(nameof(Manage));
         }
 
-        public IActionResult Edit()
+        [HttpGet]
+        public async Task<IActionResult> Edit( string id)
         {
-            return View();
+            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
+            Guid categoryGuid = Guid.Empty;
+            if (!categoryService.IsGuidValid(id, ref categoryGuid))
+            {
+                return RedirectToAction("Manage", "Category");
+            }
+
+            var model = await categoryService.GetCategoryToEditAsync(categoryGuid);
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditCategoryViewModel model)
+        {
+            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("Gallery", "Gallery");
+            }
+
+            var result = await categoryService.EditCategoryAsync(model);
+
+            if (!result)
+            {
+             return View(model);
+            }
+
+            return RedirectToAction("Manage", "Category");
         }
         public IActionResult Remove()
         {
