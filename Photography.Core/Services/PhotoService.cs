@@ -320,7 +320,7 @@ namespace Photography.Core.Services
         {
             var photos = await context.Photos
                 .Where(p => p.IsDeleted == false)
-                .OrderByDescending(p => p.Rating)
+                .OrderByDescending(p => p.UploadedAt)
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),
