@@ -35,12 +35,20 @@
             public const int PhoneNumberMinLength = 8;
             public const int PhoneNumberMaxLength = 20;
         }
-
-        
         public static class Photographer
         {
             public const int BrandNameMinLength = 2;
             public const int BrandNameMaxLength = 30;
+        }
+
+        public static class PhotoShoot
+        {
+            public const int NameMinLength = 2;
+            public const int NameMaxLength = 20;
+            public const int ImageUrlMinLength = 10;
+            public const int ImageUrlMaxLength = 100;
+            public const int DescriptionMinLength = 5;
+            public const int DescriptionMaxLength = 100;
         }
     }
 }

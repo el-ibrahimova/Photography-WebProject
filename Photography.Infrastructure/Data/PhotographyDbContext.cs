@@ -25,6 +25,8 @@ namespace Photography.Infrastructure.Data
 
         public DbSet<PhotoRating> PhotosRatings { get; set; } = null!;
         public DbSet<Photographer> Photographers { get; set; } = null!;
+        public DbSet<PhotoShoot> PhotoShoots { get; set; } = null!;
+        public DbSet<PhotoShootParticipant> PhotoShootParticipants { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,6 +38,7 @@ namespace Photography.Infrastructure.Data
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new PhotoCategoryConfiguration());
+            builder.ApplyConfiguration(new PhotoShootConfiguration());
         }
     }
 }

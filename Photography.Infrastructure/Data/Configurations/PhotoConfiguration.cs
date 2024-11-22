@@ -9,7 +9,6 @@ namespace Photography.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
             builder.Property(p => p.IsDeleted)
-                .IsRequired(true)
                 .HasDefaultValue(false);
             builder.Property(p => p.Rating)
                 .HasDefaultValue(0);

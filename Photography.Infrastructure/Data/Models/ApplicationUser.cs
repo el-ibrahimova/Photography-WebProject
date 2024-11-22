@@ -29,5 +29,6 @@ namespace Photography.Infrastructure.Data.Models
         public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
         public ICollection<PhotoRating> PhotosRatings { get; set; } = new List<PhotoRating>();
+        public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
     }
 }
