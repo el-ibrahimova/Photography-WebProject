@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Category\Edit.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
@@ -29,10 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Photography.Core\Photography.Core.csproj" />
     <ProjectReference Include="..\Photography.Infrastructure\Photography.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Category\Edit.cshtml" />
   </ItemGroup>
 
 </Project>
