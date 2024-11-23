@@ -14,6 +14,12 @@ namespace Photography
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+          
+            
+            string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
+            string adminUsername = builder.Configuration.GetValue<string>("Administrator:Username")!;
+            string adminPassword = builder.Configuration.GetValue<string>("Administrator:Password")!;
+
             builder.Services.AddDbContext<PhotographyDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
@@ -59,11 +65,21 @@ namespace Photography
             app.UseAuthentication();
             app.UseAuthorization();
 
+
+            app.SeedAdministrator(adminEmail, adminUsername, adminPassword);
+
+            app.MapControllerRoute(
+                name: "Areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "Errors",
+                pattern: "{controller=Home}/{action=Index}/{statusCode?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+           
+            
             app.MapRazorPages();
-
 
             app.Run();
         }

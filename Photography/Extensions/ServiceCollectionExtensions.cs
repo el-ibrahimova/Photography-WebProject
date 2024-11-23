@@ -12,6 +12,7 @@ namespace Photography.Extensions
             serviceCollection.AddScoped<IGalleryService, GalleryService>();
             serviceCollection.AddScoped<ICategoryService, CategoryService>();
             serviceCollection.AddScoped<IPhotoShootService, PhotoShootService>();
+            serviceCollection.AddScoped<IUserService, UserService >();
         }
     }
 }
