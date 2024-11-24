@@ -1,4 +1,6 @@
-﻿namespace Photography.Extensions
+﻿using Photography.Infrastructure.Data;
+
+namespace Photography.Extensions
 {
     using Microsoft.AspNetCore.Identity;
     using Infrastructure.Data.Models;
@@ -29,13 +31,14 @@
                     nameof(userStore), $"Service for {typeof(IUserStore<ApplicationUser>)} cannot be obtained!");
             }
 
+
             if (userManager == null)
             {
                 throw new ArgumentNullException(
                     nameof(userManager), $"Service for {typeof(UserManager<ApplicationUser>)} cannot be obtained!");
             }
 
-
+            
             Task.Run(async () =>
             {
                 bool roleExists = await roleManager.RoleExistsAsync(AdminRoleName);
