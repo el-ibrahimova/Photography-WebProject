@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -11,7 +12,7 @@ namespace Photography.Controllers
         private readonly IPhotoService photoService;
 
 
-        public PhotoController( IPhotoService _photoService)
+        public PhotoController(IPhotoService _photoService)
         {
             photoService = _photoService;
         }
@@ -33,9 +34,9 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            bool isPhotographer =await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (isPhotographer==false)
+            if (isPhotographer == false)
             {
                 return RedirectToAction("Gallery", "Gallery");
             }
@@ -159,7 +160,7 @@ namespace Photography.Controllers
             {
                 return RedirectToAction("Gallery", "Gallery");
             }
-            
+
             var model = await photoService.GetPhotoToEditAsync(photoGuid);
             if (model == null)
             {
@@ -180,7 +181,7 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
-            bool isPhotographer =await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
             if (!isPhotographer)
             {
@@ -199,7 +200,7 @@ namespace Photography.Controllers
 
                 return View(model);
             }
-            
+
             return RedirectToAction(nameof(Details), new { model.Id });
         }
 
@@ -208,9 +209,9 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
+            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return Unauthorized();
             }
 
             var photos = await photoService.GetAllPhotosAsync();
@@ -235,8 +236,8 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteViewModel model)
         {
-           var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
+            var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
             return RedirectToAction("MyGallery", "Gallery");
-        }      
+        }
     }
 }

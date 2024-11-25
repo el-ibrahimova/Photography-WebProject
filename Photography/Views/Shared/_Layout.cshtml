@@ -41,39 +41,43 @@
                             <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Gallery">Галерия</a>
                         </li>
 
-                        @if (this.User?.Identity?.IsAuthenticated ?? false){
+                        @if (this.User?.Identity?.IsAuthenticated ?? false)
+                        {
 
-                            @if (User.IsInRole(AdminRoleName)) 
+                            @if (User.IsInRole(AdminRoleName))
                             {
                                 <li class="nav-item">
-                                    <a class="navbar-brand" asp-area="" asp-controller="UserManagement" asp-action="Index">Админ Панел</a>
+                                    <a class="navbar-brand" asp-area="@AdminRoleName" asp-controller="Home" asp-action="Index">Админ Панел</a>
                                 </li>
                             }
-                       
-                            @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                            else
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="photographerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Управление
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="photographerDropdown">
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Photo" asp-action="Manage">Снимки</a></li>
-                                     //   <li><a class="dropdown-item" asp-area="" asp-controller="Category" asp-action="Manage">Категории</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Фотосесии</a></li>
-                                    </ul>
+                                @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle text-dark" href="#" id="photographerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Управление
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="photographerDropdown">
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Photo" asp-action="Manage">Снимки</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Category" asp-action="Manage">Категории</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Фотосесии</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                <li class="nav-item">
+                                    <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Favorite">Любими</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="navbar-brand" asp-area="" asp-controller="PhotoShoot" asp-action="All">Фотосесии</a>
                                 </li>
                             }
 
-                            <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Favorite">Любими</a>
-                            </li>
 
-                            <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="PhotoShoot" asp-action="All">Фотосесии</a>
-                            </li>
                         }
                         <form class="d-flex">
                             <input class="form-control me-sm-2" type="search" placeholder="Търси">
