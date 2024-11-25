@@ -65,6 +65,7 @@ namespace Photography
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 
             app.SeedAdministrator(adminEmail, adminUsername, adminPassword);
 
