@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
 using Photography.Core.ViewModels.Category;
-using Photography.Core.ViewModels.Photo;
 using CategoryFormViewModel = Photography.Core.ViewModels.Category.CategoryFormViewModel;
 
 namespace Photography.Controllers

@@ -80,13 +80,8 @@ namespace Photography.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null)
         {
-            if (User?.Identity?.IsAuthenticated ?? false)
-            {
-                return RedirectToAction("Gallery", "Photo");
-            }
-
 
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -100,8 +95,7 @@ namespace Photography.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
 
-            return Page();
-        }
+            }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

@@ -10,21 +10,20 @@
 
         .carousel-container {
             display: flex;
-            justify-content: center; /* Центрира по хоризонталната ос */
-            align-items: center; /* Центрира по вертикалната ос */
+            justify-content: center; 
+            align-items: center; 
            
         }
-        /* Стил за изображенията в карусела */
+     
         .carousel-item img {
-            max-height: 550px; /* Максимална височина на изображенията */
-            width: 100%; /* Ширина да запълва контейнера на карусела */
-            object-fit: cover; /* Задава как изображението да се вписва в контейнера */
+            max-height: 550px; 
+            width: 100%; 
+            object-fit: cover; 
         }
 
-        /* Стил за карусела */
-        #carouselExampleFade {
-            width: 80%; /* Ширина на карусела */
-            max-width: 800px; /* Максимална ширина на карусела */
+     #carouselExampleFade {
+            width: 80%; 
+            max-width: 800px;
         }
     </style>
 </head>
@@ -51,7 +50,6 @@
     </div>
 
     <script>
-        // Функция за преминаване към следващ слайд
         function nextSlide() {
             const carousel = new bootstrap.Carousel(document.getElementById('carouselExampleFade'));
             carousel.next();

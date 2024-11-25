@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-using System.Diagnostics;
-
 namespace Photography.Controllers
 {
-    using Photography.Core.ViewModels;
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
@@ -16,10 +13,10 @@ namespace Photography.Controllers
 
         public IActionResult Index()
         {
-            if (User?.Identity != null && User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (User?.Identity != null && User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
             return View();
         }
 
