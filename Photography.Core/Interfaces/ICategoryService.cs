@@ -5,7 +5,6 @@
 
     public interface ICategoryService:IBaseService
     {
-        Task<AddCategoryViewModel> GetAddCategoryAsync();
         Task AddCategoryAsync(AddCategoryViewModel model);
         Task<CategoryFormViewModel> GetCategoryToEditAsync(string categoryId);
         Task<bool> EditCategoryAsync(CategoryFormViewModel model);

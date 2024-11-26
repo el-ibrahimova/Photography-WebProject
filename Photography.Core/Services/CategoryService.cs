@@ -19,11 +19,6 @@ namespace Photography.Core.Services
             context = data;
         }
 
-        public async Task<AddCategoryViewModel> GetAddCategoryAsync()
-        {
-            var model = new AddCategoryViewModel();
-            return model;
-        }
 
         public async Task AddCategoryAsync(AddCategoryViewModel model)
         {

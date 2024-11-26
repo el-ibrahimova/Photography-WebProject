@@ -1,5 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using Photography.Core.ViewModels.PhotoShoot
+@model IEnumerable<AllPhotoShootsViewModel>
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+@if (TempData["HasDeclared"] != null)
+{
+    <div id="declarationAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> Вече заявихте участие за тази фотосесия!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="text-center row">
+    @foreach (var photoShoot in Model)
+    {
+
+        <div class="card col-4" style="width: 20rem; ">
+            <div class="card-body">
+                <h4 class="card-title mt-1">@photoShoot.Name</h4>
+                <img class="card-img-top" src=@photoShoot.ImageUrl1 alt="Image1">
+                <img class="card-img-top" src=@photoShoot.ImageUrl2 alt="Image2">
+                <img class="card-img-top" src=@photoShoot.ImageUrl3 alt="Image3">
+            </div>
+
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
+                    <input type="hidden" name="id" value="@photoShoot.Id" />
+                    <button type="submit" class="btn btn-primary w-100 mb-2">Заяви участие</button>
+                </form>
+            }
+        </div>
+
+    }
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    @*  script for hiding alert after 3 seconds *@
+    <script>
+        document.addEventListener("DOMContentLoaded",
+            function () {
+                var alert = document.getElementById("declarationAlert");
+                if (alert) {
+
+                    setTimeout(function () {
+                        var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
+                        bsAlert.close();
+                    },
+                        3000);
+                }
+            });
+
+
+    </script>
 }

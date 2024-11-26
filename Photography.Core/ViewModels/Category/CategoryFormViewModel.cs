@@ -3,7 +3,7 @@
 namespace Photography.Core.ViewModels.Category
 {
     using static Common.EntityConstants.Category;
-    using static Common.EntityValidationMessages;
+    using static Common.EntityValidationMessages.Category;
 
     public class CategoryFormViewModel
     {

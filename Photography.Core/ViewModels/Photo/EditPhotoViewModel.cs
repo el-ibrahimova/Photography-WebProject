@@ -3,7 +3,7 @@
 namespace Photography.Core.ViewModels.Photo
 {
     using static Common.EntityConstants.Photo;
-    using static Common.EntityValidationMessages;
+    using static Common.EntityValidationMessages.Photo;
     using static Common.ApplicationConstants;
     public class EditPhotoViewModel
     {
