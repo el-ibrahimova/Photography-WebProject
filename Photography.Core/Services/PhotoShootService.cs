@@ -24,6 +24,7 @@ namespace Photography.Core.Services
             return await context.PhotoShoots
                   .AsNoTracking()
                   .Where(ps => ps.IsDeleted == false)
+                  .OrderByDescending(ps=>ps.CreatedAt.Hour)
                   .Select(ps => new AllPhotoShootsViewModel()
                   {
                       Id = ps.Id.ToString(),
@@ -43,7 +44,6 @@ namespace Photography.Core.Services
             if (!DateTime.TryParseExact(model.CreatedAt, EntityDateFormat, CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out createdAt))
             {
-                throw new InvalidOperationException($"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
                 return false;
             }
 
@@ -54,7 +54,6 @@ namespace Photography.Core.Services
                 ImageUrl2 = model.ImageUrl2,
                 ImageUrl3 = model.ImageUrl3,
                 Description = model.Description,
-                CreatedAt =createdAt
             };
 
             await context.PhotoShoots.AddAsync(photoShoot);

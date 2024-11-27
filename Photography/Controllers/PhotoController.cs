@@ -24,7 +24,7 @@ namespace Photography.Controllers
 
             if (!isPhotographer)
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return Unauthorized();
             }
 
             var model = await photoService.GetAddPhotoAsync();

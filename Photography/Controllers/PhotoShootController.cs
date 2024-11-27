@@ -46,7 +46,7 @@ namespace Photography.Controllers
 
             if (!isPhotographer)
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return Unauthorized();
             }
 
             if (!this.ModelState.IsValid)
@@ -59,11 +59,8 @@ namespace Photography.Controllers
 
             if (result == false)
             {
-                this.ModelState.AddModelError(nameof(model.CreatedAt), string.Format($"Датата на създаване трябва да бъде във формат: {0}, EntityDateFormat"));
-
                 return this.View(model);
             }
-            await photoShootService.AddPhotoShootAsync(model);
 
             return RedirectToAction(nameof(All));
         }

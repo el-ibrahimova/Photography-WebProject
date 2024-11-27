@@ -11,30 +11,57 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-
-<div class="text-center row">
+<div class="row">
     @foreach (var photoShoot in Model)
     {
-
-        <div class="card col-4" style="width: 20rem; ">
-            <div class="card-body">
-                <h4 class="card-title mt-1">@photoShoot.Name</h4>
-                <img class="card-img-top" src=@photoShoot.ImageUrl1 alt="Image1">
-                <img class="card-img-top" src=@photoShoot.ImageUrl2 alt="Image2">
-                <img class="card-img-top" src=@photoShoot.ImageUrl3 alt="Image3">
+        <div class="card col-12 mb-4">
+            <!-- Име на фотосесията -->
+            <div class="card-header text-center bg-light">
+                <h3 class="fw-bold">@photoShoot.Name</h3>
             </div>
 
-            @if (User.Identity?.IsAuthenticated ?? false)
-            {
-                <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
-                    <input type="hidden" name="id" value="@photoShoot.Id" />
-                    <button type="submit" class="btn btn-primary w-100 mb-2">Заяви участие</button>
-                </form>
-            }
-        </div>
+            <div class="card-body">
+                <!-- Снимките на един ред -->
+                <div class="d-flex flex-row justify-content-center mb-3">
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl1))
+                    {
+                        <div class="me-3" style="width: 400px; height: 400px;">
+                            <img class="card-img-top" src="@photoShoot.ImageUrl1" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl2))
+                    {
+                        <div class="me-3" style="width: 400px; height: 400px;">
+                            <img class="card-img-top" src="@photoShoot.ImageUrl2" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl3))
+                    {
+                        <div class="me-3" style="width: 400px; height: 400px;">
+                            <img class="card-img-top" src="@photoShoot.ImageUrl3" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    }
+                </div>
+                <div class="mb-3 text-center">
+                    <div class="border p-3 rounded bg-light">
+                        <p class="text-dark fs-4">@photoShoot.Description</p>
+                    </div>
+                </div>
 
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <div class="text-center">
+                        <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
+                            <input type="hidden" name="id" value="@photoShoot.Id" />
+                            <button type="submit" class="btn btn-success btn-lg">Заяви участие</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
     }
 </div>
+
 
 
 @section Scripts {
