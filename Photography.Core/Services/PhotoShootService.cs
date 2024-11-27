@@ -36,7 +36,7 @@ namespace Photography.Core.Services
                   .ToArrayAsync();
         }
 
-        public async Task AddPhotoShootAsync(AddPhotoShootViewModel model)
+        public async Task<bool> AddPhotoShootAsync(AddPhotoShootViewModel model)
         {
             DateTime createdAt;
 
@@ -44,6 +44,7 @@ namespace Photography.Core.Services
                     DateTimeStyles.None, out createdAt))
             {
                 throw new InvalidOperationException($"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
+                return false;
             }
 
             PhotoShoot photoShoot = new PhotoShoot()
@@ -56,8 +57,9 @@ namespace Photography.Core.Services
                 CreatedAt =createdAt
             };
 
-            await context.AddAsync(photoShoot);
+            await context.PhotoShoots.AddAsync(photoShoot);
             await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid)

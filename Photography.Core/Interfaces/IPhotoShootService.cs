@@ -6,7 +6,7 @@ namespace Photography.Core.Interfaces
     {
         Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsAsync();
 
-        Task  AddPhotoShootAsync(AddPhotoShootViewModel model);
+        Task <bool> AddPhotoShootAsync(AddPhotoShootViewModel model);
 
         Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid);
     }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
 using Photography.Core.ViewModels.PhotoShoot;
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -35,6 +35,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
+            var model = new AddPhotoShootViewModel();
             return this.View();
         }
 
@@ -50,9 +51,18 @@ namespace Photography.Controllers
 
             if (!this.ModelState.IsValid)
             {
-                return this.View(model);
+             return this.View(model);
             }
 
+
+            bool result = await this.photoShootService.AddPhotoShootAsync(model);
+
+            if (result == false)
+            {
+                this.ModelState.AddModelError(nameof(model.CreatedAt), string.Format($"Датата на създаване трябва да бъде във формат: {0}, EntityDateFormat"));
+
+                return this.View(model);
+            }
             await photoShootService.AddPhotoShootAsync(model);
 
             return RedirectToAction(nameof(All));

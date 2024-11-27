@@ -38,7 +38,7 @@ namespace Photography.Controllers
 
             if (isPhotographer == false)
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return Unauthorized();
             }
 
             if (!ModelState.IsValid)
