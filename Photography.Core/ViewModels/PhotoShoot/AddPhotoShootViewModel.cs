@@ -13,7 +13,6 @@ namespace Photography.Core.ViewModels.PhotoShoot
             this.CreatedAt = DateTime.UtcNow.ToString(EntityDateFormat);
 
         }
-        public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = PhotoShootNameRequiredMessage)]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
@@ -33,10 +32,8 @@ namespace Photography.Core.ViewModels.PhotoShoot
         [StringLength(DescriptionMaxLength, MinimumLength=DescriptionMinLength)]
         public string Description { get; set; } = null!;
 
-    
-        [Required(ErrorMessage =PhotoShootCreatedAtRequiredMessage)]
-        public string CreatedAt { get; set; }
 
-        public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
+        [Required(ErrorMessage = PhotoShootCreatedAtRequiredMessage)]
+        public string CreatedAt { get; set; } 
     }
 }

@@ -10,6 +10,5 @@ namespace Photography.Core.ViewModels.PhotoShoot
         public string ImageUrl1 { get; set; } = null!;
         public string? ImageUrl2 { get; set;} 
         public string? ImageUrl3 { get; set;}
-        public string CreatedAt { get; set; } = null!;
     }
 }

@@ -13,7 +13,6 @@ namespace Photography.Core.ViewModels.Photo
             this.UploadedAt = DateTime.UtcNow.ToString(EntityDateFormat);
         }
 
-        public string Id { get; set; } = null!;
 
         [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength)]
         public string? TagUser { get; set; } 
