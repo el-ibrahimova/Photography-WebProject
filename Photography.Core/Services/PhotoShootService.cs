@@ -24,7 +24,7 @@ namespace Photography.Core.Services
             return await context.PhotoShoots
                   .AsNoTracking()
                   .Where(ps => ps.IsDeleted == false)
-                  .OrderByDescending(ps=>ps.CreatedAt.Hour)
+                  .OrderBy(ps=>ps.CreatedAt.Hour)
                   .Select(ps => new AllPhotoShootsViewModel()
                   {
                       Id = ps.Id.ToString(),

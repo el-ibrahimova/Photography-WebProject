@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Photography.Core.Interfaces;
+using Photography.Core.Services;
 using Photography.Core.ViewModels.PhotoShoot;
 using static Photography.Common.ApplicationConstants;
-
 namespace Photography.Controllers
 {
     [Authorize]
@@ -65,9 +65,20 @@ namespace Photography.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        //public async Task<IActionResult> Manage()
-        //{
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+
+            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            {
+                return Unauthorized();
+            }
+
+            var photoShoots = await photoShootService.GetAllPhotoShootsAsync();
+
+            return View(photoShoots);
+        }
 
         //public async Task<IActionResult> DeclareParticipation()
         //{

@@ -49,7 +49,12 @@ namespace Photography.Controllers
 
             var userId = GetUserId() ?? String.Empty;
 
-            await photoService.AddPhotoAsync(model, userId);
+            bool result = await photoService.AddPhotoAsync(model, userId);
+
+            if (result == false)
+            {
+                return this.View(model);
+            }
 
             return RedirectToAction("Gallery", "Gallery");
         }
@@ -63,13 +68,13 @@ namespace Photography.Controllers
             Guid photoIdGuid;
             if (!Guid.TryParse(id, out photoIdGuid))
             {
-                return BadRequest("Невалидно ID на снимка.");
+                return BadRequest();
             }
 
             Guid userIdGuid;
             if (!Guid.TryParse(currentUserId, out userIdGuid))
             {
-                return Unauthorized("Трябва да сте влезли в профила си.");
+                return Unauthorized();
             }
 
             bool hasUserRated = await photoService.HasUserRatedAsync(photoIdGuid, userIdGuid);

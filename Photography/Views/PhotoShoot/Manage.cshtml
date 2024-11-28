@@ -1,0 +1,63 @@
+﻿@using Photography.Core.ViewModels.PhotoShoot
+@model IEnumerable<AllPhotoShootsViewModel>
+
+
+@{
+    ViewBag.Title = "Управление на фотосесии";
+}
+
+<h2 class="my-4 text-center">Управление на фотосесии</h2>
+
+
+<div class="d-flex justify-content-end mb-4">
+    <a asp-action="Add" class="btn btn-success btn-lg">
+        <i class="bi bi-plus-circle"></i> Добави нова фотосесия
+    </a>
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">Име</th>
+            <th scope="col">Снимка</th>
+            <th scope="col">Брой участници</th>
+            <th scope="col">Име на участник</th>
+            <th scope="col">Телефонен номер</th>
+            <th scope="col" class="text-center">Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var photoShoot in Model)
+        {
+            <tr>
+                <td>@photoShoot.Name</td>
+                <td>
+                    <img src="@photoShoot.ImageUrl1" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                </td>
+                <td>@photoShoot.Participants.Count</td>
+                <td>
+                    @foreach (var participant in photoShoot.Participants)
+                    {
+                        <p>@participant.User.UserName</p>
+                    }
+                </td>
+                <td>
+                    @foreach (var participant in photoShoot.Participants)
+                    {
+                        <p>@participant.User.PhoneNumber</p>
+                    }
+                </td>
+                
+
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@photoShoot.Id" class="btn btn-warning btn-sm me-2">
+                        <i class="bi bi-pencil-square"></i> Редактирай
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@photoShoot.Id" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash"></i> Изтрий
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

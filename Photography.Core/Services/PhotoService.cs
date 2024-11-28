@@ -18,7 +18,7 @@ namespace Photography.Core.Services
             context = data;
         }
 
-        public async Task<Photo> GetPhotoByIdAsync(Guid photoIdGuid)
+        public async Task<Photo?> GetPhotoByIdAsync(Guid photoIdGuid)
         {
             return await context.Photos
                 .Where(p => !p.IsDeleted && p.Id == photoIdGuid)
@@ -36,19 +36,19 @@ namespace Photography.Core.Services
             return model;
         }
 
-        public async Task AddPhotoAsync(AddPhotoViewModel model, string userId)
+        public async Task<bool> AddPhotoAsync(AddPhotoViewModel model, string userId)
         {
             DateTime uploadedAt;
 
             if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out uploadedAt))
             {
-                throw new InvalidOperationException($"Невалиден формат за дата. Датата трябва да бъде във формат: {EntityDateFormat}");
+                return false;
             }
 
             if (model.IsPrivate && string.IsNullOrEmpty(userId))
             {
-                throw new InvalidOperationException("Невалиден потребител");
+                return false;
             }
 
             var userOwnerId = model.UserOwnerId;
@@ -70,11 +70,12 @@ namespace Photography.Core.Services
 
             await context.Photos.AddAsync(photo);
             await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid)
         {
-            var photo = await context
+            Photo? photo = await context
                 .Photos.Where(p => p.Id == photoIdGuid && p.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
@@ -178,7 +179,7 @@ namespace Photography.Core.Services
 
         public async Task RemovePhotoFromFavoritesAsync(string userId, string photoId)
         {
-            var photo = await context.Photos
+            Photo? photo = await context.Photos
                 .Where(p => !p.IsDeleted && p.Id.ToString() == photoId)
                 .Include(p => p.FavoritePhotos)
                 .FirstOrDefaultAsync();
@@ -275,15 +276,20 @@ namespace Photography.Core.Services
                     UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
                     DeletedAt = null,
                     UserOwnerId = p.UserOwnerId.ToString(),
-                    Owner = p.Owner.UserName
+                    Owner = p.Owner.UserName 
                 })
                 .FirstOrDefaultAsync();
         }
-        
+
         public async Task<Photo> DeletePhotoAsync(string photoId)
         {
-            var photoToDelete = await context.Photos
-              .FirstOrDefaultAsync(p => p.Id.ToString() == photoId);
+            Photo? photoToDelete = await context.Photos
+                .FirstOrDefaultAsync(p => p.Id.ToString() == photoId);
+
+            if (photoToDelete == null)
+            {
+                throw new ArgumentException("Снимката не съществува");
+            }
 
             photoToDelete.IsDeleted = true;
             photoToDelete.DeletedAt = DateTime.Now;

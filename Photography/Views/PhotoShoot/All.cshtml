@@ -15,13 +15,11 @@
     @foreach (var photoShoot in Model)
     {
         <div class="card col-12 mb-4">
-            <!-- Име на фотосесията -->
             <div class="card-header text-center bg-light">
                 <h3 class="fw-bold">@photoShoot.Name</h3>
             </div>
 
             <div class="card-body">
-                <!-- Снимките на един ред -->
                 <div class="d-flex flex-row justify-content-center mb-3">
                     @if (!string.IsNullOrEmpty(photoShoot.ImageUrl1))
                     {

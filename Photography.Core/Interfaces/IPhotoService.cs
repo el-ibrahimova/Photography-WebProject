@@ -5,9 +5,9 @@ namespace Photography.Core.Interfaces
 {
     public interface IPhotoService:IBaseService
     {
-        Task<Photo> GetPhotoByIdAsync(Guid photoIdGuid);
+        Task<Photo?> GetPhotoByIdAsync(Guid photoIdGuid);
         Task<AddPhotoViewModel>GetAddPhotoAsync();
-        Task AddPhotoAsync(AddPhotoViewModel model, string userId);
+        Task<bool>AddPhotoAsync(AddPhotoViewModel model, string userId);
         Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid);
         Task<bool> HasUserRatedAsync(Guid photoIdGuid, Guid userIdGuid);
         Task<DetailsViewModel> GetPhotoDetailsAsync(Guid photoGuid);
