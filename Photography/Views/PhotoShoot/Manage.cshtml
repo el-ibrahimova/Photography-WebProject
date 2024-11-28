@@ -36,18 +36,24 @@
                 </td>
                 <td>@photoShoot.Participants.Count</td>
                 <td>
-                    @foreach (var participant in photoShoot.Participants)
+                    @if (photoShoot.Participants != null && photoShoot.Participants.Any())
                     {
-                        <p>@participant.User.UserName</p>
+                        @foreach (var participant in photoShoot.Participants)
+                        {
+                            <p>@participant.UserName</p>
+                        }
                     }
                 </td>
                 <td>
-                    @foreach (var participant in photoShoot.Participants)
+                    @if (photoShoot.Participants != null && photoShoot.Participants.Any())
                     {
-                        <p>@participant.User.PhoneNumber</p>
+                        @foreach (var participant in photoShoot.Participants)
+                        {
+                            <p>@participant.PhoneNumber</p>
+                        }
                     }
                 </td>
-                
+
 
                 <td class="text-center">
                     <a asp-action="Edit" asp-route-id="@photoShoot.Id" class="btn btn-warning btn-sm me-2">

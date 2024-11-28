@@ -32,9 +32,33 @@ namespace Photography.Core.Services
                       ImageUrl1 = ps.ImageUrl1,
                       ImageUrl2 = ps.ImageUrl2,
                       ImageUrl3 = ps.ImageUrl3,
-                      Description = ps.Description
+                      Description = ps.Description,
                   })
                   .ToArrayAsync();
+        }
+
+        public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync()
+        {
+            var participant = await context.PhotoShoots
+                .Include(ps => ps.Participants)
+                .ThenInclude(p => p.User)
+                .Where(ps => ps.IsDeleted == false)
+                .Select(ps => new AllPhotoShootsViewModel()
+                {
+                    Name = ps.Name,
+                    ImageUrl1 = ps.ImageUrl1,
+                    ImageUrl2 = ps.ImageUrl2,
+                    ImageUrl3 = ps.ImageUrl3,
+                    Description = ps.Description,
+                    Participants = ps.Participants.Select(p => new ParticipantViewModel()
+                    {
+                        UserName = p.User.UserName,
+                        PhoneNumber = p.User.PhoneNumber
+                    }).ToArray()
+                })
+                .ToArrayAsync();
+
+            return participant;
         }
 
         public async Task<bool> AddPhotoShootAsync(AddPhotoShootViewModel model)
@@ -66,5 +90,32 @@ namespace Photography.Core.Services
             return await context.PhotoShootParticipants
                 .AnyAsync(ph => ph.PhotoShootId == photoShootIdGuid && ph.UserId == userIdGuid);
         }
+
+        public async Task AddParticipantToPhotoShoot(Guid photoShootIdGuid, Guid userIdGuid)
+        {
+            PhotoShoot? photoShoot = await context
+                .PhotoShoots.Where(ps => ps.Id == photoShootIdGuid && ps.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (photoShoot == null)
+            {
+                throw new InvalidOperationException("Фотосесията не е намерена.");
+            }
+
+            bool hasUserDeclared = await context
+                .PhotoShootParticipants.AnyAsync(p => p.PhotoShootId == photoShootIdGuid && p.UserId == userIdGuid);
+
+            if (!hasUserDeclared)
+            {
+                context.PhotoShootParticipants.Add(new PhotoShootParticipant()
+                {
+                    PhotoShootId = photoShootIdGuid,
+                    UserId = userIdGuid
+                });
+                
+                await context.SaveChangesAsync();
+            }
+        }
+
     }
 }

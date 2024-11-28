@@ -4,13 +4,21 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-@if (TempData["HasDeclared"] != null)
+@if (TempData["HasDeclared"] == null)
+{
+    <div id="declarationAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong> Вие се записахте за тази фотосесия!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else
 {
     <div id="declarationAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong> Вече заявихте участие за тази фотосесия!</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    </div>   
 }
+
 <div class="row">
     @foreach (var photoShoot in Model)
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Policy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Photography.Core.Interfaces;
 using Photography.Core.Services;
@@ -21,7 +22,6 @@ namespace Photography.Controllers
         public async Task<IActionResult> All()
         {
             var model = await photoShootService.GetAllPhotoShootsAsync();
-
             return View(model);
         }
 
@@ -75,13 +75,40 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            var photoShoots = await photoShootService.GetAllPhotoShootsAsync();
+            var photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync();
 
             return View(photoShoots);
         }
 
-        //public async Task<IActionResult> DeclareParticipation()
-        //{
-        //}
+        [HttpPost]
+        public async Task<IActionResult> DeclareParticipation(string id)
+        {
+            string? currentUserId = GetUserId();
+
+           Guid photoShootIdGuid;
+            if (!Guid.TryParse(id, out photoShootIdGuid))
+            {
+                return BadRequest();
+            }
+
+            Guid userIdGuid;
+            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(photoShootIdGuid, userIdGuid);
+
+            if (hasUserDeclared)
+            {
+                TempData["HasDeclared"] = true;
+                return RedirectToAction("All", "PhotoShoot");
+            }
+
+            await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
+
+            return RedirectToAction("All", "PhotoShoot");
+
+        }
     }
 }
