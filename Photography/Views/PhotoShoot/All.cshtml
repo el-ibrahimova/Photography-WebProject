@@ -1,5 +1,8 @@
 ﻿@using Photography.Core.ViewModels.PhotoShoot
+@using Photography.Extensions
+@using Photography.Core.Interfaces
 @model IEnumerable<AllPhotoShootsViewModel>
+@inject IBaseService baseService
 
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
@@ -54,14 +57,17 @@ else
                     </div>
                 </div>
 
-                @if (User.Identity?.IsAuthenticated ?? false)
+                @if (User.Identity?.IsAuthenticated ?? false )
                 {
-                    <div class="text-center">
+                    @if (!await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                    {
+                         <div class="text-center">
                         <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
                             <input type="hidden" name="id" value="@photoShoot.Id" />
                             <button type="submit" class="btn btn-success btn-lg">Заяви участие</button>
                         </form>
                     </div>
+                    }
                 }
             </div>
         </div>

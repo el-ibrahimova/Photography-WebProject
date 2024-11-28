@@ -18,8 +18,8 @@
 <table class="table table-hover table-bordered">
     <thead class="table-light">
         <tr>
+            <th scope="col">Декори</th>
             <th scope="col">Име</th>
-            <th scope="col">Снимка</th>
             <th scope="col">Брой участници</th>
             <th scope="col">Име на участник</th>
             <th scope="col">Телефонен номер</th>
@@ -30,10 +30,22 @@
         @foreach (var photoShoot in Model)
         {
             <tr>
-                <td>@photoShoot.Name</td>
                 <td>
-                    <img src="@photoShoot.ImageUrl1" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl1))
+                    {
+                            <img src="@photoShoot.ImageUrl1" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                    }
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl2)){
+                       
+                            <img src="@photoShoot.ImageUrl2" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                    }
+                    @if (!string.IsNullOrEmpty(photoShoot.ImageUrl3))
+                    {
+                            <img src="@photoShoot.ImageUrl3" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                    }
                 </td>
+                <td>@photoShoot.Name</td>
+               
                 <td>@photoShoot.Participants.Count</td>
                 <td>
                     @if (photoShoot.Participants != null && photoShoot.Participants.Any())
@@ -49,9 +61,19 @@
                     {
                         @foreach (var participant in photoShoot.Participants)
                         {
-                            <p>@participant.PhoneNumber</p>
+                           
+                            @if (string.IsNullOrEmpty(participant.PhoneNumber))
+                            {
+                                <p>Няма информация</p>
+                            }
+                            else
+                            {
+                                 <p>@participant.PhoneNumber</p>  
+                            }
+                         
                         }
                     }
+                  
                 </td>
 
 
