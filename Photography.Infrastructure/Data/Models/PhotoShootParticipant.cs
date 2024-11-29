@@ -7,11 +7,7 @@ namespace Photography.Infrastructure.Data.Models
     [Comment("PhotoShoot Participant")]
     public class PhotoShootParticipant
     {
-        [Key]
-        [Comment("Identifier")]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Comment("PhotoShoot identifier")]
+       [Comment("PhotoShoot identifier")]
         public Guid PhotoShootId { get; set; }
 
         [ForeignKey(nameof(PhotoShootId))]

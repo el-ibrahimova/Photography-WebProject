@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Photography.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial3 : Migration
+    public partial class Initial4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace Photography.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "User First Name"),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "User Last Name"),
-                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 17, 9, 39, 48, 266, DateTimeKind.Local).AddTicks(6108), comment: "Date of user registration"),
+                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 29, 11, 53, 49, 265, DateTimeKind.Local).AddTicks(9542), comment: "Date of user registration"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -60,7 +60,8 @@ namespace Photography.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Category identifier"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Name of the category")
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Name of the category"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false, comment: "Is category deleted")
                 },
                 constraints: table =>
                 {
@@ -69,19 +70,23 @@ namespace Photography.Infrastructure.Migrations
                 comment: "Categories of photos");
 
             migrationBuilder.CreateTable(
-                name: "Offers",
+                name: "PhotoShoots",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Offer identifier"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Offer name"),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true, comment: "Offer description"),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false, comment: "Offer price")
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "PhotoShoot identifier"),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, comment: "PhotoShoot Name"),
+                    ImageUrl1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Image URL for first photo"),
+                    ImageUrl2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "Image URL for second photo"),
+                    ImageUrl3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "Image URL for third photo"),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Photo shoot description"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false, comment: "Is photo shoot deleted"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of PhotoShoot creation")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Offers", x => x.Id);
+                    table.PrimaryKey("PK_PhotoShoots", x => x.Id);
                 },
-                comment: "Offers");
+                comment: "PhotoShoot");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -190,6 +195,26 @@ namespace Photography.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Photographers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Photographer identifier"),
+                    BrandName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Brand name of the photographer"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Photographer user identifier")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photographers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photographers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "Photographer");
+
+            migrationBuilder.CreateTable(
                 name: "Photos",
                 columns: table => new
                 {
@@ -216,63 +241,27 @@ namespace Photography.Infrastructure.Migrations
                 comment: "Photo information");
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "PhotoShootParticipants",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Order identifier"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User identifier"),
-                    OfferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Offer identifier"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    PhotoShootId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "PhotoShoot identifier"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User identifier")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_PhotoShootParticipants", x => new { x.PhotoShootId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_UserId",
+                        name: "FK_PhotoShootParticipants_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Orders_Offers_OfferId",
-                        column: x => x.OfferId,
-                        principalTable: "Offers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_PhotoShootParticipants_PhotoShoots_PhotoShootId",
+                        column: x => x.PhotoShootId,
+                        principalTable: "PhotoShoots",
+                        principalColumn: "Id");
                 },
-                comment: "Order");
-
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Comment identifier"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User identifier"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Name of the user"),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Photo identifier"),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of post"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false, comment: "Is the comment deleted")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comments_Photos_PhotoId",
-                        column: x => x.PhotoId,
-                        principalTable: "Photos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "Photo comments");
+                comment: "PhotoShoot Participant");
 
             migrationBuilder.CreateTable(
                 name: "FavoritePhotos",
@@ -326,90 +315,57 @@ namespace Photography.Infrastructure.Migrations
                 name: "PhotosRatings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Rate identifier"),
                     PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Photo identifier"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User identifier")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PhotosRatings", x => x.Id);
+                    table.PrimaryKey("PK_PhotosRatings", x => new { x.UserId, x.PhotoId });
                     table.ForeignKey(
                         name: "FK_PhotosRatings_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PhotosRatings_Photos_PhotoId",
                         column: x => x.PhotoId,
                         principalTable: "Photos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 },
                 comment: "Rating for photo");
 
-            migrationBuilder.CreateTable(
-                name: "OrderPhotos",
-                columns: table => new
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "JoinedAt", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
                 {
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Photo identifier"),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Order identifier"),
-                    OfferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false, defaultValue: 1, comment: "Count of ordered photos")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderPhotos", x => new { x.OrderId, x.PhotoId, x.OfferId });
-                    table.ForeignKey(
-                        name: "FK_OrderPhotos_Offers_OfferId",
-                        column: x => x.OfferId,
-                        principalTable: "Offers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderPhotos_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_OrderPhotos_Photos_PhotoId",
-                        column: x => x.PhotoId,
-                        principalTable: "Photos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "Order photo");
+                    { new Guid("04c70e70-5cf9-4e8a-a694-5c7c8d730a8f"), 0, "3d10267a-8d59-423a-b85a-17b80171754b", "photographer@gmail.com", false, null, new DateTime(2024, 11, 29, 11, 53, 49, 266, DateTimeKind.Local).AddTicks(627), null, false, null, "PHOTOGRAPHER@GMAIL.COM", "PHOTOGRAPHER", "AQAAAAIAAYagAAAAEK+lSGwXWkv2OaaJq27/muNkREP4C7QrfCXAeEyqfF5Zm4Q63r7maZpkmVY3ZZTtDw==", null, false, "a2290c22-4a8e-4f2e-b0c4-8846966f13eb", false, "Photographer" },
+                    { new Guid("a18bb94e-1a7c-4d44-b80c-fc984acf1b0d"), 0, "ae64946b-18ef-419a-9e6b-7a18603d0f7e", "admin@photography.com", false, null, new DateTime(2024, 11, 29, 11, 53, 49, 266, DateTimeKind.Local).AddTicks(493), null, false, null, "ADMIN@PHOTOGRAPHY.COM", "АDMIN", "AQAAAAIAAYagAAAAEAvuJAI0fwAKjnjnjfk5SzCcwENc0yQsKitcUk246nMgZaK3GDZW/vDUaJb3kEojuA==", null, false, "200ccbe6-6a76-4af3-a1e1-5ab7b9ac5cba", false, "Admin" },
+                    { new Guid("debacea0-5c7b-461d-a2fb-5af5284a7f9a"), 0, "b409571a-e2ee-48a9-b4ff-8daa24f24369", "client_two@gmail.com", false, null, new DateTime(2024, 11, 29, 11, 53, 49, 266, DateTimeKind.Local).AddTicks(467), null, false, null, "CLIENT_TWO@GMAIL.COM", "CLIENTTWO", "AQAAAAIAAYagAAAAENx3kF4xorQudv/SeHt/DSX8U65smQ4A7obtsdDmfjngDktovSNxrUQKH5oZbXwqRg==", null, false, "14996aee-a058-4d8d-847a-0951f9d02da7", false, "ClientTwo" },
+                    { new Guid("e8e05209-b1ce-43e9-898b-885dd3ffc422"), 0, "082f2800-7288-456f-9fa8-a117d69b92bd", "client_one@gmail.com", false, null, new DateTime(2024, 11, 29, 11, 53, 49, 266, DateTimeKind.Local).AddTicks(453), null, false, null, "CLIENT_ONE@GMAIL.COM", "CLIENTONE", "AQAAAAIAAYagAAAAEOYzVXutrowe2Oj63vfnAbuP1uNE1x+Ykk+stDi3hUFg2LuuxFV3TpE7/HnZGmlo9Q==", null, false, "0163f6c9-30ec-417a-a3a0-6cddf1fe3568", false, "ClientOne" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("0ef7c457-fec7-4c00-a334-762e6a84d3f9"), "Пейзажи" },
-                    { new Guid("1cdea3e7-0f92-4dab-92dc-1e3d6a37a1f8"), "Природа" },
-                    { new Guid("5cc78c54-44f7-4895-8db0-d762968f1001"), "Семейна фотография" },
-                    { new Guid("7060b10c-0ce1-4c2e-87c9-c071c517b6c3"), "Мода" },
-                    { new Guid("75bdf241-2093-455c-b640-869f9b4bf52a"), "Черно-бяла фотография" },
-                    { new Guid("7e53213f-0951-437a-9613-a18db925bba9"), "Храна и напитки" },
-                    { new Guid("8256a07f-e113-4f3c-8725-1c5368c7694d"), "Спорт" },
-                    { new Guid("9b627dc8-34fd-40fc-b615-ba1fb3a68e3e"), "Пътуваня и дестинации" },
-                    { new Guid("a550a3d7-c39f-4506-bed6-2715b0970675"), "Архитектура" },
-                    { new Guid("a72a41b7-fa6c-4efc-bbef-ad4ffa07fd39"), "Животни" }
+                    { new Guid("1e941d1e-6ed2-4c34-8717-79e8c008701e"), "Черно-бяла фотография" },
+                    { new Guid("2ec56978-acee-48b6-bf54-446597d83ec7"), "Мода" },
+                    { new Guid("677118c4-da24-4d95-8047-cd2013447a2e"), "Природа" },
+                    { new Guid("6d324290-7af6-4e7c-b29e-5aff991d3d2f"), "Архитектура" },
+                    { new Guid("88d1520a-f51f-4016-ab93-b170b1b640f4"), "Семейна фотография" },
+                    { new Guid("8ba1a6b0-ad7e-4185-baad-3bae3105e4ba"), "Пейзажи" },
+                    { new Guid("9964411b-04a6-4bc7-b5f4-b41d59537e40"), "Пътуваня и дестинации" },
+                    { new Guid("ad694ea0-2845-48bd-85f4-ba5ebbce2df2"), "Животни" },
+                    { new Guid("c1c2bd67-7157-48ee-90d3-09bb04c44aa6"), "Спорт" },
+                    { new Guid("f93bf742-8828-4be6-8004-11208829b66c"), "Храна и напитки" }
                 });
 
             migrationBuilder.InsertData(
-                table: "Offers",
-                columns: new[] { "Id", "Description", "Name", "Price" },
-                values: new object[,]
-                {
-                    { new Guid("0f3e9895-7485-411c-a113-001e68455bab"), null, "Печат на снимка в размер 9х13", 0.40m },
-                    { new Guid("14de24dc-e762-4ec8-801d-f101e811239f"), null, "Печат на снимка в размер 13x18", 1.20m },
-                    { new Guid("a22e5e73-4ee9-4f2f-99e4-c5c168c16595"), null, "Печат на снимка в размер 10x15", 0.45m },
-                    { new Guid("a5c2d5e5-3252-4e5e-b1c2-c77695b98140"), "Възможни са различни размери", "Печат на снимка върху тениска", 18m },
-                    { new Guid("d134ca62-15d6-4db3-9854-a093d8bb3160"), null, "Печат на снимка върху чаша", 12.00m },
-                    { new Guid("eea06896-0a27-4fc8-9fcf-b7fc4be1077d"), null, "Печат на снимка в размер А4", 2.00m }
-                });
+                table: "Photographers",
+                columns: new[] { "Id", "BrandName", "UserId" },
+                values: new object[] { new Guid("cd32306a-b068-4473-ae9d-6fd1bff6e8a2"), "NIES", new Guid("04c70e70-5cf9-4e8a-a694-5c7c8d730a8f") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -451,38 +407,13 @@ namespace Photography.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_PhotoId",
-                table: "Comments",
-                column: "PhotoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
-                table: "Comments",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FavoritePhotos_UserId",
                 table: "FavoritePhotos",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderPhotos_OfferId",
-                table: "OrderPhotos",
-                column: "OfferId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderPhotos_PhotoId",
-                table: "OrderPhotos",
-                column: "PhotoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_OfferId",
-                table: "Orders",
-                column: "OfferId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserId",
-                table: "Orders",
+                name: "IX_Photographers_UserId",
+                table: "Photographers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -496,14 +427,14 @@ namespace Photography.Infrastructure.Migrations
                 column: "PhotoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PhotoShootParticipants_UserId",
+                table: "PhotoShootParticipants",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PhotosRatings_PhotoId",
                 table: "PhotosRatings",
                 column: "PhotoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PhotosRatings_UserId",
-                table: "PhotosRatings",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -525,16 +456,16 @@ namespace Photography.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
                 name: "FavoritePhotos");
 
             migrationBuilder.DropTable(
-                name: "OrderPhotos");
+                name: "Photographers");
 
             migrationBuilder.DropTable(
                 name: "PhotosCategories");
+
+            migrationBuilder.DropTable(
+                name: "PhotoShootParticipants");
 
             migrationBuilder.DropTable(
                 name: "PhotosRatings");
@@ -543,16 +474,13 @@ namespace Photography.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Photos");
+                name: "PhotoShoots");
 
             migrationBuilder.DropTable(
-                name: "Offers");
+                name: "Photos");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

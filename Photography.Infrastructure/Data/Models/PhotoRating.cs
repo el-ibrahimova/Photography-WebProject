@@ -7,11 +7,7 @@ namespace Photography.Infrastructure.Data.Models
     [Comment("Rating for photo")]
     public class PhotoRating
     {
-        [Key]
-        [Comment("Rate identifier")]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Comment("Photo identifier")]
+      [Comment("Photo identifier")]
         public Guid PhotoId { get; set; }
 
         [ForeignKey(nameof(PhotoId))]
