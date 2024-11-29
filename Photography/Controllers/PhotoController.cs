@@ -17,6 +17,7 @@ namespace Photography.Controllers
             photoService = _photoService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -31,6 +32,7 @@ namespace Photography.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
@@ -41,14 +43,19 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
+            var userId = GetUserId() ?? String.Empty;
+
+            if (!model.IsPrivate)
+            {
+                model.UserOwnerId = Guid.Parse(userId);
+            }
+
             if (!ModelState.IsValid)
             {
                 model = await photoService.GetAddPhotoAsync();
                 return View(model);
             }
-
-            var userId = GetUserId() ?? String.Empty;
-
+            
             bool result = await photoService.AddPhotoAsync(model, userId);
 
             if (result == false)
@@ -175,7 +182,7 @@ namespace Photography.Controllers
             string userId = GetUserId() ?? String.Empty;
 
             Guid userIdGuid = Guid.Empty;
-            if (!photoService.IsGuidValid(userId, ref userIdGuid) || model.UserOwnerId != userIdGuid)
+            if (!photoService.IsGuidValid(userId, ref userIdGuid) || model.UserOwnerId != userIdGuid.ToString())
             {
                 return Unauthorized();
             }

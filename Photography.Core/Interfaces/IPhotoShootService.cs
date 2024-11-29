@@ -7,10 +7,12 @@ namespace Photography.Core.Interfaces
     {
         Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsAsync();
         Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync();
-
         Task <bool> AddPhotoShootAsync(AddPhotoShootViewModel model);
-
         Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid);
         Task AddParticipantToPhotoShoot(Guid photoIdGuid, Guid userIdGuid);
+      
+        
+        Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid);
+        Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model);
     }
 }

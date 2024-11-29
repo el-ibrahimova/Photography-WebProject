@@ -15,7 +15,7 @@ namespace Photography.Core.ViewModels.Photo
 
 
         [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength)]
-        public string? TagUser { get; set; } 
+        public string? TagUser { get; set; }
 
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string? Description { get; set; }
@@ -28,17 +28,17 @@ namespace Photography.Core.ViewModels.Photo
         [Required(ErrorMessage = PhotoImageUrlRequiredMessage)]
         [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
         public string ImageUrl { get; set; } = null!;
-        
+
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
 
-        [Required]
         public bool IsPrivate { get; set; }
 
-        public Guid? UserOwnerId { get; set; }
+        [Required]
+        public Guid UserOwnerId { get; set; } 
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
 
-        public ICollection<Guid> SelectedCategoryIds { get; set; }= new HashSet<Guid>();
+        public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>();
     }
 }

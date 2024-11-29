@@ -12,6 +12,7 @@ namespace Photography.Infrastructure.Data.Configurations
                 .HasDefaultValue(false);
             builder.Property(p => p.Rating)
                 .HasDefaultValue(0);
-        }
+
+           }
     }
 }

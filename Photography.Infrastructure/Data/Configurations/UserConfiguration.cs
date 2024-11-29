@@ -12,7 +12,7 @@ namespace Photography.Infrastructure.Data.Configurations
         {
             builder.Property(u => u.JoinedAt)
                 .HasDefaultValue(DateTime.Now);
-
+           
             builder.HasData(SeedUsers());
         }
 

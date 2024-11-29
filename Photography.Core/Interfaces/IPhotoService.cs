@@ -16,7 +16,7 @@ namespace Photography.Core.Interfaces
         Task RemovePhotoFromFavoritesAsync(string userId, string photoId);
         Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid);
         Task<bool> EditPhotoAsync(EditPhotoViewModel model);
-        Task <DeleteViewModel>GetPhotoDelete(string photoId);
+        Task <DeleteViewModel?>GetPhotoDelete(string photoId);
         Task<Photo> DeletePhotoAsync(string photoId);
 
         Task<ICollection<CategoryViewModel>> GetCategoriesAsync();

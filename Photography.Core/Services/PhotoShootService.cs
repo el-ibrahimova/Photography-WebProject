@@ -45,6 +45,7 @@ namespace Photography.Core.Services
                 .Where(ps => ps.IsDeleted == false)
                 .Select(ps => new AllPhotoShootsViewModel()
                 {
+                    Id = ps.Id.ToString(),
                     Name = ps.Name,
                     ImageUrl1 = ps.ImageUrl1,
                     ImageUrl2 = ps.ImageUrl2,
@@ -117,5 +118,55 @@ namespace Photography.Core.Services
             }
         }
 
+        public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid)
+        {
+                var photoShoot = await context.PhotoShoots
+                    .Where(ps => ps.IsDeleted == false && ps.Id == photoShootGuid)
+                    .FirstOrDefaultAsync();
+
+                if (photoShoot == null)
+                {
+                    throw new ArgumentException("Фотосесията не съществува");
+                }
+
+                var model = new EditPhotoShootViewModel()
+                {
+                    Id = photoShoot.Id.ToString(),
+                    Name = photoShoot.Name,
+                    Description = photoShoot.Description,
+                    ImageUrl1 = photoShoot.ImageUrl1,
+                    ImageUrl2 = photoShoot.ImageUrl2,
+                    ImageUrl3 = photoShoot.ImageUrl3
+                };
+
+                return model;
+            }
+
+        public async Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model)
+        {
+            if (!Guid.TryParse(model.Id, out Guid photoShootIdGuid))
+            {
+                return false;
+            }
+
+            var photoShoot = await context.PhotoShoots
+                .Where(ps => !ps.IsDeleted && ps.Id == photoShootIdGuid)
+                .FirstOrDefaultAsync();
+
+            if (photoShoot == null)
+            {
+                return false;
+            }
+
+            photoShoot.Name = model.Name;
+            photoShoot.Description = model.Description;
+            photoShoot.ImageUrl1 = model.ImageUrl1;
+            photoShoot.ImageUrl2 = model.ImageUrl2;
+            photoShoot.ImageUrl3 = model.ImageUrl3;
+            
+            await context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -28,10 +28,8 @@ namespace Photography.Infrastructure.Data
         public DbSet<PhotoShoot> PhotoShoots { get; set; } = null!;
         public DbSet<PhotoShootParticipant> PhotoShootParticipants { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //    => options.UseSqlServer("DefaultConnection");
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

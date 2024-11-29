@@ -9,7 +9,7 @@ namespace Photography.Infrastructure.Data.Models
     [Comment("Photo information")]
     public class Photo
     {
-        [Key]
+      [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("Photo identifier")]
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -42,19 +42,18 @@ namespace Photography.Infrastructure.Data.Models
         public bool IsDeleted { get; set; }
 
 
-        [Required]
         [Comment("Is the photo private ot public")]
         public bool IsPrivate { get; set; }
 
-        [Comment("Is the user owner of photo")]
-        public Guid? UserOwnerId { get; set; }
+        [Required]
+        [Comment("Owner of photo")]
+        public Guid UserOwnerId { get; set; }
 
-        [ForeignKey(nameof(UserOwnerId))]
-        public ApplicationUser? Owner { get; set; }
+        [ForeignKey(nameof(UserOwnerId))] 
+        public ApplicationUser Owner { get; set; } = null!;
 
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
-
 
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
         public ICollection<PhotoRating> PhotosRatings { get; set; } = new HashSet<PhotoRating>();

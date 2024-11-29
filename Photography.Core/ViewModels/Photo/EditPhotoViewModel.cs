@@ -34,7 +34,7 @@ namespace Photography.Core.ViewModels.Photo
         [Required]
         public bool IsPrivate { get; set; }
 
-        public Guid? UserOwnerId { get; set; }
+        public string UserOwnerId { get; set; }
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
 

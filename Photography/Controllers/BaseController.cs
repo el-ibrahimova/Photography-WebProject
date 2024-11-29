@@ -24,9 +24,9 @@ namespace Photography.Controllers
             return true;
         }
 
-        protected string? GetUserId()
+        protected string GetUserId()
         {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+            return User?.FindFirstValue(ClaimTypes.NameIdentifier)?? string.Empty;
         }
         
     }

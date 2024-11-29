@@ -51,7 +51,16 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            var userOwnerId = model.UserOwnerId;
+            var userOwnerId =Guid.Empty;
+
+            if (!model.IsPrivate)
+            {
+                userOwnerId = Guid.Parse(userId);
+            }
+            else
+            {
+                userOwnerId = model.UserOwnerId;
+            }
 
             var photo = new Photo
             {
@@ -60,17 +69,21 @@ namespace Photography.Core.Services
                 UploadedAt = uploadedAt,
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
-                UserOwnerId =
-                    model.IsPrivate
-                        ? userOwnerId
-                        : Guid.Parse(userId), //  save userOwnerId only if photo is private, or else save it to userId
+                UserOwnerId = userOwnerId,
                 PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
                     .ToList()
             };
 
-            await context.Photos.AddAsync(photo);
-            await context.SaveChangesAsync();
-            return true;
+            try
+            {
+                await context.Photos.AddAsync(photo);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid)
@@ -216,7 +229,7 @@ namespace Photography.Core.Services
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
                 ImageUrl = photo.ImageUrl,
                 IsPrivate = photo.IsPrivate,
-                UserOwnerId = photo.UserOwnerId,
+                UserOwnerId = photo.UserOwnerId.ToString(),
                 Categories = await GetCategoriesAsync(),
                 UserPhotoOwners = await GetAllUsersAsync()
             };
@@ -255,7 +268,7 @@ namespace Photography.Core.Services
             photo.ImageUrl = model.ImageUrl;
             photo.Description = model.Description;
             photo.IsPrivate = model.IsPrivate;
-            photo.UserOwnerId = model.UserOwnerId;
+            photo.UserOwnerId = Guid.Parse(model.UserOwnerId);
             photo.UploadedAt = uploadedAt;
             photo.PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory { CategoryId = id }).ToList();
 
@@ -264,7 +277,7 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<DeleteViewModel> GetPhotoDelete(string photoId)
+        public async Task<DeleteViewModel?> GetPhotoDelete(string photoId)
         {
           return await context.Photos
                 .AsNoTracking()

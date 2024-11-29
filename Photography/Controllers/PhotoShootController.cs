@@ -1,8 +1,9 @@
-﻿using System.Security.Policy;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Photography.Core.Interfaces;
 using Photography.Core.Services;
+using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.PhotoShoot;
 using static Photography.Common.ApplicationConstants;
 namespace Photography.Controllers
@@ -25,6 +26,7 @@ namespace Photography.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -39,6 +41,7 @@ namespace Photography.Controllers
             return this.View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoShootViewModel model)
         {
@@ -51,7 +54,7 @@ namespace Photography.Controllers
 
             if (!this.ModelState.IsValid)
             {
-             return this.View(model);
+                return this.View(model);
             }
 
 
@@ -62,9 +65,10 @@ namespace Photography.Controllers
                 return this.View(model);
             }
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(Manage));
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
@@ -80,12 +84,13 @@ namespace Photography.Controllers
             return View(photoShoots);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> DeclareParticipation(string id)
         {
             string? currentUserId = GetUserId();
 
-           Guid photoShootIdGuid;
+            Guid photoShootIdGuid;
             if (!Guid.TryParse(id, out photoShootIdGuid))
             {
                 return BadRequest();
@@ -107,8 +112,56 @@ namespace Photography.Controllers
 
             await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
 
-            return RedirectToAction("All", "PhotoShoot");
+            return RedirectToAction(nameof(All));
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("All", "PhotoShoot");
+            }
+
+            Guid photoShootGuid = Guid.Empty;
+            if (!photoShootService.IsGuidValid(id, ref photoShootGuid))
+            {
+                return RedirectToAction("All", "PhotoShoot");
+            }
+
+            var model = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPhotoShootViewModel model)
+        {
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+
+            if (!isPhotographer)
+            {
+                return RedirectToAction("All", "PhotoShoot");
+            }
+
+            var result = await photoShootService.EditPhotoShootAsync(model);
+
+            if (!result)
+            {
+                Guid photoShootGuid = Guid.Empty;
+                if (!photoShootService.IsGuidValid(model.Id, ref photoShootGuid))
+                {
+                    return RedirectToAction("All", "PhotoShoot");
+                }
+
+                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid);
+
+                return View(photoShoot);
+            }
+
+            return RedirectToAction("Manage", "PhotoShoot");
         }
     }
 }

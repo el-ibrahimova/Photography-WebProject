@@ -1,8 +1,7 @@
 ﻿@using static Photography.Common.ApplicationConstants
-@using Photography.Core.Services
 @using Photography.Extensions
 @using Photography.Core.Interfaces
-@inject IBaseService baseService
+@inject IBaseService BaseService
 
 @{
     // check for current year and use it in the footer
@@ -40,9 +39,19 @@
                         <li class="nav-item">
                             <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="Gallery">Галерия</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="navbar-brand" asp-area="" asp-controller="PhotoShoot" asp-action="All">Фотосесии</a>
+                        </li>
 
                         @if (this.User?.Identity?.IsAuthenticated ?? false)
                         {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Favorite">Любими</a>
+                            </li>
+
 
                             @if (User.IsInRole(AdminRoleName))
                             {
@@ -52,7 +61,7 @@
                             }
                             else
                             {
-                                @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
+                                @if (await BaseService.IsUserPhotographerAsync(this.User.GetUserId()))
                                 {
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle text-dark" href="#" id="photographerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,29 +74,13 @@
                                         </ul>
                                     </li>
                                 }
-                                <li class="nav-item">
-                                    <a class="navbar-brand" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята Галерия</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="navbar-brand" asp-area="" asp-controller="Photo" asp-action="Favorite">Любими</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="navbar-brand" asp-area="" asp-controller="PhotoShoot" asp-action="All">Фотосесии</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="navbar-brand" asp-area="" asp-controller="PhotoShoot" asp-action="Add">Добави Фотосесия</a>
-                                </li>
                             }
-
-
                         }
+
                         <form class="d-flex">
                             <input class="form-control me-sm-2" type="search" placeholder="Търси">
                             <button class="btn btn-secondary my-2 my-sm-0" type="submit">Търси</button>
                         </form>
-
-
                     </ul>
 
                     <partial name="_LoginPartial" />
@@ -102,14 +95,13 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @footerNote - NIES Photography
-        </div>
-    </footer>
+<footer class="border-top footer text-muted">
+    <div class="container">
+        <p>&copy; @footerNote - NIES Photography</p>
+    </div>
+</footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
