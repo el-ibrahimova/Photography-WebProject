@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Photography.Controllers
@@ -11,6 +12,7 @@ namespace Photography.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             //if (User?.Identity != null && User.Identity.IsAuthenticated)
@@ -20,6 +22,7 @@ namespace Photography.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Error(int? statusCode = null)
         {
             if (!statusCode.HasValue)

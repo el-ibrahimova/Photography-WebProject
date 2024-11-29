@@ -5,8 +5,7 @@ using Photography.Core.ViewModels.Gallery;
 
 namespace Photography.Controllers
 {
-    [Authorize]
-    public class GalleryController : BaseController
+  public class GalleryController : BaseController
     {
 
         private readonly IGalleryService galleryService;

@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
-using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.PhotoShoot;
 using static Photography.Common.ApplicationConstants;
 namespace Photography.Controllers
 {
-    [Authorize]
     public class PhotoShootController : BaseController
     {
         private readonly IPhotoShootService photoShootService;
@@ -26,7 +22,6 @@ namespace Photography.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -41,7 +36,6 @@ namespace Photography.Controllers
             return this.View();
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoShootViewModel model)
         {
@@ -68,7 +62,6 @@ namespace Photography.Controllers
             return RedirectToAction(nameof(Manage));
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
@@ -84,7 +77,6 @@ namespace Photography.Controllers
             return View(photoShoots);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> DeclareParticipation(string id)
         {

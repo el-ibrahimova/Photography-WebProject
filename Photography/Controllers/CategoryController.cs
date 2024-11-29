@@ -6,14 +6,14 @@ using CategoryFormViewModel = Photography.Core.ViewModels.Category.CategoryFormV
 
 namespace Photography.Controllers
 {
-    [Authorize]
+
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
 
         public CategoryController(ICategoryService _categoryService)
         {
-            categoryService=_categoryService;
+            categoryService = _categoryService;
         }
 
         [HttpGet]
@@ -66,7 +66,7 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit( string id)
+        public async Task<IActionResult> Edit(string id)
         {
             bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
@@ -104,7 +104,7 @@ namespace Photography.Controllers
 
             if (!result)
             {
-             return View(model);
+                return View(model);
             }
 
             return RedirectToAction("Manage", "Category");

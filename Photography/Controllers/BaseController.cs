@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Photography.Controllers
 {
+    [Authorize]
     public class BaseController:Controller
     {
         protected bool IsGuidValid(string? id, ref Guid parsedGuid)

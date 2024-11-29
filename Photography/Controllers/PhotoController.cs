@@ -6,8 +6,7 @@ using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
-    [Authorize]
-    public class PhotoController : BaseController
+  public class PhotoController : BaseController
     {
         private readonly IPhotoService photoService;
 
@@ -17,7 +16,6 @@ namespace Photography.Controllers
             photoService = _photoService;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -32,7 +30,6 @@ namespace Photography.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
