@@ -1,0 +1,54 @@
+﻿@using Photography.Core.ViewModels.PhotoShoot
+@model EditPhotoShootViewModel
+
+@{
+    ViewBag.Title = "Редактиране";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form asp-action="Edit" method="post">
+          
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label-add-edit">Име</label>
+                <input asp-for="Name" class="form-control" aria-required="true" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl1" class="form-label-add-edit">URL адрес</label>
+                <input asp-for="ImageUrl1" class="form-control" aria-required="true" />
+                <span asp-validation-for="ImageUrl1" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl2" class="form-label-add-edit">URL адрес</label>
+                <input asp-for="ImageUrl2" class="form-control" aria-required="false" />
+                <span asp-validation-for="ImageUrl2" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl3" class="form-label-add-edit">URL адрес</label>
+                <input asp-for="ImageUrl3" class="form-control" aria-required="false" />
+                <span asp-validation-for="ImageUrl3" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label-add-edit">Описание</label>
+                <textarea asp-for="Description" class="form-control" aria-required="true" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input class="btn btn-warning mb-2 w-100 p-3 fw-bold" type="submit" value="Редактирай" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
