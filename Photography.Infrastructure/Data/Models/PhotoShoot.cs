@@ -27,7 +27,7 @@ namespace Photography.Infrastructure.Data.Models
         [MaxLength(ImageUrlMaxLength)]
         [Comment("Image URL for second photo")]
         public string? ImageUrl2 { get; set; }
-      
+
         [MaxLength(ImageUrlMaxLength)]
         [Comment("Image URL for third photo")]
         public string? ImageUrl3 { get; set; }
@@ -44,6 +44,10 @@ namespace Photography.Infrastructure.Data.Models
         [Required]
         [Comment("Date of PhotoShoot creation")]
         public DateTime CreatedAt { get; set; }
+
+        [Required]
+        [Comment("PhotoShoot photographer identifier")]
+        public Guid PhotographerId { get; set; }
 
         public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
     }

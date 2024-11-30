@@ -22,7 +22,7 @@ namespace Photography.Infrastructure.Data.Configurations
                 
             ApplicationUser clientUserOne = new ApplicationUser()
             {
-                Id = Guid.Parse("E8E05209-B1CE-43E9-898B-885DD3FFC422"),
+                Id = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
                 UserName = "ClientOne",
                 NormalizedUserName = "CLIENTONE",
                 Email = "client_one@gmail.com",
@@ -33,7 +33,7 @@ namespace Photography.Infrastructure.Data.Configurations
 
             ApplicationUser clientUserTwo = new ApplicationUser()
             {
-                Id = Guid.Parse("DEBACEA0-5C7B-461D-A2FB-5AF5284A7F9A"),
+                Id = Guid.Parse("33386302-4EB2-4A2B-925C-819C1B92CC4D"),
                 UserName = "ClientTwo",
                 NormalizedUserName = "CLIENTTWO",
                 Email = "client_two@gmail.com",
@@ -44,7 +44,7 @@ namespace Photography.Infrastructure.Data.Configurations
 
             ApplicationUser adminUser = new ApplicationUser()
             {
-                Id = Guid.Parse("A18BB94E-1A7C-4D44-B80C-FC984ACF1B0D"),
+                Id = Guid.Parse("0CEA6E1C-0655-4C21-A14B-5B5932332FFD"),
                 UserName = "Admin",
                 NormalizedUserName = "АDMIN",
                 Email = "admin@photography.com",
@@ -55,7 +55,7 @@ namespace Photography.Infrastructure.Data.Configurations
 
             ApplicationUser photographerUser = new ApplicationUser()
             {
-                Id = Guid.Parse("04C70E70-5CF9-4E8A-A694-5C7C8D730A8F"),
+                Id = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
                 UserName = "Photographer",
                 NormalizedUserName = "PHOTOGRAPHER",
                 Email = "photographer@gmail.com",

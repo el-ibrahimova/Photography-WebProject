@@ -9,6 +9,9 @@ namespace Photography.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<FavoritePhoto> builder)
         {
             builder.HasKey(fp => new { fp.PhotoId, fp.UserId });
+
+            builder.HasOne(fp => fp.Photo).WithMany(fp => fp.FavoritePhotos).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(fp => fp.User).WithMany(fp => fp.FavoritePhotos).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

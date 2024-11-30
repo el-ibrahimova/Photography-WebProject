@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
+using Photography.Extensions;
 using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
@@ -250,6 +251,14 @@ namespace Photography.Controllers
       public async Task<IActionResult> Delete(DeleteViewModel model)
         {
             var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
+
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (User.IsAdmin() || isPhotographer)
+            {
+                return RedirectToAction("Manage", "Photo");
+            }
+
             return RedirectToAction("MyGallery", "Gallery");
         }
     }

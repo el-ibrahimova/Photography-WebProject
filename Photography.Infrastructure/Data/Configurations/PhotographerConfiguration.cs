@@ -18,9 +18,9 @@ namespace Photography.Infrastructure.Data.Configurations
             {
                 new Photographer()
                 {
-                       Id = Guid.Parse("CD32306A-B068-4473-AE9D-6FD1BFF6E8A2"),
+                       Id = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4"),
                        BrandName = "NIES",
-                       UserId = Guid.Parse("04C70E70-5CF9-4E8A-A694-5C7C8D730A8F")
+                       UserId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
                 }
             };
 

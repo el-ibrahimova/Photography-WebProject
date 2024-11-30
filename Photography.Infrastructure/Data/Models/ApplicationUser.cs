@@ -27,8 +27,9 @@ namespace Photography.Infrastructure.Data.Models
         public DateTime JoinedAt { get; set; }
 
         public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
+        public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
 
-        public ICollection<PhotoRating> PhotosRatings { get; set; } = new List<PhotoRating>();
+        public ICollection<PhotoRating> PhotosRatings { get; set; } = new HashSet<PhotoRating>();
         public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
     }
 }

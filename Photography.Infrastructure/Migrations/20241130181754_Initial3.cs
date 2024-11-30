@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Photography.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial5 : Migration
+    public partial class Initial3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace Photography.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "User First Name"),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true, comment: "User Last Name"),
-                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 29, 14, 50, 8, 852, DateTimeKind.Local).AddTicks(5617), comment: "Date of user registration"),
+                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 30, 20, 17, 49, 934, DateTimeKind.Local).AddTicks(9147), comment: "Date of user registration"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -80,7 +80,8 @@ namespace Photography.Infrastructure.Migrations
                     ImageUrl3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "Image URL for third photo"),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Photo shoot description"),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false, comment: "Is photo shoot deleted"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of PhotoShoot creation")
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of PhotoShoot creation"),
+                    PhotographerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "PhotoShoot photographer identifier")
                 },
                 constraints: table =>
                 {
@@ -165,13 +166,13 @@ namespace Photography.Infrastructure.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,7 +211,7 @@ namespace Photography.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Photographer");
 
@@ -237,7 +238,7 @@ namespace Photography.Infrastructure.Migrations
                         column: x => x.UserOwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Photo information");
 
@@ -278,14 +279,12 @@ namespace Photography.Infrastructure.Migrations
                         name: "FK_FavoritePhotos_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_FavoritePhotos_Photos_PhotoId",
                         column: x => x.PhotoId,
                         principalTable: "Photos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 },
                 comment: "Favorite photo");
 
@@ -340,10 +339,10 @@ namespace Photography.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "JoinedAt", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("04c70e70-5cf9-4e8a-a694-5c7c8d730a8f"), 0, "deef420d-62d4-43ab-a67e-4070841437f6", "photographer@gmail.com", false, null, new DateTime(2024, 11, 29, 14, 50, 8, 852, DateTimeKind.Local).AddTicks(6587), null, false, null, "PHOTOGRAPHER@GMAIL.COM", "PHOTOGRAPHER", "AQAAAAIAAYagAAAAEOmgFlxLYde2duIj+kgcxB4MwqnohZCYBXi2BQOXUIbRroV9rTtBg5IiS0IjIvyJug==", null, false, "12b82058-3227-4b26-b36c-d28e238568e8", false, "Photographer" },
-                    { new Guid("a18bb94e-1a7c-4d44-b80c-fc984acf1b0d"), 0, "d84c5b45-96cf-4a05-94ed-07c184d6a647", "admin@photography.com", false, null, new DateTime(2024, 11, 29, 14, 50, 8, 852, DateTimeKind.Local).AddTicks(6566), null, false, null, "ADMIN@PHOTOGRAPHY.COM", "АDMIN", "AQAAAAIAAYagAAAAEHvtaRCWm6xDNJ2jeuZ509sSkm5MhLBlTH6BA4GwS97CTENVrbFnMxHy+Vok9bCR+A==", null, false, "d361436b-ffee-46a9-9eb5-54b6f333124e", false, "Admin" },
-                    { new Guid("debacea0-5c7b-461d-a2fb-5af5284a7f9a"), 0, "3484a79e-fb5d-4d0a-8d0a-8a05da54abb7", "client_two@gmail.com", false, null, new DateTime(2024, 11, 29, 14, 50, 8, 852, DateTimeKind.Local).AddTicks(6541), null, false, null, "CLIENT_TWO@GMAIL.COM", "CLIENTTWO", "AQAAAAIAAYagAAAAELC38pQpsl39R/thoStp3hzBENJ1ozHUBi+3U8/A7sCGeIPt2AS1Dco5uABRwFN3qA==", null, false, "e6f1773d-edb2-4efc-b78f-0578d7ba5f6b", false, "ClientTwo" },
-                    { new Guid("e8e05209-b1ce-43e9-898b-885dd3ffc422"), 0, "d0e46d2e-8c08-40ee-a1bd-486e0ac61f11", "client_one@gmail.com", false, null, new DateTime(2024, 11, 29, 14, 50, 8, 852, DateTimeKind.Local).AddTicks(6526), null, false, null, "CLIENT_ONE@GMAIL.COM", "CLIENTONE", "AQAAAAIAAYagAAAAEOtXz3gPe3VsTc5hGkeVA9v1+NWSDUyiIV38b0r4qlh+TwDq2GCa0Of/JUU3QlB9bQ==", null, false, "5bbf393c-932d-4730-b7b3-25e24cd73dbc", false, "ClientOne" }
+                    { new Guid("0cea6e1c-0655-4c21-a14b-5b5932332ffd"), 0, "1111d475-cdbb-4984-89fc-29832b90ae50", "admin@photography.com", false, null, new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1267), null, false, null, "ADMIN@PHOTOGRAPHY.COM", "АDMIN", "AQAAAAIAAYagAAAAEIoiOR/mxHl9qeaFMV/iawrJzvrcbGYCMOhcASHtIFNAgkIPTIlHa+dy+CQb4TckCA==", null, false, "113fe0a8-1e75-432c-83f1-46c9c039fb7c", false, "Admin" },
+                    { new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d"), 0, "263ed5ee-dccb-45e1-8475-d90c9a9c76d1", "client_two@gmail.com", false, null, new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1218), null, false, null, "CLIENT_TWO@GMAIL.COM", "CLIENTTWO", "AQAAAAIAAYagAAAAEBnThCWBvFnsJGhVILRfVnPCqynLYSNEZ9WKQTumm6As8LMmENqdSEvIuBDMC+oc7w==", null, false, "c909d191-8de4-40e0-ad79-f58306af0535", false, "ClientTwo" },
+                    { new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846"), 0, "fff8658e-d041-4e50-8746-9cdc8096d715", "client_one@gmail.com", false, null, new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(872), null, false, null, "CLIENT_ONE@GMAIL.COM", "CLIENTONE", "AQAAAAIAAYagAAAAEH7ealSVaGavyPrS0YUZgwmuMN5fx6OU5zrO4nSbsF0jLuyvyyNkhu1vhECengpN0A==", null, false, "36523440-373d-4d1e-9c42-e2d3fb582917", false, "ClientOne" },
+                    { new Guid("95d458a7-115a-4db5-9319-809c7763d841"), 0, "1ce74563-eb1f-4ddf-ab0b-b08287d7f39c", "photographer@gmail.com", false, null, new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1334), null, false, null, "PHOTOGRAPHER@GMAIL.COM", "PHOTOGRAPHER", "AQAAAAIAAYagAAAAEFbeUu/rDXlSnAQEs2BtklT/2wETc67AprlAFKH3UFC0hN86Jhf78NwVg0NG349CRA==", null, false, "9933c751-408d-4536-a368-9fa0a2c6a2e4", false, "Photographer" }
                 });
 
             migrationBuilder.InsertData(
@@ -351,22 +350,22 @@ namespace Photography.Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("2f8d49c4-ec1b-4852-a392-4a61591f7dcd"), "Архитектура" },
-                    { new Guid("4f6fcb7c-0048-496e-af1d-007150b3a869"), "Животни" },
-                    { new Guid("63c26802-6fb9-40b0-8eb8-4f8ac4d0d115"), "Мода" },
-                    { new Guid("758ebdfe-5975-4003-80e1-79c5e45a7ad8"), "Храна и напитки" },
-                    { new Guid("b86021c5-5629-45b3-8068-00b771401596"), "Черно-бяла фотография" },
-                    { new Guid("c5041610-2b73-4693-bfa4-8a5e110c6d54"), "Пейзажи" },
-                    { new Guid("c53f315f-d06b-43d3-96aa-868464446420"), "Спорт" },
-                    { new Guid("c8bf58e9-4928-4cbe-ba17-f5fa5a9d34c9"), "Пътуваня и дестинации" },
-                    { new Guid("cfe57054-76b9-4de5-8b48-166dd1b26214"), "Природа" },
-                    { new Guid("e023b452-d6be-4463-9068-77f90c55a944"), "Семейна фотография" }
+                    { new Guid("28f3ee06-3b31-44d2-a6e7-95bb7c0a387e"), "Храна и напитки" },
+                    { new Guid("32218c94-93ec-4bf5-be8e-9d1d7b4e6048"), "Пейзажи" },
+                    { new Guid("387253a3-6b29-4300-a5a8-f9fc291fc62a"), "Природа" },
+                    { new Guid("4f3ead01-5f84-4522-9649-8971e196c062"), "Спорт" },
+                    { new Guid("7944ae45-396f-48d8-b6c6-368b2a7fba41"), "Мода" },
+                    { new Guid("8e38b8bd-1d71-4ba5-ab47-da801536b5e1"), "Архитектура" },
+                    { new Guid("cc8d8279-95e3-412d-82db-d751a46aefb6"), "Черно-бяла фотография" },
+                    { new Guid("eaed7ca1-b40c-4644-94d3-295786ac92cd"), "Семейна фотография" },
+                    { new Guid("ebbf45c7-37c7-4df7-9ae0-b4e8503a21d3"), "Животни" },
+                    { new Guid("f8ef36d1-fa74-4945-87bc-af7f6648bde6"), "Пътуваня и дестинации" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Photographers",
                 columns: new[] { "Id", "BrandName", "UserId" },
-                values: new object[] { new Guid("cd32306a-b068-4473-ae9d-6fd1bff6e8a2"), "NIES", new Guid("04c70e70-5cf9-4e8a-a694-5c7c8d730a8f") });
+                values: new object[] { new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"), "NIES", new Guid("95d458a7-115a-4db5-9319-809c7763d841") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

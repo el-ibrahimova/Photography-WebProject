@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Photography.Infrastructure.Data.Configurations;
@@ -12,17 +13,14 @@ namespace Photography.Infrastructure.Data
         {
 
         }
-
         public PhotographyDbContext(DbContextOptions options)
             : base(options)
         {
         }
-
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Photo> Photos { get; set; } = null!;
         public DbSet<FavoritePhoto> FavoritePhotos { get; set; } = null!;
         public DbSet<PhotoCategory> PhotosCategories { get; set; } = null!;
-
         public DbSet<PhotoRating> PhotosRatings { get; set; } = null!;
         public DbSet<Photographer> Photographers { get; set; } = null!;
         public DbSet<PhotoShoot> PhotoShoots { get; set; } = null!;
@@ -33,8 +31,6 @@ namespace Photography.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
-
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new PhotographerConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
@@ -44,6 +40,8 @@ namespace Photography.Infrastructure.Data
             builder.ApplyConfiguration(new FavoritePhotoConfiguration());
             builder.ApplyConfiguration(new PhotoShootConfiguration());
             builder.ApplyConfiguration(new PhotoShootParticipantConfiguration());
+
+            base.OnModelCreating(builder);
         }
     }
 }

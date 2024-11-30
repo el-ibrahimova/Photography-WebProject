@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Photography.Infrastructure.Data.Models;
+﻿using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Core.ViewModels.Category
 {
