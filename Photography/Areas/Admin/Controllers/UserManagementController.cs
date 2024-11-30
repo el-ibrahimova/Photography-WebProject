@@ -10,7 +10,7 @@ namespace Photography.Areas.Admin.Controllers
 
     [Area(AdminRoleName)]
     [Authorize(Roles = AdminRoleName)]
-    public class UserManagementController:BaseController
+    public class UserManagementController : BaseController
     {
         private readonly IUserService userService;
 
@@ -82,28 +82,36 @@ namespace Photography.Areas.Admin.Controllers
 
             return this.RedirectToAction(nameof(Index));
         }
-
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             Guid userGuid = Guid.Empty;
-            if (this.IsGuidValid(userId, ref userGuid))
+            if (!this.IsGuidValid(userId, ref userGuid))
             {
                 return this.RedirectToAction(nameof(Index));
             }
 
-            bool userExist = await this.userService
+            bool userExists = await this.userService
                 .UserExistByIdAsync(userGuid);
-
-            if (!userExist)
+            if (!userExists)
             {
-                return RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(Index));
             }
 
-            bool deleteResult = await this.userService
-                .DeleteUserAsync(userGuid);
+            bool isUserPhotographer = await userService.IsUserPhotographerAsync(userGuid);
 
-            if (!deleteResult)
+            if (isUserPhotographer)
+            {
+                bool result = await userService.RemoveUserFromPhotographerAsync(userGuid);
+                if (!result)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+            }
+
+            bool removeResult = await this.userService
+                .DeleteUserAsync(userGuid);
+            if (!removeResult)
             {
                 return this.RedirectToAction(nameof(Index));
             }
@@ -120,7 +128,35 @@ namespace Photography.Areas.Admin.Controllers
             {
                 return this.RedirectToAction(nameof(Index));
             }
-            
+
+            return this.RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePhotographer(string userId)
+        {
+            Guid userGuid = Guid.Empty;
+            if (!this.IsGuidValid(userId, ref userGuid))
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            bool userExist = await this.userService
+                .UserExistByIdAsync(userGuid);
+
+            if (!userExist)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool removeResult = await this.userService
+                .RemoveUserFromPhotographerAsync(userGuid);
+
+            if (!removeResult)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
             return this.RedirectToAction(nameof(Index));
         }
 

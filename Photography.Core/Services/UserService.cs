@@ -34,7 +34,7 @@ namespace Photography.Core.Services
                 IEnumerable<string> roles = await this.userManager.GetRolesAsync(user);
 
                 var photographer = await context.Photographers.FirstOrDefaultAsync(p => p.UserId == user.Id);
-               
+
                 List<PhotographerViewModel> userPhotographer;
 
                 if (photographer != null)
@@ -53,7 +53,6 @@ namespace Photography.Core.Services
                     userPhotographer = new List<PhotographerViewModel>();
                 }
 
-
                 allUsersViewModel.Add(new AllUsersViewModel()
                 {
                     Id = user.Id.ToString(),
@@ -64,12 +63,18 @@ namespace Photography.Core.Services
             }
 
             return allUsersViewModel;
-
         }
 
         public async Task<bool> UserExistByIdAsync(Guid userId)
         {
             ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            return user != null;
+        }
+
+        public async Task<bool> IsUserPhotographerAsync(Guid userId)
+        {
+           Photographer? user = await this.context.Photographers.FirstOrDefaultAsync(u=>u.UserId==userId);
 
             return user != null;
         }
@@ -134,7 +139,7 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            IdentityResult result = await this.userManager.DeleteAsync(user);
+            IdentityResult? result = await this.userManager.DeleteAsync(user);
 
             if (!result.Succeeded)
             {
@@ -162,7 +167,7 @@ namespace Photography.Core.Services
 
             bool isBrandNameAlreadyInUse = await context.Photographers.AnyAsync(n => n.BrandName == brandName);
 
-            if(isBrandNameAlreadyInUse)
+            if (isBrandNameAlreadyInUse)
             {
                 return false;
             }
@@ -177,6 +182,30 @@ namespace Photography.Core.Services
             context.Photographers.Add(photographer);
             await context.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> RemoveUserFromPhotographerAsync(Guid userId)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null )
+            {
+                return false;
+            }
+
+            bool isPhotographer = await context.Photographers.AnyAsync(p=>p.UserId == userId);
+
+            if (!isPhotographer)
+            {
+                return false;
+            }
+
+            Photographer photographer = await context
+                .Photographers.FirstAsync(p => p.UserId == userId);
+
+            context.Photographers.Remove(photographer);
+            await context.SaveChangesAsync();
             return true;
         }
     }

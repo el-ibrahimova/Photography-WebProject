@@ -65,7 +65,7 @@
                         }
                         else
                         {
-                            <form method="post" asp-action="DeletePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                            <form method="post" asp-action="RemovePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
                                 <input type="hidden" name="userId" value="@user.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Изтрий фотограф</button>
                             </form>
