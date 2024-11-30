@@ -1,5 +1,6 @@
 ﻿using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.PhotoShoot;
+using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Core.Interfaces
 {
@@ -14,5 +15,7 @@ namespace Photography.Core.Interfaces
         
         Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid);
         Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model);
+        
+        Task<PhotoShoot?> GetPhotoShootByIdAsync(Guid photoIdGuid);
     }
 }

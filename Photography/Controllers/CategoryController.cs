@@ -1,30 +1,31 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Category;
 using CategoryFormViewModel = Photography.Core.ViewModels.Category.CategoryFormViewModel;
 
 namespace Photography.Controllers
 {
-
+    [Authorize]
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
 
         public CategoryController(ICategoryService _categoryService)
         {
-            categoryService = _categoryService;
+            categoryService=_categoryService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+       public async Task<IActionResult> Manage()
         {
-            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             var categories = await categoryService.GetAllCategoriesAsync();
 
@@ -33,27 +34,29 @@ namespace Photography.Controllers
 
 
         [HttpGet]
+        [MustBeAdmin]
         public async Task<IActionResult> Add()
         {
-            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+          // bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             return this.View();
         }
 
         [HttpPost]
+        [MustBeAdmin]
         public async Task<IActionResult> Add(AddCategoryViewModel model)
         {
-            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             if (!this.ModelState.IsValid)
             {
@@ -66,14 +69,15 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)
+        [MustBeAdmin]
+        public async Task<IActionResult> Edit( string id)
         {
-            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             Guid categoryGuid = Guid.Empty;
             if (!categoryService.IsGuidValid(id, ref categoryGuid))
@@ -91,26 +95,28 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
+        [MustBeAdmin]
         public async Task<IActionResult> Edit(CategoryFormViewModel model)
         {
-            bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await categoryService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             var result = await categoryService.EditCategoryAsync(model);
 
             if (!result)
             {
-                return View(model);
+             return View(model);
             }
 
             return RedirectToAction("Manage", "Category");
         }
 
         [HttpGet]
+        [MustBeAdmin]
         public async Task<IActionResult> Delete(string id)
         {
             var model = await categoryService.GetCategoryDelete(id);
@@ -124,6 +130,7 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
+        [MustBeAdmin]
         public async Task<IActionResult> Delete(CategoryFormViewModel model)
         {
             var categoryToDelete = await categoryService.DeleteCategoryAsync(model.Id);

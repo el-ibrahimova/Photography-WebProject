@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photographer;
 using Photography.Extensions;
@@ -16,6 +17,7 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
+        [MustBeAdmin]
         public IActionResult Add()
         {
             var model = new AddPhotographerViewModel();
@@ -24,6 +26,7 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
+        [MustBeAdmin]
         public async Task<IActionResult> Add(AddPhotographerViewModel model)
         {
             if (await photographerService.UserWithBrandNameExistAsync(model.BrandName))

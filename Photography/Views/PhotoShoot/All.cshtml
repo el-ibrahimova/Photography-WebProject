@@ -4,6 +4,14 @@
 @model IEnumerable<AllPhotoShootsViewModel>
 @inject IBaseService BaseService
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
@@ -46,27 +54,12 @@
                 {
                     @if (!await BaseService.IsUserPhotographerAsync(this.User.GetUserId()))
                     {
-                        @if (TempData["HasDeclared"] == null)
-                        {
-                            <div id="declarationAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong> Вие се записахте за тази фотосесия!</strong>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        }
-                        else
-                        {
-                            <div id="declarationAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong> Вече заявихте участие за тази фотосесия!</strong>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>   
-                        }
-
-                         <div class="text-center">
-                        <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
-                            <input type="hidden" name="id" value="@photoShoot.Id" />
-                            <button type="submit" class="btn btn-success btn-lg">Заяви участие</button>
-                        </form>
-                    </div>
+                        <div class="text-center">
+                            <form asp-controller="PhotoShoot" asp-action="DeclareParticipation" method="post">
+                                <input type="hidden" name="id" value="@photoShoot.Id" />
+                                <button type="submit" class="btn btn-success btn-lg">Заяви участие</button>
+                            </form>
+                        </div>
                     }
                 }
             </div>
@@ -74,6 +67,9 @@
     }
 </div>
 
+
+
+            
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -168,5 +168,10 @@ namespace Photography.Core.Services
 
             return true;
         }
+
+        public async Task<PhotoShoot?> GetPhotoShootByIdAsync(Guid photoIdGuid)
+        {
+            return await context.PhotoShoots.FirstOrDefaultAsync(ps => ps.Id == photoIdGuid);
+        }
     }
 }

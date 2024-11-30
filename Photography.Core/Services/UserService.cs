@@ -65,6 +65,8 @@ namespace Photography.Core.Services
             return allUsersViewModel;
         }
 
+
+
         public async Task<bool> UserExistByIdAsync(Guid userId)
         {
             ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());

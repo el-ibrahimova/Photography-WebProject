@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
 using static Photography.Common.ApplicationConstants;
@@ -17,28 +18,30 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
+        [MustBePhotographer]
         public async Task<IActionResult> Add()
         {
-            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return Unauthorized();
-            }
+            //if (!isPhotographer)
+            //{
+            //    return Unauthorized();
+            //}
 
             var model = await photoService.GetAddPhotoAsync();
             return View(model);
         }
 
         [HttpPost]
+        [MustBePhotographer]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (isPhotographer == false)
-            {
-                return Unauthorized();
-            }
+            //if (isPhotographer == false)
+            //{
+            //    return Unauthorized();
+            //}
 
             var userId = GetUserId() ?? String.Empty;
 
@@ -157,12 +160,12 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             Guid photoGuid = Guid.Empty;
             if (!photoService.IsGuidValid(id, ref photoGuid))
@@ -188,14 +191,14 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditPhotoViewModel model)
+       public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
-            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("Gallery", "Gallery");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("Gallery", "Gallery");
+            //}
 
             var result = await photoService.EditPhotoAsync(model);
 
@@ -214,14 +217,14 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+       public async Task<IActionResult> Manage()
         {
-            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
-            {
-                return Unauthorized();
-            }
+            //if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            //{
+            //    return Unauthorized();
+            //}
 
             var photos = await photoService.GetAllPhotosAsync();
 
@@ -230,6 +233,7 @@ namespace Photography.Controllers
 
 
         [HttpGet]
+       
         public async Task<IActionResult> Delete(string id)
         {
             var model = await photoService.GetPhotoDelete(id);
@@ -243,7 +247,7 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(DeleteViewModel model)
+      public async Task<IActionResult> Delete(DeleteViewModel model)
         {
             var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
             return RedirectToAction("MyGallery", "Gallery");

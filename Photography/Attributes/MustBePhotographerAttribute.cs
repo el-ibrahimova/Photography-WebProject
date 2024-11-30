@@ -22,7 +22,7 @@ namespace Photography.Attributes
             if (photographerService != null
                 && photographerService.ExistsByIdAsync(context.HttpContext.User.GetUserId()).Result == false)
             {
-                context.Result = new RedirectToActionResult(nameof(PhotographerController.Add), "Photographer", null);
+                context.Result = new RedirectToActionResult(nameof(GalleryController.Gallery), "Gallery", null);
             }
         }
     }
