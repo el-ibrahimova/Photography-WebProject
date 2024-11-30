@@ -1,9 +1,10 @@
 ﻿@using Photography.Core.ViewModels.Admin.UserManagement
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
+@using Photography.Core.Interfaces
 @model IEnumerable<AllUsersViewModel>
-
 @inject RoleManager<IdentityRole<Guid>> roleManager;
+@inject IBaseService BaseService
 
 @{
     IEnumerable<string?> allRoles = await roleManager.Roles
@@ -14,12 +15,21 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Управление на потребители</h1>
 
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover text-center align-middle">
+         <colgroup>
+        <col style="width: 15%;"> <!-- Email -->
+        <col style="width: 10%;"> <!-- Роля -->
+        <col style="width: 30%;"> <!-- Управление на фотографи -->
+        <col style="width: 25%;"> <!-- Управление на роли -->
+        <col style="width: 15%;"> <!-- Премахване на потребители -->
+        </colgroup>
         <thead class="thead-light">
             <tr>
                 <th>Email</th>
-                <th>Роли</th>
-                <th>Действия</th>
+                <th>Роля</th>
+                <th>Управление на фотографи</th>
+                <th>Управление на роли</th>
+                <th>Премахване на потребители</th>
             </tr>
         </thead>
         <tbody>
@@ -32,33 +42,66 @@
                         {
                             <span class="badge bg-secondary">@role</span>
                         }
+
+                        @if (await BaseService.IsUserPhotographerAsync(user.Id))
+                        {
+                            foreach (var photographer in user.Photographers)
+                            {
+                                <div class="mt-2">
+                                    <span class="badge bg-success">Фотограф</span><br />
+                                    <span>@photographer.BrandName</span>
+                                </div>
+                            }
+                        }
                     </td>
                     <td>
-                        <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                        @if (!await BaseService.IsUserPhotographerAsync(user.Id))
+                        {
+                            <form method="post" asp-action="MakePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <input type="text" name="brandName" class="form-control d-inline w-auto me-2" placeholder="Марка на фотографа" required />
+                                <button type="submit" class="btn btn-primary btn-sm">Направи фотограф</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" asp-action="DeletePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Изтрий фотограф</button>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100 mb-2">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <select name="role" class="form-select d-inline w-auto">
-
-                                @foreach (string role in allRoles)
-                                {
-                                    <option value="role">@role</option>
-                                }
-
-                            </select>
-                            <button type="submit" class="btn btn-primary btn-sm">Задай роля</button>
+                            <div class="d-flex">
+                                <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
+                                    @foreach (string role in allRoles)
+                                    {
+                                        <option value="@role">@role</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-primary" style="width: 100px;">Задай</button>
+                            </div>
                         </form>
 
-                        <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
+                        <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <select name="role" class="form-select d-inline w-auto">
-                                @foreach (var role in user.Roles)
-                                {
-                                    <option value="@role">@role</option>
-                                }
-                            </select>
-                            <button type="submit" class="btn btn-warning btn-sm">Премахни роля</button>
+                            <div class="d-flex">
+                                <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
+                                    @foreach (var role in user.Roles)
+                                    {
+                                        <option value="@role">@role</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-warning" style="width: 100px;">Премахни</button>
+                            </div>
                         </form>
 
-                        <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
+
+                    </td>
+                    <td>
+                        <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
                             <input type="hidden" name="userId" value="@user.Id" />
                             <button type="submit" class="btn btn-danger btn-sm">Изтрий</button>
                         </form>

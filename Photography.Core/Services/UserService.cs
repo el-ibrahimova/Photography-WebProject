@@ -2,19 +2,24 @@
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Admin.UserManagement;
+using Photography.Core.ViewModels.Photographer;
+using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Core.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
+        private readonly PhotographyDbContext context;
 
-        public UserService(UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole<Guid>> _roleManager)
-       {
+
+        public UserService(UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole<Guid>> _roleManager, PhotographyDbContext _context)
+        {
             userManager = _userManager;
             roleManager = _roleManager;
+            context = _context;
         }
 
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
@@ -28,15 +33,38 @@ namespace Photography.Core.Services
             {
                 IEnumerable<string> roles = await this.userManager.GetRolesAsync(user);
 
+                var photographer = await context.Photographers.FirstOrDefaultAsync(p => p.UserId == user.Id);
+               
+                List<PhotographerViewModel> userPhotographer;
+
+                if (photographer != null)
+                {
+                    userPhotographer = new List<PhotographerViewModel>
+                    {
+                        new PhotographerViewModel
+                        {
+                            Id = photographer.UserId.ToString(),
+                            BrandName = photographer.BrandName
+                        }
+                    };
+                }
+                else
+                {
+                    userPhotographer = new List<PhotographerViewModel>();
+                }
+
+
                 allUsersViewModel.Add(new AllUsersViewModel()
                 {
                     Id = user.Id.ToString(),
                     Email = user.Email,
-                    Roles = roles
+                    Roles = roles,
+                    Photographers = userPhotographer
                 });
             }
 
             return allUsersViewModel;
+
         }
 
         public async Task<bool> UserExistByIdAsync(Guid userId)
@@ -94,7 +122,6 @@ namespace Photography.Core.Services
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -113,6 +140,42 @@ namespace Photography.Core.Services
             {
                 return false;
             }
+
+            return true;
+        }
+
+        public async Task<bool> MakeUserPhotographerAsync(Guid userId, string brandName)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            bool isAlreadyPhotographer = await context.Photographers.AnyAsync(p => p.UserId == userId);
+
+            if (isAlreadyPhotographer)
+            {
+                return false;
+            }
+
+            bool isBrandNameAlreadyInUse = await context.Photographers.AnyAsync(n => n.BrandName == brandName);
+
+            if(isBrandNameAlreadyInUse)
+            {
+                return false;
+            }
+
+            var photographer = new Photographer
+            {
+                UserId = userId,
+                BrandName = brandName,
+                User = user
+            };
+
+            context.Photographers.Add(photographer);
+            await context.SaveChangesAsync();
 
             return true;
         }

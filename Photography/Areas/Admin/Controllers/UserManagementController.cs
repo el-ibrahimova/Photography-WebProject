@@ -110,5 +110,19 @@ namespace Photography.Areas.Admin.Controllers
 
             return this.RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MakePhotographer(Guid userId, string brandName)
+        {
+            bool success = await userService.MakeUserPhotographerAsync(userId, brandName);
+
+            if (!success)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+            
+            return this.RedirectToAction(nameof(Index));
+        }
+
     }
 }

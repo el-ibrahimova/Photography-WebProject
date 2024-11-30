@@ -3,7 +3,7 @@
 namespace Photography.Core.ViewModels.Photo
 {
     using static Common.EntityConstants.Photo;
-    using static Common.EntityValidationMessages.Photo;
+    using static Common.EntityValidationMessages;
     using static Common.ApplicationConstants;
     public class EditPhotoViewModel
     {
@@ -13,27 +13,26 @@ namespace Photography.Core.ViewModels.Photo
         }
         public Guid Id { get; set; }
 
-        [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength)]
-        public string? TagUser { get; set; } 
+        [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength, ErrorMessage = LengthMessage)]
+        public string? TagUser { get; set; }
 
-        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthMessage)]
         public string? Description { get; set; }
 
 
-        [Required(ErrorMessage = PhotoUploadedAtRequiredMessage)]
-        public string UploadedAt { get; set; } 
+        [Required(ErrorMessage = RequiredMessage)]
+        public string UploadedAt { get; set; }
 
 
-        [Required(ErrorMessage = PhotoImageUrlRequiredMessage)]
-        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength, ErrorMessage = LengthMessage)]
         public string ImageUrl { get; set; } = null!;
 
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
 
-
-        [Required]
         public bool IsPrivate { get; set; }
 
+        [Required(ErrorMessage = RequiredMessage)]
         public string UserOwnerId { get; set; }
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();

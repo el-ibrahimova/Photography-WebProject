@@ -20,10 +20,10 @@ namespace Photography.Core.ViewModels.Photo
 
         public bool IsPrivate { get; set; }
 
-        public Guid? UserOwnerId { get; set; }
+        public Guid UserOwnerId { get; set; }
 
-        public ApplicationUser? Owner { get; set; }
-        public string? PhotoOwner { get; set; }
+        public ApplicationUser Owner { get; set; } = null!;
+        public string PhotoOwner { get; set; }= null!;
 
         public ICollection<string> Categories { get; set; } = new HashSet<string>();
 

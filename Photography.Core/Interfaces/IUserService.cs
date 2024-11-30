@@ -1,4 +1,5 @@
 ﻿using Photography.Core.ViewModels.Admin.UserManagement;
+using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Core.Interfaces
 {
@@ -10,5 +11,6 @@ namespace Photography.Core.Interfaces
         Task<bool> RemoveUserRoleAsync(Guid userId, string roleName);
 
         Task<bool> DeleteUserAsync(Guid userId);
+        Task<bool> MakeUserPhotographerAsync(Guid userId, string brandName);
     }
 }

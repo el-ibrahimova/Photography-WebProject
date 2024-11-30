@@ -5,7 +5,7 @@ namespace Photography.Core.ViewModels.PhotoShoot
 {
     using static Common.ApplicationConstants;
     using static Common.EntityConstants.PhotoShoot;
-    using static Common.EntityValidationMessages.PhotoShoot;
+    using static Common.EntityValidationMessages;
     public class AddPhotoShootViewModel
     {
         public AddPhotoShootViewModel()
@@ -14,26 +14,26 @@ namespace Photography.Core.ViewModels.PhotoShoot
 
         }
 
-        [Required(ErrorMessage = PhotoShootNameRequiredMessage)]
-        [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(NameMaxLength, MinimumLength = NameMinLength,ErrorMessage = LengthMessage)]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = PhotoShootImageUrlRequiredMessage)]
-        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength, ErrorMessage = LengthMessage)]
         public string ImageUrl1 { get; set; } = null!;
 
-        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
+        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength, ErrorMessage = LengthMessage)]
         public string? ImageUrl2 { get; set; }
 
-        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength)]
+        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength, ErrorMessage=LengthMessage)]
         public string? ImageUrl3 { get; set; }
 
-        [Required(ErrorMessage = PhotoShootDescriptionRequiredMessage)]
-        [StringLength(DescriptionMaxLength, MinimumLength=DescriptionMinLength)]
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(DescriptionMaxLength, MinimumLength=DescriptionMinLength, ErrorMessage = LengthMessage)]
         public string Description { get; set; } = null!;
 
 
-        [Required(ErrorMessage = PhotoShootCreatedAtRequiredMessage)]
+        [Required(ErrorMessage = RequiredMessage)]
         public string CreatedAt { get; set; } 
     }
 }
