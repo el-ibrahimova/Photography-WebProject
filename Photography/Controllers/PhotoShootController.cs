@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.Services;
+using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.PhotoShoot;
+using Photography.Extensions;
 using static Photography.Common.ApplicationConstants;
 namespace Photography.Controllers
 {
@@ -35,8 +37,10 @@ namespace Photography.Controllers
             //    return Unauthorized();
             //}
 
+
             var model = new AddPhotoShootViewModel();
-            return this.View();
+            model.PhotographerId = GetUserId();
+            return this.View(model);
         }
 
         [HttpPost]
@@ -54,7 +58,6 @@ namespace Photography.Controllers
             {
                 return this.View(model);
             }
-
 
             bool result = await this.photoShootService.AddPhotoShootAsync(model);
 
@@ -85,13 +88,13 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> DeclareParticipation(string id)
         {
-            string? currentUserId = GetUserId();
-
             Guid photoShootIdGuid;
             if (!Guid.TryParse(id, out photoShootIdGuid))
             {
 
             }
+
+            string? currentUserId = GetUserId();
 
             Guid userIdGuid;
             if (!Guid.TryParse(currentUserId, out userIdGuid))
@@ -122,7 +125,7 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-
+        [MustBePhotographer]
         public async Task<IActionResult> Edit(string id)
         {
             //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
@@ -138,21 +141,29 @@ namespace Photography.Controllers
                 return RedirectToAction("All", "PhotoShoot");
             }
 
-            var model = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid);
+            string? currentUserId = GetUserId();
+
+            Guid userIdGuid;
+            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            var model = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, userIdGuid);
 
             return View(model);
         }
 
         [HttpPost]
-
+        [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoShootViewModel model)
         {
-            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
 
-            if (!isPhotographer)
-            {
-                return RedirectToAction("All", "PhotoShoot");
-            }
+            //if (!isPhotographer)
+            //{
+            //    return RedirectToAction("All", "PhotoShoot");
+            //}
 
             var result = await photoShootService.EditPhotoShootAsync(model);
 
@@ -164,11 +175,46 @@ namespace Photography.Controllers
                     return RedirectToAction("All", "PhotoShoot");
                 }
 
-                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid);
+                string? currentUserId = GetUserId();
+
+                Guid userIdGuid;
+                if (!Guid.TryParse(currentUserId, out userIdGuid))
+                {
+                    return Unauthorized();
+                }
+
+                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, userIdGuid);
 
                 return View(photoShoot);
             }
 
+            return RedirectToAction("Manage", "PhotoShoot");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var model = await photoShootService.GetPhotoShootDelete(id);
+
+            if (model == null)
+            {
+                return RedirectToAction("Manage", "PhotoShoot");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeletePhotoShootViewModel model)
+        {
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+
+            if (!(User.IsAdmin() || isPhotographer))
+            {
+                return Unauthorized();
+            }
+
+            var photoShootToDelete = await photoShootService.DeletePhotoShootAsync(model.Id);
             return RedirectToAction("Manage", "PhotoShoot");
         }
     }

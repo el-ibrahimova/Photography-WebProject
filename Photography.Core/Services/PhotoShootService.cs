@@ -33,6 +33,7 @@ namespace Photography.Core.Services
                       ImageUrl2 = ps.ImageUrl2,
                       ImageUrl3 = ps.ImageUrl3,
                       Description = ps.Description,
+                      PhotographerId = ps.PhotographerId.ToString()
                   })
                   .ToArrayAsync();
         }
@@ -51,6 +52,7 @@ namespace Photography.Core.Services
                     ImageUrl2 = ps.ImageUrl2,
                     ImageUrl3 = ps.ImageUrl3,
                     Description = ps.Description,
+                    PhotographerId = ps.PhotographerId.ToString(),
                     Participants = ps.Participants.Select(p => new ParticipantViewModel()
                     {
                         UserName = p.User.UserName,
@@ -79,6 +81,7 @@ namespace Photography.Core.Services
                 ImageUrl2 = model.ImageUrl2,
                 ImageUrl3 = model.ImageUrl3,
                 Description = model.Description,
+                PhotographerId = Guid.Parse(model.PhotographerId)
             };
 
             await context.PhotoShoots.AddAsync(photoShoot);
@@ -118,10 +121,10 @@ namespace Photography.Core.Services
             }
         }
 
-        public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid)
+        public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid)
         {
                 var photoShoot = await context.PhotoShoots
-                    .Where(ps => ps.IsDeleted == false && ps.Id == photoShootGuid)
+                    .Where(ps => ps.IsDeleted == false && ps.Id == photoShootGuid && userGuid ==ps.PhotographerId )
                     .FirstOrDefaultAsync();
 
                 if (photoShoot == null)
@@ -136,7 +139,8 @@ namespace Photography.Core.Services
                     Description = photoShoot.Description,
                     ImageUrl1 = photoShoot.ImageUrl1,
                     ImageUrl2 = photoShoot.ImageUrl2,
-                    ImageUrl3 = photoShoot.ImageUrl3
+                    ImageUrl3 = photoShoot.ImageUrl3,
+                    PhotographerId = photoShoot.PhotographerId.ToString()
                 };
 
                 return model;
@@ -150,7 +154,7 @@ namespace Photography.Core.Services
             }
 
             var photoShoot = await context.PhotoShoots
-                .Where(ps => !ps.IsDeleted && ps.Id == photoShootIdGuid)
+                .Where(ps => !ps.IsDeleted && ps.Id == photoShootIdGuid && model.PhotographerId ==ps.PhotographerId.ToString())
                 .FirstOrDefaultAsync();
 
             if (photoShoot == null)
@@ -172,6 +176,37 @@ namespace Photography.Core.Services
         public async Task<PhotoShoot?> GetPhotoShootByIdAsync(Guid photoIdGuid)
         {
             return await context.PhotoShoots.FirstOrDefaultAsync(ps => ps.Id == photoIdGuid);
+        }
+
+        public async Task<DeletePhotoShootViewModel?> GetPhotoShootDelete(string photoShootId)
+        {
+            return await context.PhotoShoots
+                .AsNoTracking()
+                .Where(p => p.IsDeleted == false && p.Id.ToString() == photoShootId)
+                .Select(p => new DeletePhotoShootViewModel()
+                {
+                    Id = p.Id.ToString(),
+                    Name = p.Name,
+                    IsDeleted = p.IsDeleted,
+                    PhotographerId = p.PhotographerId.ToString()
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> DeletePhotoShootAsync(string photoShootId)
+        {
+            PhotoShoot? photoShootToDelete = await context.PhotoShoots
+                .FirstOrDefaultAsync(p => p.Id.ToString() == photoShootId);
+
+            if (photoShootToDelete== null)
+            {
+                return false;
+            }
+
+            photoShootToDelete.IsDeleted = true;
+
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }

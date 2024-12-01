@@ -1,9 +1,13 @@
 ﻿@using Photography.Core.ViewModels.PhotoShoot
+@using Microsoft.AspNetCore.Identity
+@using Photography.Infrastructure.Data.Models
 @model IEnumerable<AllPhotoShootsViewModel>
+@inject UserManager<ApplicationUser> userManager
 
 
 @{
     ViewBag.Title = "Управление на фотосесии";
+   
 }
 
 <h2 class="my-4 text-center">Управление на фотосесии</h2>
@@ -20,6 +24,7 @@
         <tr>
             <th scope="col">Декори</th>
             <th scope="col">Име</th>
+            <th scope="col">Фотограф</th>
             <th scope="col">Брой участници</th>
             <th scope="col">Име на участник</th>
             <th scope="col">Телефонен номер</th>
@@ -45,7 +50,17 @@
                     }
                 </td>
                 <td>@photoShoot.Name</td>
-               
+                
+                @{
+                    var photographer = await userManager.FindByIdAsync(photoShoot.PhotographerId);
+
+                    if (photographer != null)
+                    {
+                        var userName = photographer.UserName;
+                        <td>@userName</td>
+                    }
+                }
+                
                 <td>@photoShoot.Participants.Count</td>
                 <td>
                     @if (photoShoot.Participants != null && photoShoot.Participants.Any())

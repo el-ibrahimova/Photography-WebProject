@@ -1,0 +1,33 @@
+﻿@using Photography.Core.ViewModels.PhotoShoot
+@model DeletePhotoShootViewModel
+
+
+@{
+    ViewData["Title"] = "Изтрий фотосесия";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title text-center">@Model.Name</h3>
+                <p class="text-danger mt-3">Сигурни ли сте, че искате да изтриете фотосесията @(Model.Name)?</p>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Name" />
+                    <input type="hidden" asp-for="PhotographerId" />
+
+                    <button type="submit" class="btn btn-danger">Да</button>
+                    <a asp-controller="PhotoShoot" asp-action="Manage" asp-route-id="@Model.Id" class="btn btn-warning">Отказ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

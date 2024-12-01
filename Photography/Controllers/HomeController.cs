@@ -6,7 +6,7 @@ namespace Photography.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-         
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -15,10 +15,6 @@ namespace Photography.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            //if (User?.Identity != null && User.Identity.IsAuthenticated)
-            //{
-            //    return RedirectToAction("Gallery", "Gallery");
-            //}
             return View();
         }
 

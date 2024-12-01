@@ -11,6 +11,8 @@ namespace Photography.Core.ViewModels.PhotoShoot
         public string? ImageUrl2 { get; set;} 
         public string? ImageUrl3 { get; set;}
 
+        public string PhotographerId { get; set; } = null!;
+
         public ICollection<ParticipantViewModel> Participants { get; set; } = new HashSet<ParticipantViewModel>();
     }
 }

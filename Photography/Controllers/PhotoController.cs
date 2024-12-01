@@ -8,7 +8,7 @@ using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
-  public class PhotoController : BaseController
+    public class PhotoController : BaseController
     {
         private readonly IPhotoService photoService;
 
@@ -56,7 +56,7 @@ namespace Photography.Controllers
                 model = await photoService.GetAddPhotoAsync();
                 return View(model);
             }
-            
+
             bool result = await photoService.AddPhotoAsync(model, userId);
 
             if (result == false)
@@ -192,7 +192,7 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-       public async Task<IActionResult> Edit(EditPhotoViewModel model)
+        public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
             //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
@@ -218,7 +218,7 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-       public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage()
         {
             //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
@@ -234,7 +234,7 @@ namespace Photography.Controllers
 
 
         [HttpGet]
-       
+
         public async Task<IActionResult> Delete(string id)
         {
             var model = await photoService.GetPhotoDelete(id);
@@ -248,16 +248,16 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-      public async Task<IActionResult> Delete(DeleteViewModel model)
+        public async Task<IActionResult> Delete(DeleteViewModel model)
         {
-            var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
-
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (User.IsAdmin() || isPhotographer)
+            if (!(User.IsAdmin() || isPhotographer))
             {
                 return RedirectToAction("Manage", "Photo");
             }
+
+            var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
 
             return RedirectToAction("MyGallery", "Gallery");
         }

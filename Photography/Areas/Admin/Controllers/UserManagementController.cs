@@ -82,6 +82,7 @@ namespace Photography.Areas.Admin.Controllers
 
             return this.RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {

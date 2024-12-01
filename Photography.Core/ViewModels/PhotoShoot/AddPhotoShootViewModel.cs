@@ -34,6 +34,9 @@ namespace Photography.Core.ViewModels.PhotoShoot
 
 
         [Required(ErrorMessage = RequiredMessage)]
-        public string CreatedAt { get; set; } 
+        public string CreatedAt { get; set; }
+
+        [Required(ErrorMessage = RequiredMessage)]
+        public string PhotographerId { get; set; } = null!;
     }
 }

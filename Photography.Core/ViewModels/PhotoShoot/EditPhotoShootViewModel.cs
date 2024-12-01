@@ -25,5 +25,8 @@ namespace Photography.Core.ViewModels.PhotoShoot
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthMessage)]
         public string Description { get; set; } = null!;
+
+        [Required(ErrorMessage = RequiredMessage)]
+        public string PhotographerId { get; set; } = null!;
     }
 }
