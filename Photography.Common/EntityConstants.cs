@@ -33,7 +33,7 @@
             public const int EmailMinLength = 10;
             public const int EmailMaxLength = 25;
             public const int PhoneNumberMinLength = 8;
-            public const int PhoneNumberMaxLength = 20;
+            public const int PhoneNumberMaxLength = 15;
         }
         public static class Photographer
         {

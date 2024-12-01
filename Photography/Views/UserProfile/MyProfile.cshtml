@@ -1,0 +1,35 @@
+﻿@using Photography.Core.ViewModels.UserProfile
+@model UserProfileViewModel
+
+<div class="container mt-6">
+    <h2>Моят профил</h2>
+    <hr />
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <form asp-action="MyProfile" method="post">
+        <div class="form-group mb-3">
+            <label for="FirstName">Първо име</label>
+            <input type="text" class="form-control form-control-sm" id="FirstName" asp-for="FirstName" style="width: 30%; font-size: 0.85rem;" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label for="LastName">Фамилия</label>
+            <input type="text" class="form-control form-control-sm" id="LastName" asp-for="LastName" style="width: 30%; font-size: 0.85rem;" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Phone">Телефон</label>
+            <input type="text" class="form-control form-control-sm" id="Phone" asp-for="Phone" style="width: 30%; font-size: 0.85rem;" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Запази</button>
+    </form>
+</div>
+

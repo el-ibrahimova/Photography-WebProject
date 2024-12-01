@@ -11,7 +11,8 @@ namespace Photography.Core.Interfaces
         Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid);
         Task<bool> AddParticipantToPhotoShoot(Guid photoIdGuid, Guid userIdGuid);
         Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(string userId);
-      
+        Task<bool> RemoveUserFromParticipation(string userId, string photoId);
+
         Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid);
         Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model);
         

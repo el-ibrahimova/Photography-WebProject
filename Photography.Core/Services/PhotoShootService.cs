@@ -141,6 +141,27 @@ namespace Photography.Core.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> RemoveUserFromParticipation(string userId, string photoShootId)
+        {
+            PhotoShoot? photoShoot = await context.PhotoShoots
+                .Where(p => !p.IsDeleted && p.Id.ToString() == photoShootId)
+                .Include(p => p.Participants)
+                .FirstOrDefaultAsync();
+
+            var user = await context.PhotoShootParticipants
+                .Where(u => u.UserId.ToString() == userId)
+                .FirstOrDefaultAsync();
+
+            if (photoShoot == null || user == null)
+            {
+                return false;
+            }
+
+            context.PhotoShootParticipants.Remove(user);
+            await context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid)
         {
                 var photoShoot = await context.PhotoShoots

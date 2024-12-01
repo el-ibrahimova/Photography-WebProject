@@ -83,7 +83,7 @@ namespace Photography.Controllers
             return View(photoShoots);
         }
 
-      
+
 
         [HttpGet]
         [MustBePhotographer]
@@ -214,14 +214,14 @@ namespace Photography.Controllers
                 TempData["Message"] = $"Вие успешно се записахте за фотосесия \"{photoShoot.Name}\"";
             }
 
-           var result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
+            var result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
 
-           if (result == false)
-           {
-               return BadRequest();
-           }
+            if (result == false)
+            {
+                return BadRequest();
+            }
 
-           return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All));
         }
 
         [HttpGet]
@@ -232,6 +232,17 @@ namespace Photography.Controllers
             var model = await photoShootService.GetUserPhotoShootsAsync(userId);
 
             return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeclineParticipation(string id)
+        {
+            string userId = GetUserId() ?? String.Empty;
+
+            await photoShootService.RemoveUserFromParticipation(userId, id);
+
+            return RedirectToAction(nameof(UserPhotoShoots));
         }
 
     }
