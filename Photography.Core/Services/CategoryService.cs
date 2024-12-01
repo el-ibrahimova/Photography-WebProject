@@ -12,11 +12,13 @@ namespace Photography.Core.Services
     public class CategoryService : BaseService, ICategoryService
     {
         private readonly PhotographyDbContext context;
+        private readonly IPhotoService photoService;
 
-        public CategoryService(PhotographyDbContext data)
+        public CategoryService(PhotographyDbContext data, IPhotoService _photoService)
             : base(data)
         {
             context = data;
+            photoService = _photoService;
         }
 
 
@@ -86,20 +88,31 @@ namespace Photography.Core.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Category> DeleteCategoryAsync(string categoryId)
+        public async Task<bool> DeleteCategoryAsync(string categoryId)
         {
             var category = await context.Categories
+                .Include(p=>p.PhotosCategories)
                 .FirstOrDefaultAsync(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false);
 
             if (category == null)
             {
-                throw new ArgumentException("Категорията не съществува");
+                return false;
             }
 
             category.IsDeleted = true;
             await context.SaveChangesAsync();
 
-            return category;
+            var photosCategoriesToRemove = context.PhotosCategories
+                .Where(pc => pc.CategoryId == category.Id)
+                .ToList(); 
+
+            if (photosCategoriesToRemove.Any())
+            {
+                context.PhotosCategories.RemoveRange(photosCategoriesToRemove); 
+                await context.SaveChangesAsync();
+            }
+
+            return true;
         }
 
         public async Task<ICollection<AllCategoryViewModel>> GetAllCategoriesAsync()

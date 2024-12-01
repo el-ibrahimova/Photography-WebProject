@@ -1,8 +1,6 @@
-﻿using System.Net.Mime;
-using Photography.Infrastructure.Data.Models;
-
-namespace Photography.Core.ViewModels.Photo
+﻿namespace Photography.Core.ViewModels.Photo
 {
+    using Infrastructure.Data.Models;
     public class AllPhotosViewModel
     {
         public string Id { get; set; } = null!;

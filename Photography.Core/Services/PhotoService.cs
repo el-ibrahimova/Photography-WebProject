@@ -4,6 +4,7 @@ using Photography.Core.ViewModels.Photo;
 using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Photography.Core.Services
 {
@@ -11,11 +12,13 @@ namespace Photography.Core.Services
     public class PhotoService : BaseService, IPhotoService
     {
         private readonly PhotographyDbContext context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public PhotoService(PhotographyDbContext data)
+        public PhotoService(PhotographyDbContext data, UserManager<ApplicationUser> _userManager)
             : base(data)
         {
             context = data;
+            userManager= _userManager;
         }
 
         public async Task<Photo?> GetPhotoByIdAsync(Guid photoIdGuid)
@@ -51,7 +54,7 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            var userOwnerId =Guid.Empty;
+            var userOwnerId = Guid.Empty;
 
             if (!model.IsPrivate)
             {
@@ -148,7 +151,7 @@ namespace Photography.Core.Services
                 UserOwnerId = photo.UserOwnerId,
                 Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
                 Owner = photo.Owner,
-                PhotoOwner = photo.Owner!.UserName 
+                PhotoOwner = photo.Owner!.UserName
             };
         }
 
@@ -213,7 +216,7 @@ namespace Photography.Core.Services
         public async Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid)
         {
             var photo = await context.Photos
-                .Include(p => p.PhotosCategories)  
+                .Include(p => p.PhotosCategories)
                 .Where(p => p.IsDeleted == false && p.Id == photoGuid)
                 .FirstOrDefaultAsync();
 
@@ -241,7 +244,7 @@ namespace Photography.Core.Services
         {
             if (!Guid.TryParse(model.Id.ToString(), out Guid photoIdGuid))
             {
-                return false; 
+                return false;
             }
 
             var photo = await context.Photos
@@ -251,17 +254,17 @@ namespace Photography.Core.Services
 
             if (photo == null)
             {
-                return false; 
+                return false;
             }
 
             if (!Guid.TryParse(model.UserOwnerId.ToString(), out Guid userIdGuid) || photo.UserOwnerId != userIdGuid)
             {
-                return false; 
+                return false;
             }
 
             if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime uploadedAt))
             {
-                return false; 
+                return false;
             }
 
             photo.TagUser = model.TagUser;
@@ -279,19 +282,19 @@ namespace Photography.Core.Services
 
         public async Task<DeleteViewModel?> GetPhotoDelete(string photoId)
         {
-          return await context.Photos
-                .AsNoTracking()
-                .Where(p => p.IsDeleted == false && p.Id.ToString() == photoId)
-                .Select(p => new DeleteViewModel()
-                {
-                    Id = p.Id.ToString(),
-                    TagUser = p.TagUser,
-                    UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
-                    DeletedAt = null,
-                    UserOwnerId = p.UserOwnerId.ToString(),
-                    Owner = p.Owner.UserName 
-                })
-                .FirstOrDefaultAsync();
+            return await context.Photos
+                  .AsNoTracking()
+                  .Where(p => p.IsDeleted == false && p.Id.ToString() == photoId)
+                  .Select(p => new DeleteViewModel()
+                  {
+                      Id = p.Id.ToString(),
+                      TagUser = p.TagUser,
+                      UploadedAt = p.UploadedAt.ToString(EntityDateFormat),
+                      DeletedAt = null,
+                      UserOwnerId = p.UserOwnerId.ToString(),
+                      Owner = p.Owner.UserName
+                  })
+                  .FirstOrDefaultAsync();
         }
 
         public async Task<Photo> DeletePhotoAsync(string photoId)
@@ -310,12 +313,12 @@ namespace Photography.Core.Services
             await context.SaveChangesAsync();
             return photoToDelete;
         }
-        
+
         public async Task<ICollection<CategoryViewModel>> GetCategoriesAsync()
         {
             return await context.Categories
                 .AsNoTracking()
-                .Where(c=>c.IsDeleted==false)
+                .Where(c => c.IsDeleted == false)
                 .Select(c => new CategoryViewModel()
                 {
                     Id = c.Id.ToString(),
@@ -326,8 +329,14 @@ namespace Photography.Core.Services
 
         public async Task<ICollection<UserViewModel>> GetAllUsersAsync()
         {
+            var adminRoleId = await context.Roles
+                .Where(r => r.Name == AdminRoleName)
+                .Select(r => r.Id)
+                .FirstOrDefaultAsync();
+
             return await context.Users
                   .AsNoTracking()
+                  .Where(u => !context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId))
                   .Select(u => new UserViewModel()
                   {
                       Id = u.Id.ToString(),

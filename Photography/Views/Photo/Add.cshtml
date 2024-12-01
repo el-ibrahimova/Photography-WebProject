@@ -1,10 +1,8 @@
 ﻿@using Photography.Core.ViewModels.Photo
-@using System.Security.Claims
 @model AddPhotoViewModel
 
 @{
     ViewBag.Title = "Добави снимка";
-    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
@@ -24,9 +22,9 @@
                 <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="5"></textarea>
                 <span asp-validation-for="@Model.Description" class="text-danger"></span>
             </div>
-        
 
-            
+
+
             <div>
                 <label>Категории</label>
                 <div>
@@ -39,7 +37,7 @@
                     }
                 </div>
             </div>
-            
+
             <div class="mb-3">
                 <label for="isPrivate">Частна снимка:</label>
                 <input type="checkbox" id="isPrivate" name="IsPrivate" value="true" onchange="toggleUserDropdown(this.checked)" />
@@ -49,16 +47,18 @@
                 <label asp-for="@Model.UserOwnerId" class="form-label-add-edit">Избери потребител...</label>
                 <select asp-for="@Model.UserOwnerId" class="form-control" aria-required="true">
                     <option disabled selected value="">Избери потребител...</option>
-                    @foreach (var user in Model.UserPhotoOwners.Where(u => u.Id.ToString() != currentUserId))
-                    {
-                        <option value="@user.Id">@user.UserName</option>
-                    }
+                    
+                        @foreach (var user in Model.UserPhotoOwners)
+                        {
+                            <option value="@user.Id">@user.UserName</option>
+                        }
+                    
                 </select>
                 <span asp-validation-for="@Model.UserOwnerId" class="text-danger"></span>
             </div>
 
 
-            
+
             <div class="mb-3">
                 <input class="btn btn-warning mb-2 w-100 p-3 fw-bold" type="submit" value="Добави" />
             </div>

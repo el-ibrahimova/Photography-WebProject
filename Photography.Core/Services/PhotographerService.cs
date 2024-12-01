@@ -22,13 +22,24 @@ namespace Photography.Core.Services
                 .AnyAsync(p=>p.UserId.ToString().ToLower()== userId.ToLower());
         }
 
-        public async Task CreateAsync(string userId, string brandName)
+        public async Task<bool> CreateAsync(string userId, string brandName)
         {
-            await context.AddAsync(new Photographer()
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString().ToLower() == userId.ToLower());
+
+            if (user == null)
             {
-                UserId = Guid.Parse(userId),
-                BrandName = brandName
-            });
+                return false;
+            }
+            
+            var photographer = new Photographer
+            {
+                BrandName = brandName,
+                UserId = Guid.Parse(userId)
+            };
+
+            context.Photographers.Add(photographer);
+            await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> UserWithBrandNameExistAsync(string brandName)

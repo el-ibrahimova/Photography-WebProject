@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Photography.Core.ViewModels.UserProfile;
+using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Controllers
@@ -18,7 +19,8 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> MyProfile()
         {
-            var user = await userManager.GetUserAsync(User);
+            string? userId = User.GetUserId() ?? String.Empty;
+            var user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
@@ -36,7 +38,6 @@ namespace Photography.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> MyProfile(UserProfileViewModel model)
         {
             if (!ModelState.IsValid)

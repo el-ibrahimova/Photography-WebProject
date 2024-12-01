@@ -46,10 +46,10 @@
                         @if (this.User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item dropdown">
-                                <a class="navbar-brand dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="navbar-brand dropdown-toggle text-dark" href="#" id="clientUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Моят профил
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <ul class="dropdown-menu" aria-labelledby="clientUserDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="MyProfile">Моята информация</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Gallery" asp-action="MyGallery">Моята галерия</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="PhotoShoot" asp-action="UserPhotoShoots">Моите фотосесии</a></li>

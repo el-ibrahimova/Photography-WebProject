@@ -181,7 +181,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 30, 20, 17, 49, 934, DateTimeKind.Local).AddTicks(9147))
+                        .HasDefaultValue(new DateTime(2024, 12, 1, 20, 15, 39, 301, DateTimeKind.Local).AddTicks(2437))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -239,16 +239,16 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fff8658e-d041-4e50-8746-9cdc8096d715",
+                            ConcurrencyStamp = "f05befaa-2c9c-4f4b-8a49-d765c6ac7bf7",
                             Email = "client_one@gmail.com",
                             EmailConfirmed = false,
-                            JoinedAt = new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(872),
+                            JoinedAt = new DateTime(2024, 12, 1, 20, 15, 39, 301, DateTimeKind.Local).AddTicks(3538),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                             NormalizedUserName = "CLIENTONE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH7ealSVaGavyPrS0YUZgwmuMN5fx6OU5zrO4nSbsF0jLuyvyyNkhu1vhECengpN0A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENWlhKiTAoCWoKdxiJhZznval6Wm9XcsG7JrsLm91VoVGFSaHjFvgyhnB4joXpt3lw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "36523440-373d-4d1e-9c42-e2d3fb582917",
+                            SecurityStamp = "2966045a-d48f-41c7-b116-e6413673fbec",
                             TwoFactorEnabled = false,
                             UserName = "ClientOne"
                         },
@@ -256,16 +256,16 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "263ed5ee-dccb-45e1-8475-d90c9a9c76d1",
+                            ConcurrencyStamp = "733c374a-5bff-43b9-bda4-47bc4cd8ae02",
                             Email = "client_two@gmail.com",
                             EmailConfirmed = false,
-                            JoinedAt = new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1218),
+                            JoinedAt = new DateTime(2024, 12, 1, 20, 15, 39, 301, DateTimeKind.Local).AddTicks(3572),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_TWO@GMAIL.COM",
                             NormalizedUserName = "CLIENTTWO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBnThCWBvFnsJGhVILRfVnPCqynLYSNEZ9WKQTumm6As8LMmENqdSEvIuBDMC+oc7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBQGis9Ao2m8KGjLVYs9TItMLhGPMqjzabshi7vHNPSYzy9rR09VnHm61SeIYKS3vQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c909d191-8de4-40e0-ad79-f58306af0535",
+                            SecurityStamp = "d9e79d0d-03ac-4368-b822-72fbcd5769ca",
                             TwoFactorEnabled = false,
                             UserName = "ClientTwo"
                         },
@@ -273,16 +273,16 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("0cea6e1c-0655-4c21-a14b-5b5932332ffd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1111d475-cdbb-4984-89fc-29832b90ae50",
+                            ConcurrencyStamp = "27d649ee-03d9-4f4c-8917-1b9a2a06890c",
                             Email = "admin@photography.com",
                             EmailConfirmed = false,
-                            JoinedAt = new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1267),
+                            JoinedAt = new DateTime(2024, 12, 1, 20, 15, 39, 301, DateTimeKind.Local).AddTicks(3596),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PHOTOGRAPHY.COM",
                             NormalizedUserName = "АDMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIoiOR/mxHl9qeaFMV/iawrJzvrcbGYCMOhcASHtIFNAgkIPTIlHa+dy+CQb4TckCA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEII8rJJS27aS9ghbnwHheCZScxdLbgHef+5sbKWdxQaohPmi++qsNQXBlf2zI5benQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "113fe0a8-1e75-432c-83f1-46c9c039fb7c",
+                            SecurityStamp = "73f0a8b9-7929-4ac2-9b8d-1e2954492a1f",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -290,16 +290,16 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("95d458a7-115a-4db5-9319-809c7763d841"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ce74563-eb1f-4ddf-ab0b-b08287d7f39c",
+                            ConcurrencyStamp = "57ce5500-e886-4267-aaed-63a100fe6cb1",
                             Email = "photographer@gmail.com",
                             EmailConfirmed = false,
-                            JoinedAt = new DateTime(2024, 11, 30, 20, 17, 49, 935, DateTimeKind.Local).AddTicks(1334),
+                            JoinedAt = new DateTime(2024, 12, 1, 20, 15, 39, 301, DateTimeKind.Local).AddTicks(3617),
                             LockoutEnabled = false,
                             NormalizedEmail = "PHOTOGRAPHER@GMAIL.COM",
                             NormalizedUserName = "PHOTOGRAPHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFbeUu/rDXlSnAQEs2BtklT/2wETc67AprlAFKH3UFC0hN86Jhf78NwVg0NG349CRA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJFyjNtmcTm3kZhfsCOYJDTQVThVxSBJk+yo1qXhovyn8aOlFdPOTDVtvh2bjeX4lw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9933c751-408d-4536-a368-9fa0a2c6a2e4",
+                            SecurityStamp = "b640ac75-fe0d-4ec4-bd76-3d5f8ebb6a77",
                             TwoFactorEnabled = false,
                             UserName = "Photographer"
                         });
@@ -334,61 +334,61 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ebbf45c7-37c7-4df7-9ae0-b4e8503a21d3"),
+                            Id = new Guid("ec00bc7a-7296-4d51-bca3-29fc2b5f0d85"),
                             IsDeleted = false,
                             Name = "Животни"
                         },
                         new
                         {
-                            Id = new Guid("387253a3-6b29-4300-a5a8-f9fc291fc62a"),
+                            Id = new Guid("eea53935-59b8-43f8-a9bf-07d47be3bfa7"),
                             IsDeleted = false,
                             Name = "Природа"
                         },
                         new
                         {
-                            Id = new Guid("28f3ee06-3b31-44d2-a6e7-95bb7c0a387e"),
+                            Id = new Guid("cb1a2127-a789-454e-b3bb-c02b44ad4ef8"),
                             IsDeleted = false,
                             Name = "Храна и напитки"
                         },
                         new
                         {
-                            Id = new Guid("eaed7ca1-b40c-4644-94d3-295786ac92cd"),
+                            Id = new Guid("454eb44e-4f45-42c0-916d-0b7bcb645f09"),
                             IsDeleted = false,
                             Name = "Семейна фотография"
                         },
                         new
                         {
-                            Id = new Guid("4f3ead01-5f84-4522-9649-8971e196c062"),
+                            Id = new Guid("9df7978a-92bb-4f4e-a10d-ab1bf3a61e67"),
                             IsDeleted = false,
                             Name = "Спорт"
                         },
                         new
                         {
-                            Id = new Guid("8e38b8bd-1d71-4ba5-ab47-da801536b5e1"),
+                            Id = new Guid("0128e2fb-6d23-4b7c-b4c3-32ba2d661bdc"),
                             IsDeleted = false,
                             Name = "Архитектура"
                         },
                         new
                         {
-                            Id = new Guid("f8ef36d1-fa74-4945-87bc-af7f6648bde6"),
+                            Id = new Guid("693a0085-52cd-43c0-bb3e-8184738510d8"),
                             IsDeleted = false,
                             Name = "Пътуваня и дестинации"
                         },
                         new
                         {
-                            Id = new Guid("cc8d8279-95e3-412d-82db-d751a46aefb6"),
+                            Id = new Guid("e86850d7-5089-466c-bdaa-c6d5da242475"),
                             IsDeleted = false,
                             Name = "Черно-бяла фотография"
                         },
                         new
                         {
-                            Id = new Guid("7944ae45-396f-48d8-b6c6-368b2a7fba41"),
+                            Id = new Guid("20dcc3ee-6f4f-441a-b302-e5ae45d3ff54"),
                             IsDeleted = false,
                             Name = "Мода"
                         },
                         new
                         {
-                            Id = new Guid("32218c94-93ec-4bf5-be8e-9d1d7b4e6048"),
+                            Id = new Guid("66697fa2-d97a-4e5d-a393-7c150bb5c48c"),
                             IsDeleted = false,
                             Name = "Пейзажи"
                         });
@@ -565,6 +565,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasComment("PhotoShoot photographer identifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PhotographerId");
 
                     b.ToTable("PhotoShoots", t =>
                         {
@@ -746,6 +748,15 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoShoot", b =>
+                {
+                    b.HasOne("Photography.Infrastructure.Data.Models.Photographer", null)
+                        .WithMany("PhotoShoots")
+                        .HasForeignKey("PhotographerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoShootParticipant", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.PhotoShoot", "PhotoShoot")
@@ -768,7 +779,7 @@ namespace Photography.Infrastructure.Migrations
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photographer", b =>
                 {
                     b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Photographers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -781,6 +792,8 @@ namespace Photography.Infrastructure.Migrations
                     b.Navigation("FavoritePhotos");
 
                     b.Navigation("Participants");
+
+                    b.Navigation("Photographers");
 
                     b.Navigation("Photos");
 
@@ -804,6 +817,11 @@ namespace Photography.Infrastructure.Migrations
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoShoot", b =>
                 {
                     b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photographer", b =>
+                {
+                    b.Navigation("PhotoShoots");
                 });
 #pragma warning restore 612, 618
         }

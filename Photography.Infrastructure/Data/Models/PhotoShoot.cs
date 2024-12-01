@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-
 namespace Photography.Infrastructure.Data.Models
 {
     using static Common.EntityConstants.PhotoShoot;
@@ -48,7 +47,7 @@ namespace Photography.Infrastructure.Data.Models
         [Required]
         [Comment("PhotoShoot photographer identifier")]
         public Guid PhotographerId { get; set; }
-
-        public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
+        
+       public ICollection<PhotoShootParticipant> Participants { get; set; } = new HashSet<PhotoShootParticipant>();
     }
 }

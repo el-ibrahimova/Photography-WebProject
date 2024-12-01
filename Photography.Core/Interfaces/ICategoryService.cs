@@ -10,7 +10,7 @@
         Task<bool> EditCategoryAsync(CategoryFormViewModel model);
 
         Task<CategoryFormViewModel?> GetCategoryDelete(string categoryId);
-        Task<Category> DeleteCategoryAsync(string categoryId);
+        Task<bool> DeleteCategoryAsync(string categoryId);
 
         Task<ICollection<AllCategoryViewModel>> GetAllCategoriesAsync();
     }

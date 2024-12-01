@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Photography.Core.ViewModels.Photo
+﻿namespace Photography.Core.ViewModels.Photo
 {
+    using System.ComponentModel.DataAnnotations;
     using static Common.ApplicationConstants;
     using static Common.EntityConstants.Photo;
     using static Common.EntityValidationMessages;
@@ -14,10 +13,17 @@ namespace Photography.Core.ViewModels.Photo
         }
 
 
-        [StringLength(TagUserMaxLength, MinimumLength = TagUserMinLength, ErrorMessage =LengthMessage)]
+        [StringLength(TagUserMaxLength, 
+            MinimumLength = TagUserMinLength, 
+            ErrorMessage = LengthMessage)]
+        [Display(Name = "Отбелязване на потребител")]
         public string? TagUser { get; set; }
 
-        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = LengthMessage)]
+
+        [StringLength(DescriptionMaxLength, 
+            MinimumLength = DescriptionMinLength, 
+            ErrorMessage = LengthMessage)]
+        [Display(Name = "Описание")]
         public string? Description { get; set; }
 
 
@@ -26,19 +32,19 @@ namespace Photography.Core.ViewModels.Photo
 
 
         [Required(ErrorMessage = RequiredMessage)]
-        [StringLength(ImageUrlMaxLength, MinimumLength = ImageUrlMinLength, ErrorMessage = LengthMessage)]
+        [StringLength(ImageUrlMaxLength, 
+            MinimumLength = ImageUrlMinLength, 
+            ErrorMessage = LengthMessage)]
+        [Display(Name = "URL на снимката")]
         public string ImageUrl { get; set; } = null!;
 
-        public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
-
-
-        public bool IsPrivate { get; set; }
+       public bool IsPrivate { get; set; }
 
         [Required(ErrorMessage = RequiredMessage)]
-        public Guid UserOwnerId { get; set; } 
+        public Guid UserOwnerId { get; set; }
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
-
-        public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>();
+        public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>(); 
+        public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();
     }
 }

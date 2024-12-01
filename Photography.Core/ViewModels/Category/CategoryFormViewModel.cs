@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Photography.Core.ViewModels.Category
+﻿namespace Photography.Core.ViewModels.Category
 {
+    using System.ComponentModel.DataAnnotations;
     using static Common.EntityConstants.Category;
     using static Common.EntityValidationMessages;
 
@@ -9,8 +8,11 @@ namespace Photography.Core.ViewModels.Category
     {
         public string Id { get; set; } = null!;
 
-        [Required(ErrorMessage =RequiredMessage )]
-        [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = LengthMessage)]
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(NameMaxLength, 
+            MinimumLength = NameMinLength, 
+            ErrorMessage = LengthMessage)]
+        [Display(Name = "Име")]
         public string Name { get; set; } = null!;
     }
 }

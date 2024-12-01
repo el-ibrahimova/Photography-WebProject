@@ -50,16 +50,7 @@
                     }
                 </td>
                 <td>@photoShoot.Name</td>
-                
-                @{
-                    var photographer = await userManager.FindByIdAsync(photoShoot.PhotographerId);
-
-                    if (photographer != null)
-                    {
-                        var userName = photographer.UserName;
-                        <td>@userName</td>
-                    }
-                }
+                <td>@photoShoot.PhotographerBrandName</td>
                 
                 <td>@photoShoot.Participants.Count</td>
                 <td>

@@ -1,6 +1,4 @@
-﻿using Photography.Infrastructure.Data.Models;
-
-namespace Photography.Core.ViewModels.PhotoShoot
+﻿namespace Photography.Core.ViewModels.PhotoShoot
 {
     public class AllPhotoShootsViewModel
     {
@@ -10,9 +8,8 @@ namespace Photography.Core.ViewModels.PhotoShoot
         public string ImageUrl1 { get; set; } = null!;
         public string? ImageUrl2 { get; set;} 
         public string? ImageUrl3 { get; set;}
-
+        public string PhotographerBrandName { get; set; } = null!;
         public string PhotographerId { get; set; } = null!;
-
         public ICollection<ParticipantViewModel> Participants { get; set; } = new HashSet<ParticipantViewModel>();
     }
 }

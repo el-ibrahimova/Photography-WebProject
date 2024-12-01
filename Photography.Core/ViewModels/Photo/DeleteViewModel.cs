@@ -7,7 +7,6 @@
         public string UploadedAt { get; set; } = null!;
         public string? DeletedAt { get; set; }
         public string UserOwnerId { get; set; } = null!;
-
         public string Owner { get; set; } = null!;
     }
 }

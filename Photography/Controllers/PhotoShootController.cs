@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
 using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Extensions;
+
 namespace Photography.Controllers
 {
     public class PhotoShootController : BaseController
@@ -36,8 +36,20 @@ namespace Photography.Controllers
             //}
 
 
-            var model = new AddPhotoShootViewModel();
-            model.PhotographerId = GetUserId();
+            var userId = GetUserId();
+
+            var photographer = await photoShootService.GetPhotographerByUserIdAsync(userId);
+
+            if (photographer == null)
+            {
+                return Unauthorized(); 
+            }
+
+            var model = new AddPhotoShootViewModel
+            {
+                PhotographerId = photographer.Id.ToString()
+            };
+
             return this.View(model);
         }
 
@@ -78,7 +90,8 @@ namespace Photography.Controllers
             //    return Unauthorized();
             //}
 
-            var photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync();
+            var userId = GetUserId();
+            var photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync(userId);
 
             return View(photoShoots);
         }
@@ -104,13 +117,24 @@ namespace Photography.Controllers
 
             string? currentUserId = GetUserId();
 
-            Guid userIdGuid;
-            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            var userId = GetUserId();
+
+            var photographer = await photoShootService.GetPhotographerByUserIdAsync(userId);
+
+            if (photographer == null)
             {
                 return Unauthorized();
             }
 
-            var model = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, userIdGuid);
+            string photographerId = photographer.Id.ToString();
+
+            Guid userIdGuid;
+            if (!Guid.TryParse(photographerId, out userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            var model = await photoShootService.GetPhotoShootToEditAsync(id, photographerId);
 
             return View(model);
         }
@@ -138,13 +162,22 @@ namespace Photography.Controllers
 
                 string? currentUserId = GetUserId();
 
+                var photographer = await photoShootService.GetPhotographerByUserIdAsync(currentUserId);
+
+                if (photographer == null)
+                {
+                    return Unauthorized();
+                }
+
+                string photographerId = photographer.Id.ToString();
+
                 Guid userIdGuid;
                 if (!Guid.TryParse(currentUserId, out userIdGuid))
                 {
                     return Unauthorized();
                 }
 
-                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, userIdGuid);
+                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(model.Id, photographerId);
 
                 return View(photoShoot);
             }
@@ -174,8 +207,14 @@ namespace Photography.Controllers
             {
                 return Unauthorized();
             }
+            
+          bool isDeleted= await photoShootService.DeletePhotoShootAsync(model.Id);
 
-            var photoShootToDelete = await photoShootService.DeletePhotoShootAsync(model.Id);
+          if (!isDeleted)
+          {
+              return BadRequest();
+          }
+
             return RedirectToAction("Manage", "PhotoShoot");
         }
 

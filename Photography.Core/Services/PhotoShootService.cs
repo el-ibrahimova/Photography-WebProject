@@ -38,8 +38,12 @@ namespace Photography.Core.Services
                   .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync()
+        public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync(string userId)
         {
+            Photographer? photographer = await context
+                .Photographers
+                .FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
+            
             var participant = await context.PhotoShoots
                 .Include(ps => ps.Participants)
                 .ThenInclude(p => p.User)
@@ -48,6 +52,7 @@ namespace Photography.Core.Services
                 {
                     Id = ps.Id.ToString(),
                     Name = ps.Name,
+                    PhotographerBrandName = photographer.BrandName,
                     ImageUrl1 = ps.ImageUrl1,
                     ImageUrl2 = ps.ImageUrl2,
                     ImageUrl3 = ps.ImageUrl3,
@@ -81,7 +86,8 @@ namespace Photography.Core.Services
                 ImageUrl2 = model.ImageUrl2,
                 ImageUrl3 = model.ImageUrl3,
                 Description = model.Description,
-                PhotographerId = Guid.Parse(model.PhotographerId)
+                PhotographerId = Guid.Parse(model.PhotographerId),
+                CreatedAt = createdAt
             };
 
             await context.PhotoShoots.AddAsync(photoShoot);
@@ -162,17 +168,12 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid)
+        public async Task<EditPhotoShootViewModel?> GetPhotoShootToEditAsync(string photoShootId, string photographerId)
         {
                 var photoShoot = await context.PhotoShoots
-                    .Where(ps => ps.IsDeleted == false && ps.Id == photoShootGuid && userGuid ==ps.PhotographerId )
+                    .Where(ps => ps.IsDeleted == false && ps.Id.ToString() == photoShootId && photographerId ==ps.PhotographerId.ToString() )
                     .FirstOrDefaultAsync();
-
-                if (photoShoot == null)
-                {
-                    throw new ArgumentException("Фотосесията не съществува");
-                }
-
+            
                 var model = new EditPhotoShootViewModel()
                 {
                     Id = photoShoot.Id.ToString(),
@@ -248,6 +249,12 @@ namespace Photography.Core.Services
 
             await context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<Photographer?> GetPhotographerByUserIdAsync(string userId)
+        {
+            return await context.Photographers
+                .FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
         }
     }
 }
