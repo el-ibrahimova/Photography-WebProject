@@ -95,7 +95,7 @@ namespace Photography.Core.Services
                 .AnyAsync(ph => ph.PhotoShootId == photoShootIdGuid && ph.UserId == userIdGuid);
         }
 
-        public async Task AddParticipantToPhotoShoot(Guid photoShootIdGuid, Guid userIdGuid)
+        public async Task<bool> AddParticipantToPhotoShoot(Guid photoShootIdGuid, Guid userIdGuid)
         {
             PhotoShoot? photoShoot = await context
                 .PhotoShoots.Where(ps => ps.Id == photoShootIdGuid && ps.IsDeleted == false)
@@ -103,7 +103,7 @@ namespace Photography.Core.Services
 
             if (photoShoot == null)
             {
-                throw new InvalidOperationException("Фотосесията не е намерена.");
+                return false;
             }
 
             bool hasUserDeclared = await context
@@ -119,6 +119,26 @@ namespace Photography.Core.Services
                 
                 await context.SaveChangesAsync();
             }
+
+            return true;
+        }
+
+        public async Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(string userId)
+        {
+            return await context.PhotoShootParticipants
+                .AsNoTracking()
+                .Where(fp => fp.UserId.ToString() == userId && fp.PhotoShoot.IsDeleted == false)
+                .Select(fp => new UserPhotoShootsViewModel()
+                {
+                    Id = fp.PhotoShoot.Id.ToString(),
+                    ImageUrl1 = fp.PhotoShoot.ImageUrl1,
+                    ImageUrl2 = fp.PhotoShoot.ImageUrl2,
+                    ImageUrl3 = fp.PhotoShoot.ImageUrl3,
+                    Name = fp.PhotoShoot.Name,
+                    Description = fp.PhotoShoot.Description,
+                    PhotographerId = fp.PhotoShoot.PhotographerId.ToString()
+                })
+                .ToListAsync();
         }
 
         public async Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid)

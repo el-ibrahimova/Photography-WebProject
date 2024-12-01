@@ -1,0 +1,45 @@
+﻿@using Photography.Core.ViewModels.PhotoShoot
+@using Microsoft.AspNetCore.Identity
+@using Photography.Infrastructure.Data.Models
+@model IEnumerable<UserPhotoShootsViewModel>
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    ViewData["Title"] = "Моите фотосесии";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+
+@foreach (var photoShoot in Model)
+{
+    <div class="row align-items-center mb-4 py-3" style="border-bottom: 1px solid #ccc;">
+        <div class="col-md-12 text-center">
+            <h3 class="mb-3">@photoShoot.Name</h3>
+        </div>
+
+        <div class="col-md-2 text-center">
+            <img src="@photoShoot.ImageUrl1" class="img-fluid" style="width: 200px; height: auto; object-fit: contain;" />
+            <img src="@photoShoot.ImageUrl2" class="img-fluid" style="width: 200px; height: auto; object-fit: contain;" />
+            <img src="@photoShoot.ImageUrl3" class="img-fluid" style="width: 200px; height: auto; object-fit: contain;" />
+        </div>
+
+        <div class="col-md-4 text-start">
+            <p class="mb-1">@photoShoot.Description</p>
+            @if (await userManager.FindByIdAsync(photoShoot.PhotographerId) is { } photographer)
+            {
+                <p class="mb-0"><strong>Фотограф:</strong> @photographer.UserName</p>
+            }
+        </div>
+
+        <div class="d-flex flex-column align-items-end">
+            <form asp-controller="PhotoShoot" asp-action="DeclineParticipation" asp-route-id="@photoShoot.Id" method="post">
+                <input type="hidden" name="id" value="@photoShoot.Id" />
+                <button type="submit" class="btn btn-danger mb-2 w-100 button-height">Откажи участие</button>
+            </form>
+        </div>
+    </div>
+}

@@ -9,7 +9,8 @@ namespace Photography.Core.Interfaces
         Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync();
         Task <bool> AddPhotoShootAsync(AddPhotoShootViewModel model);
         Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid);
-        Task AddParticipantToPhotoShoot(Guid photoIdGuid, Guid userIdGuid);
+        Task<bool> AddParticipantToPhotoShoot(Guid photoIdGuid, Guid userIdGuid);
+        Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(string userId);
       
         Task<EditPhotoShootViewModel> GetPhotoShootToEditAsync(Guid photoShootGuid, Guid userGuid);
         Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model);
@@ -18,5 +19,6 @@ namespace Photography.Core.Interfaces
 
         Task<DeletePhotoShootViewModel?> GetPhotoShootDelete(string photoShootId);
         Task<bool> DeletePhotoShootAsync(string photoShootId);
+        
     }
 }

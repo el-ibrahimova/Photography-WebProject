@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.Services;
-using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Extensions;
-using static Photography.Common.ApplicationConstants;
 namespace Photography.Controllers
 {
     public class PhotoShootController : BaseController
@@ -85,44 +83,7 @@ namespace Photography.Controllers
             return View(photoShoots);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeclareParticipation(string id)
-        {
-            Guid photoShootIdGuid;
-            if (!Guid.TryParse(id, out photoShootIdGuid))
-            {
-
-            }
-
-            string? currentUserId = GetUserId();
-
-            Guid userIdGuid;
-            if (!Guid.TryParse(currentUserId, out userIdGuid))
-            {
-                return Unauthorized();
-            }
-
-            var photoShoot = await photoShootService.GetPhotoShootByIdAsync(photoShootIdGuid);
-            if (photoShoot == null)
-            {
-                return BadRequest();
-            }
-
-            bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(photoShootIdGuid, userIdGuid);
-
-            if (hasUserDeclared)
-            {
-                TempData["Message"] = $"Вече заявихте участие за фотосесия \"{photoShoot.Name}\"";
-            }
-            else
-            {
-                TempData["Message"] = $"Вие успешно се записахте за фотосесия \"{photoShoot.Name}\"";
-            }
-
-            await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
-
-            return RedirectToAction(nameof(All));
-        }
+      
 
         [HttpGet]
         [MustBePhotographer]
@@ -217,5 +178,61 @@ namespace Photography.Controllers
             var photoShootToDelete = await photoShootService.DeletePhotoShootAsync(model.Id);
             return RedirectToAction("Manage", "PhotoShoot");
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeclareParticipation(string id)
+        {
+            Guid photoShootIdGuid;
+            if (!Guid.TryParse(id, out photoShootIdGuid))
+            {
+                return BadRequest();
+            }
+
+            string? currentUserId = GetUserId();
+
+            Guid userIdGuid;
+            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            var photoShoot = await photoShootService.GetPhotoShootByIdAsync(photoShootIdGuid);
+            if (photoShoot == null)
+            {
+                return BadRequest();
+            }
+
+            bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(photoShootIdGuid, userIdGuid);
+
+            if (hasUserDeclared)
+            {
+                TempData["Message"] = $"Вече заявихте участие за фотосесия \"{photoShoot.Name}\"";
+            }
+            else
+            {
+                TempData["Message"] = $"Вие успешно се записахте за фотосесия \"{photoShoot.Name}\"";
+            }
+
+           var result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
+
+           if (result == false)
+           {
+               return BadRequest();
+           }
+
+           return RedirectToAction(nameof(All));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserPhotoShoots()
+        {
+            string userId = GetUserId() ?? String.Empty;
+
+            var model = await photoShootService.GetUserPhotoShootsAsync(userId);
+
+            return View(model);
+        }
+
     }
 }
