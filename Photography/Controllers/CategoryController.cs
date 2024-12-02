@@ -49,7 +49,8 @@ namespace Photography.Controllers
         [MustBeAdmin]
         public async Task<IActionResult> Edit(string id)
         {
-            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var categoryGuid))
+            Guid categoryGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref categoryGuid))
             {
                 return Unauthorized();
             }
@@ -87,7 +88,8 @@ namespace Photography.Controllers
         [MustBeAdmin]
         public async Task<IActionResult> Delete(string id)
         {
-            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var categoryIdGuid))
+            Guid categoryIdGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref categoryIdGuid))
             {
                 return Unauthorized();
             }

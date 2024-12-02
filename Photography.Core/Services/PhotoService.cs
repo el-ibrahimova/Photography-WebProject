@@ -65,7 +65,7 @@ namespace Photography.Core.Services
 
         public async Task<AddPhotoViewModel> GetAddPhotoAsync()
         {
-            var model = new AddPhotoViewModel()
+            AddPhotoViewModel model = new AddPhotoViewModel()
             {
                 Categories = await GetCategoriesAsync(),
                 UserPhotoOwners = await GetAllUsersAsync()
@@ -84,12 +84,12 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            if (model.IsPrivate && string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId) && model.IsPrivate)
             {
                 return false;
             }
 
-            var userOwnerId = Guid.Empty;
+            Guid userOwnerId = Guid.Empty;
 
             if (!model.IsPrivate)
             {
@@ -111,17 +111,10 @@ namespace Photography.Core.Services
                 PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
                     .ToList()
             };
-
-            try
-            {
+            
                 await context.Photos.AddAsync(photo);
                 await context.SaveChangesAsync();
                 return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
 
         public async Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid)
@@ -158,21 +151,16 @@ namespace Photography.Core.Services
             return await context.PhotosRatings
                 .AnyAsync(r => r.PhotoId == photoIdGuid && r.UserId == userIdGuid);
         }
-
-
-        public async Task<DetailsViewModel> GetPhotoDetailsAsync(Guid photoGuid)
+        
+        public async Task<DetailsViewModel?> GetPhotoDetailsAsync(Guid photoGuid)
         {
-            var photo = await context.Photos
+            Photo? photo = await context.Photos
                 .Include(p => p.Owner)
                 .Include(p => p.PhotosCategories)
                 .ThenInclude(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == photoGuid);
+                .FirstOrDefaultAsync(p => p.Id == photoGuid&& p.IsDeleted==false);
 
-            if (photo == null || photo.IsDeleted == true)
-            {
-                return null;
-            }
-
+            
             return new DetailsViewModel()
             {
                 Id = photo.Id.ToString(),
@@ -190,11 +178,11 @@ namespace Photography.Core.Services
             };
         }
 
-        public async Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(string userId)
+        public async Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(Guid userId)
         {
             return await context.FavoritePhotos
                  .AsNoTracking()
-                 .Where(fp => fp.UserId.ToString() == userId && fp.Photo.IsDeleted == false)
+                 .Where(fp => fp.UserId== userId && fp.Photo.IsDeleted == false)
                  .Select(fp => new FavoriteViewModel()
                  {
                      Id = fp.Photo.Id.ToString(),
@@ -204,16 +192,16 @@ namespace Photography.Core.Services
                  .ToListAsync();
         }
 
-        public async Task AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid)
+        public async Task<bool> AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid)
         {
-            var photo = await context.Photos
+            Photo? photo = await context.Photos
                 .Where(p => p.IsDeleted == false && p.Id == photoGuid)
                 .Include(fp => fp.FavoritePhotos)
                 .FirstOrDefaultAsync();
 
             if (photo == null)
             {
-                throw new ArgumentException("Снимката не съществува");
+                return false;
             }
 
             if (!context.FavoritePhotos.Any(fp => fp.UserId == userGuid && fp.PhotoId == photoGuid))
@@ -226,38 +214,41 @@ namespace Photography.Core.Services
 
                 await context.SaveChangesAsync();
             }
+
+            return true;
         }
 
-        public async Task RemovePhotoFromFavoritesAsync(string userId, string photoId)
+        public async Task<bool> RemovePhotoFromFavoritesAsync(string userId, string photoId)
         {
             Photo? photo = await context.Photos
                 .Where(p => !p.IsDeleted && p.Id.ToString() == photoId)
                 .Include(p => p.FavoritePhotos)
                 .FirstOrDefaultAsync();
 
-            var user = await context.FavoritePhotos
+            FavoritePhoto? favoritePhoto = await context.FavoritePhotos
                 .Where(u => u.UserId.ToString() == userId)
                 .FirstOrDefaultAsync();
 
-            if (photo == null || user == null)
+            if (photo == null || favoritePhoto == null)
             {
-                throw new ArgumentException("Снимката или потребителят не съществуват");
+                return false;
             }
 
-            context.FavoritePhotos.Remove(user);
+            context.FavoritePhotos.Remove(favoritePhoto);
             await context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid)
+        public async Task<EditPhotoViewModel?> GetPhotoToEditAsync(Guid photoGuid)
         {
-            var photo = await context.Photos
+            Photo? photo = await context.Photos
                 .Include(p => p.PhotosCategories)
                 .Where(p => p.IsDeleted == false && p.Id == photoGuid)
                 .FirstOrDefaultAsync();
 
             if (photo == null)
             {
-                throw new ArgumentException("Снимката не съществува");
+                return null;
             }
 
             var model = new EditPhotoViewModel()
@@ -282,7 +273,7 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            var photo = await context.Photos
+            Photo? photo = await context.Photos
                 .Include(p => p.PhotosCategories)
                 .Where(p => !p.IsDeleted && p.Id == photoIdGuid)
                 .FirstOrDefaultAsync();
@@ -297,7 +288,8 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime uploadedAt))
+            DateTime uploadedAt;
+            if (!DateTime.TryParseExact(model.UploadedAt, EntityDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out uploadedAt))
             {
                 return false;
             }
@@ -315,11 +307,11 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<DeleteViewModel?> GetPhotoDelete(string photoId)
+        public async Task<DeleteViewModel?> GetPhotoDelete(Guid photoId)
         {
             return await context.Photos
                   .AsNoTracking()
-                  .Where(p => p.IsDeleted == false && p.Id.ToString() == photoId)
+                  .Where(p => p.IsDeleted == false && p.Id== photoId)
                   .Select(p => new DeleteViewModel()
                   {
                       Id = p.Id.ToString(),
@@ -332,21 +324,21 @@ namespace Photography.Core.Services
                   .FirstOrDefaultAsync();
         }
 
-        public async Task<Photo> DeletePhotoAsync(string photoId)
+        public async Task<bool> DeletePhotoAsync(string photoId)
         {
             Photo? photoToDelete = await context.Photos
-                .FirstOrDefaultAsync(p => p.Id.ToString() == photoId);
+                .FirstOrDefaultAsync(p => p.Id.ToString() == photoId && p.IsDeleted==false);
 
             if (photoToDelete == null)
             {
-                throw new ArgumentException("Снимката не съществува");
+                return false;
             }
 
             photoToDelete.IsDeleted = true;
             photoToDelete.DeletedAt = DateTime.Now;
 
             await context.SaveChangesAsync();
-            return photoToDelete;
+            return true;
         }
 
         public async Task<ICollection<CategoryViewModel>> GetCategoriesAsync()
@@ -364,12 +356,12 @@ namespace Photography.Core.Services
 
         public async Task<ICollection<UserViewModel>> GetAllUsersAsync()
         {
-            var adminRoleId = await context.Roles
+            Guid adminRoleId = await context.Roles
                 .Where(r => r.Name == AdminRoleName)
                 .Select(r => r.Id)
                 .FirstOrDefaultAsync();
 
-            return await context.Users
+            List<UserViewModel> user = await context.Users
                   .AsNoTracking()
                   .Where(u => !context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId))
                   .Select(u => new UserViewModel()
@@ -377,6 +369,8 @@ namespace Photography.Core.Services
                       Id = u.Id.ToString(),
                       UserName = u.UserName ?? String.Empty
                   }).ToListAsync();
+
+            return user;
         }
 
         public async Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync()

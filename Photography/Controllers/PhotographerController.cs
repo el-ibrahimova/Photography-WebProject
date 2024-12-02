@@ -39,14 +39,14 @@ namespace Photography.Controllers
                 return View(model);
             }
 
-           var result = await photographerService.CreateAsync(User.GetUserId()!, model.BrandName);
+           bool result = await photographerService.CreateAsync(User.GetUserId()!, model.BrandName);
 
            if (result == false)
            {
                return BadRequest();
            }
 
-           return RedirectToAction("Manage", "PhotoShoot");
+           return RedirectToAction("Index", "UserManagement");
         }
     }
 }

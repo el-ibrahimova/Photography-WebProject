@@ -12,14 +12,14 @@ namespace Photography.Core.Interfaces
         Task<bool>AddPhotoAsync(AddPhotoViewModel model, string userId);
         Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid);
         Task<bool> HasUserRatedAsync(Guid photoIdGuid, Guid userIdGuid);
-        Task<DetailsViewModel> GetPhotoDetailsAsync(Guid photoGuid);
-        Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(string userId);
-        Task AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid);
-        Task RemovePhotoFromFavoritesAsync(string userId, string photoId);
-        Task<EditPhotoViewModel> GetPhotoToEditAsync(Guid photoGuid);
+        Task<DetailsViewModel?> GetPhotoDetailsAsync(Guid photoGuid);
+        Task<ICollection<FavoriteViewModel>> GetFavoritePhotosAsync(Guid userId);
+        Task <bool> AddPhotoToFavoritesAsync(Guid userGuid, Guid photoGuid);
+        Task <bool> RemovePhotoFromFavoritesAsync(string userId, string photoId);
+        Task<EditPhotoViewModel?> GetPhotoToEditAsync(Guid photoGuid);
         Task<bool> EditPhotoAsync(EditPhotoViewModel model);
-        Task <DeleteViewModel?>GetPhotoDelete(string photoId);
-        Task<Photo> DeletePhotoAsync(string photoId);
+        Task <DeleteViewModel?>GetPhotoDelete(Guid photoId);
+        Task<bool> DeletePhotoAsync(string photoId);
 
         Task<ICollection<CategoryViewModel>> GetCategoriesAsync();
         Task<ICollection<UserViewModel>> GetAllUsersAsync();

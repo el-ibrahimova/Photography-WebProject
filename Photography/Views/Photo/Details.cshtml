@@ -58,7 +58,7 @@
 
         <div class="card-footer text-center">
             <div class="d-flex justify-content-between align-items-center">
-                <a asp-controller="Gallery" asp-action="Gallery" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1">Върни се</a>
+                <a asp-controller="Photo" asp-action="Gallery" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1">Върни се</a>
 
 
                 @if (User?.Identity?.IsAuthenticated == true && currentUserId == @Model.UserOwnerId.ToString() && @Model.IsDeleted == false)

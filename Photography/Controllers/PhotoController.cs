@@ -4,6 +4,7 @@ using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
 using Photography.Extensions;
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -32,7 +33,8 @@ namespace Photography.Controllers
         {
             var userIdString = GetUserId();
 
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(userIdString, ref userIdGuid))
             {
                 return Unauthorized();
             }
@@ -46,13 +48,6 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add()
         {
-            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return Unauthorized();
-            //}
-
             var model = await photoService.GetAddPhotoAsync();
             return View(model);
         }
@@ -61,13 +56,6 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
-
-            //if (isPhotographer == false)
-            //{
-            //    return Unauthorized();
-            //}
-
             var userId = GetUserId() ?? String.Empty;
 
             if (!model.IsPrivate)
@@ -88,7 +76,7 @@ namespace Photography.Controllers
                 return this.View(model);
             }
 
-            return RedirectToAction("Gallery", "Gallery");
+            return RedirectToAction(nameof(Manage));
         }
 
 
@@ -97,14 +85,14 @@ namespace Photography.Controllers
         {
             var currentUserId = GetUserId();
 
-            Guid photoIdGuid;
-            if (!Guid.TryParse(id, out photoIdGuid))
+            Guid photoIdGuid=Guid.Empty;
+            if (!IsGuidValid(id, ref photoIdGuid))
             {
                 return BadRequest();
             }
 
-            Guid userIdGuid;
-            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref userIdGuid))
             {
                 return Unauthorized();
             }
@@ -114,12 +102,12 @@ namespace Photography.Controllers
             if (hasUserRated)
             {
                 TempData["HasVoted"] = true;
-                return RedirectToAction("Gallery", "Gallery");
+                return RedirectToAction(nameof(Gallery));
             }
 
             await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
 
-            return RedirectToAction("Gallery", "Gallery");
+            return RedirectToAction(nameof(Gallery));
         }
 
         [AllowAnonymous]
@@ -127,13 +115,17 @@ namespace Photography.Controllers
         public async Task<IActionResult> Details(string? id)
         {
             Guid photoGuid = Guid.Empty;
-            bool isGuidValid = this.IsGuidValid(id, ref photoGuid);
-            if (!isGuidValid)
+            if (!IsGuidValid(id, ref photoGuid))
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return RedirectToAction("Gallery", "Photo");
             }
 
-            var model = await photoService.GetPhotoDetailsAsync(photoGuid);
+            DetailsViewModel? model = await photoService.GetPhotoDetailsAsync(photoGuid);
+
+            if (model == null)
+            {
+                return RedirectToAction(nameof(Gallery));
+            }
 
             return View(model);
         }
@@ -143,7 +135,13 @@ namespace Photography.Controllers
         {
             string userId = GetUserId() ?? String.Empty;
 
-            var model = await photoService.GetFavoritePhotosAsync(userId);
+            Guid userIdGuid = Guid.Empty;
+            if (IsGuidValid(userId, ref userIdGuid))
+            {
+                return RedirectToAction(nameof(Gallery));
+            }
+
+            ICollection<FavoriteViewModel> model = await photoService.GetFavoritePhotosAsync(userIdGuid);
 
             return View(model);
         }
@@ -154,22 +152,26 @@ namespace Photography.Controllers
             string? userId = GetUserId();
 
             Guid photoIdGuid = Guid.Empty;
-            bool isPhotoGuidValid = this.IsGuidValid(id, ref photoIdGuid);
-            if (!isPhotoGuidValid)
+            if (!IsGuidValid(id, ref photoIdGuid))
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return RedirectToAction(nameof(Gallery));
             }
 
             Guid userIdGuid = Guid.Empty;
-            bool isGuidValid = this.IsGuidValid(userId, ref userIdGuid);
-            if (!isGuidValid)
+            if (!IsGuidValid(userId, ref userIdGuid))
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return RedirectToAction(nameof(Gallery));
             }
 
-            await photoService.AddPhotoToFavoritesAsync(userIdGuid, photoIdGuid);
+           bool isAdded= await photoService.AddPhotoToFavoritesAsync(userIdGuid, photoIdGuid);
 
-            return RedirectToAction(nameof(Favorite));
+           if (!isAdded)
+           {
+             //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше добавена в любими.";
+                return RedirectToAction(nameof(Gallery));
+           }
+
+           return RedirectToAction(nameof(Favorite));
         }
 
         [HttpPost]
@@ -177,25 +179,30 @@ namespace Photography.Controllers
         {
             string userId = GetUserId() ?? String.Empty;
 
-            await photoService.RemovePhotoFromFavoritesAsync(userId, id);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction(nameof(Gallery));
+            }
+
+            bool isRemoved = await photoService.RemovePhotoFromFavoritesAsync(userId, id);
+
+            if (!isRemoved)
+            {
+                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше премахната от любими.";
+                return RedirectToAction(nameof(Favorite));
+            }
 
             return RedirectToAction(nameof(Favorite));
         }
 
         [HttpGet]
+        [MustBePhotographer]
         public async Task<IActionResult> Edit(string id)
         {
-            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return RedirectToAction("Gallery", "Gallery");
-            //}
-
             Guid photoGuid = Guid.Empty;
-            if (!photoService.IsGuidValid(id, ref photoGuid))
+            if (!IsGuidValid(id, ref photoGuid))
             {
-                return RedirectToAction("Gallery", "Gallery");
+                return RedirectToAction(nameof(Gallery));
             }
 
             var model = await photoService.GetPhotoToEditAsync(photoGuid);
@@ -216,16 +223,11 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
+        [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
-            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return RedirectToAction("Gallery", "Gallery");
-            //}
-
-            var result = await photoService.EditPhotoAsync(model);
+            
+            bool result = await photoService.EditPhotoAsync(model);
 
             if (!result)
             {
@@ -244,28 +246,40 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Manage()
         {
-            //bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            //if (!User.IsInRole(AdminRoleName) && !isPhotographer)
-            //{
-            //    return Unauthorized();
-            //}
+            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            {
+                return Unauthorized();
+            }
 
-            var photos = await photoService.GetAllPhotosAsync();
+            ICollection<AllPhotosViewModel> photos = await photoService.GetAllPhotosAsync();
 
             return View(photos);
         }
 
 
         [HttpGet]
-
         public async Task<IActionResult> Delete(string id)
         {
-            var model = await photoService.GetPhotoDelete(id);
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+
+            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            {
+                return Unauthorized();
+            }
+
+            Guid photoGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref photoGuid))
+            {
+                return NotFound();
+            }
+
+            DeleteViewModel? model = await photoService.GetPhotoDelete(photoGuid);
 
             if (model == null)
             {
-                return RedirectToAction("MyGallery", "Gallery");
+                return NotFound();
             }
 
             return View(model);
@@ -278,12 +292,18 @@ namespace Photography.Controllers
 
             if (!(User.IsAdmin() || isPhotographer))
             {
-                return RedirectToAction("Manage", "Photo");
+                return Unauthorized();
             }
 
-            var photoToDelete = await photoService.DeletePhotoAsync(model.Id);
+            bool isDeleted  = await photoService.DeletePhotoAsync(model.Id);
 
-            return RedirectToAction("MyGallery", "Gallery");
+            if (!isDeleted)
+            {
+                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше изтрита.";
+                return RedirectToAction(nameof(Manage));
+            }
+
+            return RedirectToAction(nameof(Manage));
         }
     }
 }

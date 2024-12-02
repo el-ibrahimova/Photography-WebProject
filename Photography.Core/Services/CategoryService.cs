@@ -85,7 +85,7 @@ namespace Photography.Core.Services
 
         public async Task<bool> DeleteCategoryAsync(string categoryId)
         {
-            Category category = await context.Categories
+            Category? category = await context.Categories
                 .Include(p => p.PhotosCategories)
                 .FirstOrDefaultAsync(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false);
 
