@@ -5,11 +5,11 @@
 
     public interface ICategoryService:IBaseService
     {
-        Task AddCategoryAsync(AddCategoryViewModel model);
-        Task<CategoryFormViewModel> GetCategoryToEditAsync(string categoryId);
-        Task<bool> EditCategoryAsync(CategoryFormViewModel model);
+        Task<bool> AddCategoryAsync(AddCategoryViewModel model);
+        Task<CategoryFormViewModel?> GetCategoryToEditAsync(Guid categoryId);
+        Task<bool> EditCategoryAsync(CategoryFormViewModel? model);
 
-        Task<CategoryFormViewModel?> GetCategoryDelete(string categoryId);
+        Task<CategoryFormViewModel?> GetCategoryDelete(Guid categoryId);
         Task<bool> DeleteCategoryAsync(string categoryId);
 
         Task<ICollection<AllCategoryViewModel>> GetAllCategoriesAsync();

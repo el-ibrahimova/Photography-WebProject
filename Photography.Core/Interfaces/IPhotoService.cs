@@ -5,6 +5,8 @@ namespace Photography.Core.Interfaces
 {
     public interface IPhotoService:IBaseService
     {
+        Task<IEnumerable<GalleryViewModel>> GetGalleryAsync();
+        Task<IEnumerable<MyGalleryViewModel>> GetPrivateGalleryAsync(Guid userId);
         Task<Photo?> GetPhotoByIdAsync(Guid photoIdGuid);
         Task<AddPhotoViewModel>GetAddPhotoAsync();
         Task<bool>AddPhotoAsync(AddPhotoViewModel model, string userId);

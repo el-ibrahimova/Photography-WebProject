@@ -7,7 +7,6 @@ using Photography.Infrastructure.Data.Models;
 namespace Photography.Core.Services
 {
     using Photography.Core.ViewModels.Category;
-    using Photography.Core.ViewModels.Photo;
 
     public class CategoryService : BaseService, ICategoryService
     {
@@ -22,7 +21,7 @@ namespace Photography.Core.Services
         }
 
 
-        public async Task AddCategoryAsync(AddCategoryViewModel model)
+        public async Task<bool> AddCategoryAsync(AddCategoryViewModel model)
         {
             Category category = new Category()
             {
@@ -31,19 +30,20 @@ namespace Photography.Core.Services
 
             await context.Categories.AddAsync(category);
             await context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<CategoryFormViewModel> GetCategoryToEditAsync(string categoryId)
+        public async Task<CategoryFormViewModel?> GetCategoryToEditAsync(Guid categoryId)
         {
-            var category = await context.Categories
-                .Where(c=>c.IsDeleted==false && c.Id.ToString().ToLower() == categoryId.ToLower())
+            Category? category = await context.Categories
+                .Where(c => c.IsDeleted == false && c.Id == categoryId)
                 .FirstOrDefaultAsync();
 
             if (category == null)
             {
-                throw new ArgumentException("Категорията не съществува");
+                return null;
             }
-
+            
             var model = new CategoryFormViewModel()
             {
                 Id = category.Id.ToString(),
@@ -53,14 +53,9 @@ namespace Photography.Core.Services
             return model;
         }
 
-        public async Task<bool> EditCategoryAsync(CategoryFormViewModel model)
+        public async Task<bool> EditCategoryAsync(CategoryFormViewModel? model)
         {
-            if (!Guid.TryParse(model.Id.ToString(), out Guid categoryIdGuid))
-            {
-                return false;
-            }
-
-            var category = await context.Categories
+            Category? category = await context.Categories
                 .Where(c => c.IsDeleted == false && c.Id.ToString().ToLower() == model.Id.ToLower())
                 .FirstOrDefaultAsync();
 
@@ -76,11 +71,11 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<CategoryFormViewModel?> GetCategoryDelete(string categoryId)
+        public async Task<CategoryFormViewModel?> GetCategoryDelete(Guid categoryId)
         {
             return await context.Categories
                 .AsNoTracking()
-                .Where(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false)
+                .Where(c => c.Id== categoryId && c.IsDeleted == false)
                 .Select(c => new CategoryFormViewModel()
                 {
                     Name = c.Name
@@ -90,8 +85,8 @@ namespace Photography.Core.Services
 
         public async Task<bool> DeleteCategoryAsync(string categoryId)
         {
-            var category = await context.Categories
-                .Include(p=>p.PhotosCategories)
+            Category category = await context.Categories
+                .Include(p => p.PhotosCategories)
                 .FirstOrDefaultAsync(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false);
 
             if (category == null)
@@ -102,13 +97,13 @@ namespace Photography.Core.Services
             category.IsDeleted = true;
             await context.SaveChangesAsync();
 
-            var photosCategoriesToRemove = context.PhotosCategories
+         List<PhotoCategory> photosCategoriesToRemove = context.PhotosCategories
                 .Where(pc => pc.CategoryId == category.Id)
-                .ToList(); 
+                .ToList();
 
             if (photosCategoriesToRemove.Any())
             {
-                context.PhotosCategories.RemoveRange(photosCategoriesToRemove); 
+                context.PhotosCategories.RemoveRange(photosCategoriesToRemove);
                 await context.SaveChangesAsync();
             }
 

@@ -4,7 +4,6 @@ using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
 using Photography.Extensions;
-using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -16,6 +15,31 @@ namespace Photography.Controllers
         public PhotoController(IPhotoService _photoService)
         {
             photoService = _photoService;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Gallery()
+        {
+            var model = await photoService.GetGalleryAsync();
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> MyGallery()
+        {
+            var userIdString = GetUserId();
+
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            var model = await photoService.GetPrivateGalleryAsync(userIdGuid);
+
+            return View(model);
         }
 
         [HttpGet]

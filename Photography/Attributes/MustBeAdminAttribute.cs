@@ -6,7 +6,7 @@ using Photography.Extensions;
 
 namespace Photography.Attributes
 {
-    public class MustBeAdminAttribute:ActionFilterAttribute
+    public class MustBeAdminAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
