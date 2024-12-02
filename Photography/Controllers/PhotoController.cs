@@ -214,7 +214,7 @@ namespace Photography.Controllers
             string userId = GetUserId() ?? String.Empty;
 
             Guid userIdGuid = Guid.Empty;
-            if (!photoService.IsGuidValid(userId, ref userIdGuid) || model.UserOwnerId != userIdGuid.ToString())
+            if (!IsGuidValid(userId, ref userIdGuid) || model.UserOwnerId != userIdGuid.ToString())
             {
                 return Unauthorized();
             }
@@ -229,12 +229,14 @@ namespace Photography.Controllers
             
             bool result = await photoService.EditPhotoAsync(model);
 
+            Guid photoIdGuid = Guid.Parse(model.Id);
+
             if (!result)
             {
                 model.Categories = await photoService.GetCategoriesAsync();
                 model.UserPhotoOwners = await photoService.GetAllUsersAsync();
 
-                var photo = await photoService.GetPhotoByIdAsync(model.Id);
+                var photo = await photoService.GetPhotoByIdAsync(photoIdGuid);
                 model.SelectedCategoryIds = photo.PhotosCategories.Select(p => p.CategoryId).ToList();
 
                 return View(model);

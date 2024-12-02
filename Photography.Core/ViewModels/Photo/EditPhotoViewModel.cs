@@ -10,7 +10,7 @@
         {
             this.UploadedAt = DateTime.UtcNow.ToString(EntityDateFormat);
         }
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [StringLength(TagUserMaxLength,
             MinimumLength = TagUserMinLength,

@@ -253,6 +253,7 @@ namespace Photography.Core.Services
 
             var model = new EditPhotoViewModel()
             {
+                Id=photo.Id.ToString(),
                 TagUser = photo.TagUser,
                 Description = photo.Description,
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
@@ -268,7 +269,8 @@ namespace Photography.Core.Services
 
         public async Task<bool> EditPhotoAsync(EditPhotoViewModel model)
         {
-            if (!Guid.TryParse(model.Id.ToString(), out Guid photoIdGuid))
+            Guid photoIdGuid = Guid.Empty;
+            if (!IsGuidValid(model.Id, ref photoIdGuid))
             {
                 return false;
             }
@@ -283,7 +285,8 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            if (!Guid.TryParse(model.UserOwnerId.ToString(), out Guid userIdGuid) || photo.UserOwnerId != userIdGuid)
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(model.UserOwnerId, ref userIdGuid) || photo.UserOwnerId != userIdGuid)
             {
                 return false;
             }
