@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.UserProfile;
 using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
@@ -19,21 +19,29 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> MyProfile()
         {
-            string? userId = User.GetUserId() ?? String.Empty;
-            var user = await userManager.FindByIdAsync(userId);
+            string userId = GetUserId();
+
+            Guid userIdGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var model = new UserProfileViewModel
+            UserProfileViewModel model = new UserProfileViewModel()
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.PhoneNumber
+                FirstName = user.FirstName!,
+                LastName = user.LastName!,
+                Phone = user.PhoneNumber!
             };
-            return View();
+
+           return View();
         }
 
 
@@ -56,7 +64,7 @@ namespace Photography.Controllers
             user.LastName = model.LastName;
             user.PhoneNumber = model.Phone;
 
-            var result = await userManager.UpdateAsync(user);
+            IdentityResult result = await userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
             {

@@ -24,7 +24,7 @@ namespace Photography.Core.Services
             return await context.PhotoShoots
                   .AsNoTracking()
                   .Where(ps => ps.IsDeleted == false)
-                  .OrderBy(ps=>ps.CreatedAt.Hour)
+                  .OrderBy(ps=>ps.CreatedAt)
                   .Select(ps => new AllPhotoShootsViewModel()
                   {
                       Id = ps.Id.ToString(),
@@ -38,12 +38,17 @@ namespace Photography.Core.Services
                   .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync(string userId)
+        public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync(Guid userId)
         {
             Photographer? photographer = await context
                 .Photographers
-                .FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
-            
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (photographer == null)
+            {
+                return null;
+            }
+
             var participant = await context.PhotoShoots
                 .Include(ps => ps.Participants)
                 .ThenInclude(p => p.User)
@@ -129,11 +134,11 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(string userId)
+        public async Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(Guid userId)
         {
             return await context.PhotoShootParticipants
                 .AsNoTracking()
-                .Where(fp => fp.UserId.ToString() == userId && fp.PhotoShoot.IsDeleted == false)
+                .Where(fp => fp.UserId== userId && fp.PhotoShoot.IsDeleted == false)
                 .Select(fp => new UserPhotoShootsViewModel()
                 {
                     Id = fp.PhotoShoot.Id.ToString(),
@@ -168,12 +173,17 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<EditPhotoShootViewModel?> GetPhotoShootToEditAsync(string photoShootId, string photographerId)
+        public async Task<EditPhotoShootViewModel?> GetPhotoShootToEditAsync(Guid photoShootId, Guid photographerId)
         {
-                var photoShoot = await context.PhotoShoots
-                    .Where(ps => ps.IsDeleted == false && ps.Id.ToString() == photoShootId && photographerId ==ps.PhotographerId.ToString() )
+                PhotoShoot? photoShoot = await context.PhotoShoots
+                    .Where(ps => ps.IsDeleted == false && ps.Id == photoShootId && photographerId ==ps.PhotographerId)
                     .FirstOrDefaultAsync();
-            
+
+                if (photoShoot == null)
+                {
+                    return null;
+                }
+
                 var model = new EditPhotoShootViewModel()
                 {
                     Id = photoShoot.Id.ToString(),
@@ -190,12 +200,13 @@ namespace Photography.Core.Services
 
         public async Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model)
         {
-            if (!Guid.TryParse(model.Id, out Guid photoShootIdGuid))
+            Guid photoShootIdGuid= Guid.Empty;
+            if (!IsGuidValid(model.Id, ref photoShootIdGuid))
             {
                 return false;
             }
 
-            var photoShoot = await context.PhotoShoots
+            PhotoShoot? photoShoot = await context.PhotoShoots
                 .Where(ps => !ps.IsDeleted && ps.Id == photoShootIdGuid && model.PhotographerId ==ps.PhotographerId.ToString())
                 .FirstOrDefaultAsync();
 
@@ -220,11 +231,11 @@ namespace Photography.Core.Services
             return await context.PhotoShoots.FirstOrDefaultAsync(ps => ps.Id == photoIdGuid);
         }
 
-        public async Task<DeletePhotoShootViewModel?> GetPhotoShootDelete(string photoShootId)
+        public async Task<DeletePhotoShootViewModel?> GetPhotoShootToDelete(Guid photoShootId)
         {
             return await context.PhotoShoots
                 .AsNoTracking()
-                .Where(p => p.IsDeleted == false && p.Id.ToString() == photoShootId)
+                .Where(p => p.IsDeleted == false && p.Id== photoShootId)
                 .Select(p => new DeletePhotoShootViewModel()
                 {
                     Id = p.Id.ToString(),
@@ -251,10 +262,17 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<Photographer?> GetPhotographerByUserIdAsync(string userId)
+        public async Task<Guid> GetPhotographerIdByUserIdAsync(Guid userId)
         {
-            return await context.Photographers
-                .FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
+           Photographer? photographer =  await context.Photographers
+                .FirstOrDefaultAsync(p => p.UserId== userId);
+
+           if (photographer == null)
+           {
+               return Guid.Empty;
+           }
+
+           return photographer.Id;
         }
     }
 }

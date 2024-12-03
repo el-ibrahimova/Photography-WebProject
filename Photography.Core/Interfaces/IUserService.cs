@@ -1,5 +1,5 @@
 ﻿using Photography.Core.ViewModels.Admin.UserManagement;
-using Photography.Infrastructure.Data.Models;
+using Photography.Core.ViewModels.UserProfile;
 
 namespace Photography.Core.Interfaces
 {

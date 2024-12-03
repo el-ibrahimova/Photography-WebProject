@@ -4,6 +4,8 @@ using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Extensions;
+using Photography.Infrastructure.Data.Models;
+
 
 namespace Photography.Controllers
 {
@@ -20,7 +22,7 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var model = await photoShootService.GetAllPhotoShootsAsync();
+            IEnumerable<AllPhotoShootsViewModel> model = await photoShootService.GetAllPhotoShootsAsync();
             return View(model);
         }
 
@@ -28,27 +30,24 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add()
         {
-            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+            string userId = GetUserId();
 
-            //if (!isPhotographer)
-            //{
-            //    return Unauthorized();
-            //}
-
-
-            var userId = GetUserId();
-
-            var photographer = await photoShootService.GetPhotographerByUserIdAsync(userId);
-
-            if (photographer == null)
+            Guid userIdGuid = Guid.NewGuid();
+            if (!IsGuidValid(userId, ref userIdGuid))
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
 
-            var model = new AddPhotoShootViewModel
+            var model = new AddPhotoShootViewModel();
+
+            Guid photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
+
+            if (photographerIdGuid == Guid.Empty)
             {
-                PhotographerId = photographer.Id.ToString()
-            };
+                return Unauthorized();
+            }
+
+            model.PhotographerId = photographerIdGuid.ToString();
 
             return this.View(model);
         }
@@ -57,23 +56,17 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add(AddPhotoShootViewModel model)
         {
-            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return Unauthorized();
-            //}
-
-            if (!this.ModelState.IsValid)
+          
+            if (!ModelState.IsValid)
             {
-                return this.View(model);
+                return View(model);
             }
 
-            bool result = await this.photoShootService.AddPhotoShootAsync(model);
+            bool isAdded = await photoShootService.AddPhotoShootAsync(model);
 
-            if (result == false)
+            if (isAdded == false)
             {
-                return this.View(model);
+                return View(model);
             }
 
             return RedirectToAction(nameof(Manage));
@@ -83,101 +76,94 @@ namespace Photography.Controllers
 
         public async Task<IActionResult> Manage()
         {
-            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
 
-            //if (!User.IsInRole(AdminRoleName) && !isPhotographer)
-            //{
-            //    return Unauthorized();
-            //}
+            if (!User.IsAdmin() && !isPhotographer)
+            {
+                return Unauthorized();
+            }
 
             var userId = GetUserId();
-            var photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync(userId);
+
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(userId, ref userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            IEnumerable<AllPhotoShootsViewModel> photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync(userIdGuid);
 
             return View(photoShoots);
         }
-
-
 
         [HttpGet]
         [MustBePhotographer]
         public async Task<IActionResult> Edit(string id)
         {
-            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return RedirectToAction("All", "PhotoShoot");
-            //}
-
             Guid photoShootGuid = Guid.Empty;
-            if (!photoShootService.IsGuidValid(id, ref photoShootGuid))
+            if (!IsGuidValid(id, ref photoShootGuid))
             {
-                return RedirectToAction("All", "PhotoShoot");
+                return NotFound();
             }
 
-            string? currentUserId = GetUserId();
+            string currentUserId = GetUserId();
+          
+            Guid userIdGuid = Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref userIdGuid))
+            {
+                return Unauthorized();
+            }
+            
+            var photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
 
-            var userId = GetUserId();
-
-            var photographer = await photoShootService.GetPhotographerByUserIdAsync(userId);
-
-            if (photographer == null)
+            if (photographerIdGuid == Guid.Empty)
             {
                 return Unauthorized();
             }
 
-            string photographerId = photographer.Id.ToString();
+           var model  = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, photographerIdGuid);
+           if (model == null)
+           {
+               return BadRequest();
+           }
 
-            Guid userIdGuid;
-            if (!Guid.TryParse(photographerId, out userIdGuid))
-            {
-                return Unauthorized();
-            }
-
-            var model = await photoShootService.GetPhotoShootToEditAsync(id, photographerId);
-
-            return View(model);
+           return View(model);
         }
 
         [HttpPost]
         [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoShootViewModel model)
         {
-            //bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
-
-            //if (!isPhotographer)
-            //{
-            //    return RedirectToAction("All", "PhotoShoot");
-            //}
-
             var result = await photoShootService.EditPhotoShootAsync(model);
 
             if (!result)
             {
                 Guid photoShootGuid = Guid.Empty;
-                if (!photoShootService.IsGuidValid(model.Id, ref photoShootGuid))
+                if (!IsGuidValid(model.Id, ref photoShootGuid))
                 {
-                    return RedirectToAction("All", "PhotoShoot");
+                    return NotFound();
                 }
 
-                string? currentUserId = GetUserId();
-
-                var photographer = await photoShootService.GetPhotographerByUserIdAsync(currentUserId);
-
-                if (photographer == null)
+                string currentUserId = GetUserId();
+                Guid userIdGuid = Guid.Empty;
+                if (!IsGuidValid(model.Id, ref userIdGuid))
                 {
                     return Unauthorized();
                 }
 
-                string photographerId = photographer.Id.ToString();
+                Guid photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
 
-                Guid userIdGuid;
-                if (!Guid.TryParse(currentUserId, out userIdGuid))
+                if (photographerIdGuid == Guid.Empty)
                 {
                     return Unauthorized();
                 }
 
-                var photoShoot = await photoShootService.GetPhotoShootToEditAsync(model.Id, photographerId);
+                EditPhotoShootViewModel? photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, photographerIdGuid);
+
+                if (photoShoot == null)
+                {
+                    return BadRequest();
+                }
 
                 return View(photoShoot);
             }
@@ -188,11 +174,24 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            var model = await photoShootService.GetPhotoShootDelete(id);
+            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+
+            if (!User.IsAdmin() && !isPhotographer)
+            {
+                return Unauthorized();
+            }
+
+            Guid photoShootIdGuid = Guid.Empty;
+            if (!IsGuidValid(id, ref photoShootIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            DeletePhotoShootViewModel? model = await photoShootService.GetPhotoShootToDelete(photoShootIdGuid);
 
             if (model == null)
             {
-                return RedirectToAction("Manage", "PhotoShoot");
+                return NotFound();
             }
 
             return View(model);
@@ -207,6 +206,7 @@ namespace Photography.Controllers
             {
                 return Unauthorized();
             }
+
             
           bool isDeleted= await photoShootService.DeletePhotoShootAsync(model.Id);
 
@@ -222,24 +222,24 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> DeclareParticipation(string id)
         {
-            Guid photoShootIdGuid;
-            if (!Guid.TryParse(id, out photoShootIdGuid))
+            Guid photoShootIdGuid=Guid.Empty;
+            if (!IsGuidValid(id, ref photoShootIdGuid))
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            string? currentUserId = GetUserId();
+            string currentUserId = GetUserId();
 
-            Guid userIdGuid;
-            if (!Guid.TryParse(currentUserId, out userIdGuid))
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref userIdGuid))
             {
                 return Unauthorized();
             }
 
-            var photoShoot = await photoShootService.GetPhotoShootByIdAsync(photoShootIdGuid);
+            PhotoShoot? photoShoot = await photoShootService.GetPhotoShootByIdAsync(photoShootIdGuid);
             if (photoShoot == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(photoShootIdGuid, userIdGuid);
@@ -253,7 +253,7 @@ namespace Photography.Controllers
                 TempData["Message"] = $"Вие успешно се записахте за фотосесия \"{photoShoot.Name}\"";
             }
 
-            var result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
+            bool result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
 
             if (result == false)
             {
@@ -266,9 +266,15 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> UserPhotoShoots()
         {
-            string userId = GetUserId() ?? String.Empty;
+            string userId = GetUserId();
 
-            var model = await photoShootService.GetUserPhotoShootsAsync(userId);
+            Guid userIdGuid=Guid.Empty;
+            if (!IsGuidValid(userId, ref userIdGuid))
+            {
+                return Unauthorized();
+            }
+
+            IEnumerable<UserPhotoShootsViewModel> model = await photoShootService.GetUserPhotoShootsAsync(userIdGuid);
 
             return View(model);
         }
@@ -277,9 +283,14 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> DeclineParticipation(string id)
         {
-            string userId = GetUserId() ?? String.Empty;
+            string userId = GetUserId();
 
-            await photoShootService.RemoveUserFromParticipation(userId, id);
+            var isRemoved = await photoShootService.RemoveUserFromParticipation(userId, id);
+            if(isRemoved==false)
+            {
+                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Вашето участие не беше отказано..";
+                return RedirectToAction(nameof(UserPhotoShoots));
+            }
 
             return RedirectToAction(nameof(UserPhotoShoots));
         }

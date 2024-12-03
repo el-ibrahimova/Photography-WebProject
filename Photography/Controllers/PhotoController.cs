@@ -4,8 +4,6 @@ using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
 using Photography.Extensions;
-using static Photography.Common.ApplicationConstants;
-
 namespace Photography.Controllers
 {
     public class PhotoController : BaseController
@@ -250,7 +248,7 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            if (!User.IsAdmin() && !isPhotographer)
             {
                 return Unauthorized();
             }
@@ -266,7 +264,7 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!User.IsInRole(AdminRoleName) && !isPhotographer)
+            if (!User.IsAdmin()&& !isPhotographer)
             {
                 return Unauthorized();
             }
