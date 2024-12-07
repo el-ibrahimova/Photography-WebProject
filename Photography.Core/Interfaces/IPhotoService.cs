@@ -25,5 +25,7 @@ namespace Photography.Core.Interfaces
         Task<ICollection<UserViewModel>> GetAllUsersAsync();
 
         Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync();
+        Task<int> GetPhotosCountByFilterAsync(GalleryWithSearchFilterViewModel inputModel);
+        Task<int> GetPrivatePhotosCountByFilterAsync(GalleryWithSearchFilterViewModel inputModel, Guid userId);
     }
 }

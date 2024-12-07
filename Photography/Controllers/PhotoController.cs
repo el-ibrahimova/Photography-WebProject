@@ -20,15 +20,21 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Gallery(GalleryWithSearchFilterViewModel inputModel)
         {
-            ICollection<GalleryViewModel> gallery = await this.photoService.GetGalleryAsync(inputModel);
+            ICollection<GalleryViewModel> gallery = await photoService.GetGalleryAsync(inputModel);
 
-            var viewModel = new GalleryWithSearchFilterViewModel();
+            int allPhotosCount = await this.photoService.GetPhotosCountByFilterAsync(inputModel);
 
-            viewModel.Gallery = gallery;
-            viewModel.AllCategories = (await photoService.GetCategoriesAsync())
-                .Select(c => c.Name) 
-                .ToList();
-
+            GalleryWithSearchFilterViewModel viewModel = new()
+            {
+                Gallery = gallery,
+                AllCategories = (await photoService.GetCategoriesAsync()).Select(c => c.Name)
+                .ToList(),
+                SearchQuery = inputModel.SearchQuery,
+                CategoryFilter = inputModel.CategoryFilter,
+                DateFilter = inputModel.DateFilter,
+                CurrentPage = inputModel.CurrentPage,
+                TotalPages = (int)Math.Ceiling(((double)allPhotosCount / inputModel.EntitiesPerPage!.Value))
+            };
 
             return View(viewModel);
         }
@@ -39,7 +45,7 @@ namespace Photography.Controllers
         {
             var userIdString = GetUserId();
 
-            Guid userIdGuid=Guid.Empty;
+            Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(userIdString, ref userIdGuid))
             {
                 return Unauthorized();
@@ -47,12 +53,19 @@ namespace Photography.Controllers
 
             ICollection<GalleryViewModel> myGallery = await photoService.GetPrivateGalleryAsync(inputModel, userIdGuid);
 
-            var viewModel = new GalleryWithSearchFilterViewModel();
+            int allPhotosCount = await photoService.GetPrivatePhotosCountByFilterAsync(inputModel, userIdGuid);
 
-            viewModel.Gallery = myGallery;
-            viewModel.AllCategories = (await photoService.GetCategoriesAsync())
-                .Select(c => c.Name)
-                .ToList();
+            GalleryWithSearchFilterViewModel viewModel = new()
+            {
+                Gallery = myGallery,
+                AllCategories = (await photoService.GetCategoriesAsync()).Select(c => c.Name)
+                    .ToList(),
+                SearchQuery = inputModel.SearchQuery,
+                CategoryFilter = inputModel.CategoryFilter,
+                DateFilter = inputModel.DateFilter,
+                CurrentPage = inputModel.CurrentPage,
+                TotalPages = (int)Math.Ceiling(((double)allPhotosCount / inputModel.EntitiesPerPage!.Value))
+            };
 
             return View(viewModel);
         }
@@ -98,13 +111,13 @@ namespace Photography.Controllers
         {
             var currentUserId = GetUserId();
 
-            Guid photoIdGuid=Guid.Empty;
+            Guid photoIdGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoIdGuid))
             {
                 return BadRequest();
             }
 
-            Guid userIdGuid=Guid.Empty;
+            Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(currentUserId, ref userIdGuid))
             {
                 return Unauthorized();
@@ -176,15 +189,15 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Gallery));
             }
 
-           bool isAdded= await photoService.AddPhotoToFavoritesAsync(userIdGuid, photoIdGuid);
+            bool isAdded = await photoService.AddPhotoToFavoritesAsync(userIdGuid, photoIdGuid);
 
-           if (!isAdded)
-           {
-             //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше добавена в любими.";
+            if (!isAdded)
+            {
+                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше добавена в любими.";
                 return RedirectToAction(nameof(Gallery));
-           }
+            }
 
-           return RedirectToAction(nameof(Favorite));
+            return RedirectToAction(nameof(Favorite));
         }
 
         [HttpPost]
@@ -239,7 +252,7 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
-            
+
             bool result = await photoService.EditPhotoAsync(model);
 
             Guid photoIdGuid = Guid.Parse(model.Id);
@@ -279,7 +292,7 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-            if (!User.IsAdmin()&& !isPhotographer)
+            if (!User.IsAdmin() && !isPhotographer)
             {
                 return Unauthorized();
             }
@@ -310,7 +323,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            bool isDeleted  = await photoService.DeletePhotoAsync(model.Id);
+            bool isDeleted = await photoService.DeletePhotoAsync(model.Id);
 
             if (!isDeleted)
             {

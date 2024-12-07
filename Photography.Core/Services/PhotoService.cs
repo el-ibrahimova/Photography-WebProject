@@ -81,6 +81,13 @@ namespace Photography.Core.Services
                 }
             }
 
+            if (model.CurrentPage.HasValue && model.EntitiesPerPage.HasValue)
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Skip(model.EntitiesPerPage.Value * (model.CurrentPage.Value - 1))
+                    .Take(model.EntitiesPerPage.Value);
+            }
+
             return await allPhotosQuery
                 .Select(p => new GalleryViewModel
                 {
@@ -142,6 +149,14 @@ namespace Photography.Core.Services
                 {
                     allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
                 }
+            }
+
+            
+            if (model.CurrentPage.HasValue && model.EntitiesPerPage.HasValue)
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Skip(model.EntitiesPerPage.Value * (model.CurrentPage.Value - 1))
+                    .Take(model.EntitiesPerPage.Value);
             }
 
             var viewModel = await context.Photos
@@ -487,6 +502,42 @@ namespace Photography.Core.Services
                 .ToListAsync();
 
             return photos;
+        }
+
+        public async Task<int> GetPhotosCountByFilterAsync(GalleryWithSearchFilterViewModel inputModel)
+        {
+            GalleryWithSearchFilterViewModel inputModelCopy = new()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                SearchQuery = inputModel.SearchQuery,
+                CategoryFilter = inputModel.CategoryFilter,
+                DateFilter = inputModel.DateFilter
+            };
+
+            int photosCount = (await this.GetGalleryAsync(inputModelCopy)).Count();
+
+            return photosCount;
+        }
+
+        public async Task<int> GetPrivatePhotosCountByFilterAsync(GalleryWithSearchFilterViewModel inputModel, Guid userId)
+        {
+            GalleryWithSearchFilterViewModel inputModelCopy = new()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                SearchQuery = inputModel.SearchQuery,
+                CategoryFilter = inputModel.CategoryFilter,
+                DateFilter = inputModel.DateFilter
+            };
+
+            var photos = await this.GetPrivateGalleryAsync(inputModel, userId);
+
+            int photosCount = photos
+                .Where(p => p.IsPrivate && userId.ToString()==p.UserOwnerId)
+                .Count();
+
+            return photosCount;
         }
     }
 }
