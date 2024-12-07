@@ -16,13 +16,15 @@ namespace Photography.Attributes
 
             if (userService == null)
             {
-                context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                context.Result = new RedirectToActionResult(nameof(HomeController.Error), "Home", new { statusCode = 500 });
+                return;
             }
 
             if (userService != null
                 && userService.UserExistByIdAsync(Guid.Parse(context.HttpContext.User.GetUserId())).Result == false)
             {
-                context.Result = new RedirectToActionResult(nameof(HomeController.Error), "Home", 403);
+                context.Result = new RedirectToActionResult(nameof(HomeController.Error), "Home", new { statusCode = 403 });
+                return;
             }
         }
     }

@@ -14,29 +14,29 @@ namespace Photography.Areas.Admin.Controllers
     {
         private readonly IUserService userService;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserService _userService)
         {
-            this.userService = userService;
+            userService = _userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<AllUsersViewModel> allUsers = await this.userService.GetAllUsersAsync();
+            IEnumerable<AllUsersViewModel> allUsers = await userService.GetAllUsersAsync();
 
-            return this.View(allUsers);
+            return View(allUsers);
         }
 
         [HttpPost]
         public async Task<IActionResult> AssignRole(string userId, string role)
         {
             Guid userGuid = Guid.Empty;
-            if (this.IsGuidValid(userId, ref userGuid))
+            if (!IsGuidValid(userId, ref userGuid))
             {
                 return this.RedirectToAction(nameof(Index));
             }
 
-            bool userExist = await this.userService
+            bool userExist = await userService
                 .UserExistByIdAsync(userGuid);
 
             if (!userExist)
@@ -44,27 +44,27 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool assignResult = await this.userService
+            bool assignResult = await userService
                 .AssignUserToRoleAsync(userGuid, role);
 
             if (!assignResult)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> RemoveRole(string userId, string role)
         {
             Guid userGuid = Guid.Empty;
-            if (this.IsGuidValid(userId, ref userGuid))
+            if (!IsGuidValid(userId, ref userGuid))
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            bool userExist = await this.userService
+            bool userExist = await userService
                 .UserExistByIdAsync(userGuid);
 
             if (!userExist)
@@ -72,31 +72,31 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool removeResult = await this.userService
+            bool removeResult = await userService
                 .RemoveUserRoleAsync(userGuid, role);
 
             if (!removeResult)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             Guid userGuid = Guid.Empty;
-            if (!this.IsGuidValid(userId, ref userGuid))
+            if (!IsGuidValid(userId, ref userGuid))
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            bool userExists = await this.userService
+            bool userExists = await userService
                 .UserExistByIdAsync(userGuid);
             if (!userExists)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
             bool isUserPhotographer = await userService.IsUserPhotographerAsync(userGuid);
@@ -106,18 +106,18 @@ namespace Photography.Areas.Admin.Controllers
                 bool result = await userService.RemoveUserFromPhotographerAsync(userGuid);
                 if (!result)
                 {
-                    return this.RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
-            bool removeResult = await this.userService
+            bool removeResult = await userService
                 .DeleteUserAsync(userGuid);
             if (!removeResult)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -127,22 +127,22 @@ namespace Photography.Areas.Admin.Controllers
 
             if (!success)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> RemovePhotographer(string userId)
         {
             Guid userGuid = Guid.Empty;
-            if (!this.IsGuidValid(userId, ref userGuid))
+            if (!IsGuidValid(userId, ref userGuid))
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            bool userExist = await this.userService
+            bool userExist = await userService
                 .UserExistByIdAsync(userGuid);
 
             if (!userExist)
@@ -150,16 +150,15 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool removeResult = await this.userService
+            bool removeResult = await userService
                 .RemoveUserFromPhotographerAsync(userGuid);
 
             if (!removeResult)
             {
-                return this.RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
-
     }
 }

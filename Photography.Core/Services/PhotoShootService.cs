@@ -4,6 +4,7 @@ using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
+using Photography.Infrastructure.Migrations;
 
 namespace Photography.Core.Services
 {
@@ -40,38 +41,29 @@ namespace Photography.Core.Services
 
         public async Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync(Guid userId)
         {
-            Photographer? photographer = await context
-                .Photographers
-                .FirstOrDefaultAsync(p => p.UserId == userId);
-
-            if (photographer == null)
-            {
-                return null;
-            }
-
-            var participant = await context.PhotoShoots
+           var viewModel = await context.PhotoShoots
                 .Include(ps => ps.Participants)
                 .ThenInclude(p => p.User)
                 .Where(ps => ps.IsDeleted == false)
                 .Select(ps => new AllPhotoShootsViewModel()
                 {
                     Id = ps.Id.ToString(),
-                    Name = ps.Name,
-                    PhotographerBrandName = photographer.BrandName,
+                    Name = ps.Name, 
+                    PhotographerId = ps.PhotographerId.ToString(),
+                    PhotographerBrandName = context.Photographers.Where(p=>p.Id==ps.PhotographerId).Select(p=>p.BrandName).FirstOrDefault()!.ToString(),
                     ImageUrl1 = ps.ImageUrl1,
                     ImageUrl2 = ps.ImageUrl2,
                     ImageUrl3 = ps.ImageUrl3,
                     Description = ps.Description,
-                    PhotographerId = ps.PhotographerId.ToString(),
                     Participants = ps.Participants.Select(p => new ParticipantViewModel()
                     {
-                        UserName = p.User.UserName,
-                        PhoneNumber = p.User.PhoneNumber
+                        UserName = p.User.UserName!,
+                        PhoneNumber = p.User.PhoneNumber!
                     }).ToArray()
                 })
                 .ToArrayAsync();
 
-            return participant;
+            return viewModel;
         }
 
         public async Task<bool> AddPhotoShootAsync(AddPhotoShootViewModel model)

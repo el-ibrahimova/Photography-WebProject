@@ -24,7 +24,6 @@ namespace Photography.Controllers
 
             var viewModel = new GalleryWithSearchFilterViewModel();
 
-
             viewModel.Gallery = gallery;
             viewModel.AllCategories = (await photoService.GetCategoriesAsync())
                 .Select(c => c.Name) 
@@ -36,7 +35,7 @@ namespace Photography.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> MyGallery()
+        public async Task<IActionResult> MyGallery(GalleryWithSearchFilterViewModel inputModel)
         {
             var userIdString = GetUserId();
 
@@ -46,9 +45,16 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            var model = await photoService.GetPrivateGalleryAsync(userIdGuid);
+            ICollection<GalleryViewModel> myGallery = await photoService.GetPrivateGalleryAsync(inputModel, userIdGuid);
 
-            return View(model);
+            var viewModel = new GalleryWithSearchFilterViewModel();
+
+            viewModel.Gallery = myGallery;
+            viewModel.AllCategories = (await photoService.GetCategoriesAsync())
+                .Select(c => c.Name)
+                .ToList();
+
+            return View(viewModel);
         }
 
         [HttpGet]

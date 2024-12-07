@@ -1,38 +1,67 @@
 ﻿@using Photography.Core.ViewModels.Photo
 @using System.Security.Claims
-@model IEnumerable<MyGalleryViewModel>
+@model GalleryWithSearchFilterViewModel
 
 @{
     ViewBag.Title = "Моята галерия";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
-<hr />
 
-<div class="text-center row">
-    @foreach (var photo in Model)
-    {
-        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+<form method="get" asp-action="Gallery" class="mb-4">
+    <div class="row">
+        <div class="col">
+            <input asp-for="SearchQuery" class="form-control" placeholder="Търси по таг..." />
+        </div>
+        <div class="col">
+            <select asp-for="CategoryFilter" class="form-control" placeholder="Търси по категория...">
+                @if (Model.AllCategories != null && Model.AllCategories.Any())
+                {
+                    <option value="">Филтрирай по категория...</option>
+                    @foreach (var category in Model.AllCategories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col">
+            <input asp-for="DateFilter" class="form-control" placeholder="мм.гггг - мм.гггг" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Филтър</button>
+        </div>
+    </div>
+</form>
 
-        if (photo.IsPrivate && photo.UserOwnerId == currentUserId)
+
+@if (Model.Gallery != null)
+{
+    <div class="text-center row">
+        @foreach (var photo in Model.Gallery)
         {
-            <div class="card col-4" style="width: 20rem; ">
-                <div class="card-body">
-                    <h4 class="card-title mt-1">@photo.TagUser</h4>
-                    <img class="card-img-top" src=@photo.ImageUrl alt="Image">
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (photo.IsPrivate && photo.UserOwnerId == currentUserId)
+            {
+                <div class="card col-4" style="width: 20rem;">
+                    <div class="card-body">
+                        <h4 class="card-title mt-1">@photo.TagUser</h4>
+                        <img class="card-img-top" src=@photo.ImageUrl alt="Image">
+                    </div>
+
+                    <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
+
+                    <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
+                        <input type="hidden" name="id" value="@photo.Id"/>
+                        <button type="submit" class="btn btn-success w-100">Добави в любими</button>
+                    </form>
+
                 </div>
-
-                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
-
-                <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
-                    <input type="hidden" name="id" value="@photo.Id" />
-                    <button type="submit" class="btn btn-success w-100">Добави в любими</button>
-                </form>
-
-            </div>
+            }
         }
-    }
-</div>
+    </div>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

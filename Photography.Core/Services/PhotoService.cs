@@ -75,7 +75,7 @@ namespace Photography.Core.Services
                     }
 
                 }
-                else if (int.TryParse(model.DateFilter, out int date))
+                else if(int.TryParse(model.DateFilter, out int date))
                 {
                     allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
                 }
@@ -93,12 +93,60 @@ namespace Photography.Core.Services
                 .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<MyGalleryViewModel>> GetPrivateGalleryAsync(Guid userId)
+        public async Task<ICollection<GalleryViewModel>> GetPrivateGalleryAsync(GalleryWithSearchFilterViewModel model, Guid userId)
         {
-            var model = await context.Photos
-                .AsNoTracking()
+            IQueryable<Photo> allPhotosQuery = context
+                .Photos
                 .Where(p => !p.IsPrivate || p.UserOwnerId == userId && p.IsDeleted == false)
-                .Select(p => new MyGalleryViewModel()
+                .AsQueryable();
+
+
+            if (!String.IsNullOrWhiteSpace(model.SearchQuery))
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Where(p =>
+                        (p.TagUser ?? string.Empty).ToLower().Contains(model.SearchQuery.ToLower()));
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.CategoryFilter))
+            {
+                allPhotosQuery = allPhotosQuery.Where(p =>
+                    p.PhotosCategories.Any(pc => pc.Category.Name.ToLower() == model.CategoryFilter.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.DateFilter))
+            {
+                Match rangeMatch = Regex.Match(model.DateFilter, DateRegexFormat);
+
+                if (rangeMatch.Success)
+                {
+                    int startMonth = int.Parse(rangeMatch.Groups[1].Value);
+                    int startYear = int.Parse(rangeMatch.Groups[2].Value);
+                    int endMonth = int.Parse(rangeMatch.Groups[3].Value);
+                    int endYear = int.Parse(rangeMatch.Groups[4].Value);
+
+                    if (startYear < endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                            p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear);
+                    }
+                    else if (startYear == endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                            (p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear) &&
+                            (p.UploadedAt.Month >= startMonth && p.UploadedAt.Month <= endMonth));
+                    }
+
+                }
+                else if (int.TryParse(model.DateFilter, out int date))
+                {
+                    allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
+                }
+            }
+
+            var viewModel = await context.Photos
+                .AsNoTracking()
+                .Select(p => new GalleryViewModel()
                 {
                     Id = p.Id.ToString(),
                     TagUser = p.TagUser,
@@ -106,9 +154,9 @@ namespace Photography.Core.Services
                     IsPrivate = p.IsPrivate,
                     UserOwnerId = userId.ToString()
                 })
-                .ToListAsync();
+                .ToArrayAsync();
 
-            return model;
+            return viewModel;
         }
 
         public async Task<AddPhotoViewModel> GetAddPhotoAsync()
