@@ -18,11 +18,20 @@ namespace Photography.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Gallery()
+        public async Task<IActionResult> Gallery(GalleryWithSearchFilterViewModel inputModel)
         {
-            var model = await photoService.GetGalleryAsync();
+            ICollection<GalleryViewModel> gallery = await this.photoService.GetGalleryAsync(inputModel);
 
-            return View(model);
+            var viewModel = new GalleryWithSearchFilterViewModel();
+
+
+            viewModel.Gallery = gallery;
+            viewModel.AllCategories = (await photoService.GetCategoriesAsync())
+                .Select(c => c.Name) 
+                .ToList();
+
+
+            return View(viewModel);
         }
 
 
@@ -134,7 +143,7 @@ namespace Photography.Controllers
             string userId = GetUserId() ?? String.Empty;
 
             Guid userIdGuid = Guid.Empty;
-            if (IsGuidValid(userId, ref userIdGuid))
+            if (!IsGuidValid(userId, ref userIdGuid))
             {
                 return RedirectToAction(nameof(Gallery));
             }

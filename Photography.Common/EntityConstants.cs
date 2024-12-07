@@ -18,6 +18,8 @@
             public const int ImageUrlMaxLength = 100;
             public const int RatingMinValue = 0;
             public const int RatingMaxValue = 10;
+            public const string DateRegexFormat = @"^(\d{2})\.(\d{4})\s\-\s(\d{2})\.(\d{4})$";
+
         }
 
         public static class User

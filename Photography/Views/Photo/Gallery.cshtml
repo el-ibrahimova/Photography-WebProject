@@ -1,12 +1,9 @@
 ﻿@using Photography.Core.ViewModels.Photo
-@model IEnumerable<GalleryViewModel>
+@model GalleryWithSearchFilterViewModel
 
 @{
     ViewBag.Title = "Галерия";
 }
-
-<h2 class="text-center">@ViewBag.Title</h2>
-<hr />
 
 @if (TempData["HasVoted"] != null)
 {
@@ -16,56 +13,87 @@
     </div>
 }
 
-<div class="text-center row">
-    @foreach (var photo in Model)
-    {
-        if (!photo.IsPrivate)
-        {
-            <div class="card col-4" style="width: 20rem; ">
-                <div class="card-body">
-                    <h4 class="card-title mt-1">@photo.TagUser</h4>
-                    <img class="card-img-top" src=@photo.ImageUrl alt="Image">
-                    <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
-                </div>
+<h2 class="text-center">@ViewBag.Title</h2>
 
-                <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
 
-                @if (User.Identity?.IsAuthenticated ?? false)
+<form method="get" asp-action="Gallery" class="mb-4">
+    <div class="row">
+        <div class="col">
+            <input asp-for="SearchQuery" class="form-control" placeholder="Търси по таг..." />
+        </div>
+        <div class="col">
+            <select asp-for="CategoryFilter" class="form-control" placeholder="Търси по категория...">
+                @if (Model.AllCategories != null && Model.AllCategories.Any())
                 {
-                    <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
-                        <input type="hidden" name="id" value="@photo.Id" />
-                        <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>
-                    </form>
+                    <option value="">Филтрирай по категория...</option>
+                    @foreach (var category in Model.AllCategories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col">
+            <input asp-for="DateFilter" class="form-control" placeholder="Филтрирай по дата..." />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Филтър</button>
+        </div>
+    </div>
+</form>
 
-                    <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
-                        <input type="hidden" name="id" value="@photo.Id" />
-                        <button type="submit" class="btn btn-success w-100">Добави в любими</button>
-                    </form>
-                  }
-            </div>
+@if (Model.Gallery != null)
+{
+    <div class="text-center row">
+        @foreach (var photo in Model.Gallery)
+        {
+            if (!photo.IsPrivate)
+            {
+                <div class="card col-4" style="width: 20rem;">
+                    <div class="card-body">
+                        <h4 class="card-title mt-1">@photo.TagUser</h4>
+                        <img class="card-img-top" src=@photo.ImageUrl alt="Image">
+                        <h5 class="card-title mt-1">Рейтинг: @photo.Rating</h5>
+                    </div>
+
+                    <a asp-controller="Photo" asp-action="Details" asp-route-id="@photo.Id" class="btn btn-warning w-100 mb-2">Детайли</a>
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <form asp-controller="Photo" asp-action="IncreaseRating" method="post">
+                            <input type="hidden" name="id" value="@photo.Id" />
+                            <button type="submit" class="btn btn-primary w-100 mb-2">Гласувай</button>
+                        </form>
+
+                        <form asp-controller="Photo" asp-action="AddToFavorite" method="post">
+                            <input type="hidden" name="id" value="@photo.Id" />
+                            <button type="submit" class="btn btn-success w-100">Добави в любими</button>
+                        </form>
+                    }
+                </div>
+            }
         }
-    }
-</div>
-
+    </div>
+}
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
+    <partial name="_ValidationScriptsPartial" />
 
     @*  script for hiding alert after 3 seconds *@
     <script>
         document.addEventListener("DOMContentLoaded",
-            function() {
+            function () {
                 var alert = document.getElementById("voteAlert");
                 if (alert) {
 
-                    setTimeout(function() {
-                            var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
-                            bsAlert.close();
-                        },
+                    setTimeout(function () {
+                        var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
+                        bsAlert.close();
+                    },
                         3000);
                 }
             });
-    
-        
+
+
     </script>
 }

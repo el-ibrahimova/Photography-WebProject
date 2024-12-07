@@ -5,10 +5,12 @@ using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using System.Text.RegularExpressions;
 
 namespace Photography.Core.Services
 {
     using static Common.ApplicationConstants;
+    using static Common.EntityConstants.Photo;
     public class PhotoService : BaseService, IPhotoService
     {
         private readonly PhotographyDbContext context;
@@ -18,7 +20,7 @@ namespace Photography.Core.Services
             : base(data)
         {
             context = data;
-            userManager= _userManager;
+            userManager = _userManager;
         }
 
         public async Task<Photo?> GetPhotoByIdAsync(Guid photoIdGuid)
@@ -28,11 +30,59 @@ namespace Photography.Core.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<GalleryViewModel>> GetGalleryAsync()
+        public async Task<ICollection<GalleryViewModel>> GetGalleryAsync(GalleryWithSearchFilterViewModel model)
         {
-            List<GalleryViewModel> photos = await context.Photos
+            IQueryable<Photo> allPhotosQuery = context
+                .Photos
                 .Where(p => !p.IsPrivate && p.IsDeleted == false)
-                .Select(p => new GalleryViewModel()
+                .AsQueryable();
+
+
+            if (!String.IsNullOrWhiteSpace(model.SearchQuery))
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Where(p =>
+                    (p.TagUser ?? string.Empty).ToLower().Contains(model.SearchQuery.ToLower()));
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.CategoryFilter))
+            {
+                allPhotosQuery = allPhotosQuery.Where(p =>
+                    p.PhotosCategories.Any(pc => pc.Category.Name.ToLower() == model.CategoryFilter.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.DateFilter))
+            {
+                Match rangeMatch = Regex.Match(model.DateFilter, DateRegexFormat);
+
+                if (rangeMatch.Success)
+                {
+                    int startMonth = int.Parse(rangeMatch.Groups[1].Value);
+                    int startYear = int.Parse(rangeMatch.Groups[2].Value);
+                    int endMonth = int.Parse(rangeMatch.Groups[3].Value);
+                    int endYear = int.Parse(rangeMatch.Groups[4].Value);
+
+                    if (startYear < endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                                              p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear);
+                    }
+                    else if (startYear == endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                            (p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear) && 
+                            (p.UploadedAt.Month>= startMonth && p.UploadedAt.Month<=endMonth));
+                    }
+
+                }
+                else if (int.TryParse(model.DateFilter, out int date))
+                {
+                    allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
+                }
+            }
+
+            return await allPhotosQuery
+                .Select(p => new GalleryViewModel
                 {
                     Id = p.Id.ToString(),
                     TagUser = p.TagUser,
@@ -40,9 +90,7 @@ namespace Photography.Core.Services
                     IsPrivate = p.IsPrivate,
                     Rating = p.Rating
                 })
-                .ToListAsync();
-
-            return photos;
+                .ToArrayAsync();
         }
 
         public async Task<IEnumerable<MyGalleryViewModel>> GetPrivateGalleryAsync(Guid userId)
@@ -111,10 +159,10 @@ namespace Photography.Core.Services
                 PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
                     .ToList()
             };
-            
-                await context.Photos.AddAsync(photo);
-                await context.SaveChangesAsync();
-                return true;
+
+            await context.Photos.AddAsync(photo);
+            await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task IncreaseRatingAsync(Guid photoIdGuid, Guid userIdGuid)
@@ -151,16 +199,16 @@ namespace Photography.Core.Services
             return await context.PhotosRatings
                 .AnyAsync(r => r.PhotoId == photoIdGuid && r.UserId == userIdGuid);
         }
-        
+
         public async Task<DetailsViewModel?> GetPhotoDetailsAsync(Guid photoGuid)
         {
             Photo? photo = await context.Photos
                 .Include(p => p.Owner)
                 .Include(p => p.PhotosCategories)
                 .ThenInclude(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == photoGuid&& p.IsDeleted==false);
+                .FirstOrDefaultAsync(p => p.Id == photoGuid && p.IsDeleted == false);
 
-            
+
             return new DetailsViewModel()
             {
                 Id = photo.Id.ToString(),
@@ -182,7 +230,7 @@ namespace Photography.Core.Services
         {
             return await context.FavoritePhotos
                  .AsNoTracking()
-                 .Where(fp => fp.UserId== userId && fp.Photo.IsDeleted == false)
+                 .Where(fp => fp.UserId == userId && fp.Photo.IsDeleted == false)
                  .Select(fp => new FavoriteViewModel()
                  {
                      Id = fp.Photo.Id.ToString(),
@@ -253,7 +301,7 @@ namespace Photography.Core.Services
 
             var model = new EditPhotoViewModel()
             {
-                Id=photo.Id.ToString(),
+                Id = photo.Id.ToString(),
                 TagUser = photo.TagUser,
                 Description = photo.Description,
                 UploadedAt = photo.UploadedAt.ToString(EntityDateFormat),
@@ -285,7 +333,7 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            Guid userIdGuid=Guid.Empty;
+            Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(model.UserOwnerId, ref userIdGuid) || photo.UserOwnerId != userIdGuid)
             {
                 return false;
@@ -314,7 +362,7 @@ namespace Photography.Core.Services
         {
             return await context.Photos
                   .AsNoTracking()
-                  .Where(p => p.IsDeleted == false && p.Id== photoId)
+                  .Where(p => p.IsDeleted == false && p.Id == photoId)
                   .Select(p => new DeleteViewModel()
                   {
                       Id = p.Id.ToString(),
@@ -330,7 +378,7 @@ namespace Photography.Core.Services
         public async Task<bool> DeletePhotoAsync(string photoId)
         {
             Photo? photoToDelete = await context.Photos
-                .FirstOrDefaultAsync(p => p.Id.ToString() == photoId && p.IsDeleted==false);
+                .FirstOrDefaultAsync(p => p.Id.ToString() == photoId && p.IsDeleted == false);
 
             if (photoToDelete == null)
             {
