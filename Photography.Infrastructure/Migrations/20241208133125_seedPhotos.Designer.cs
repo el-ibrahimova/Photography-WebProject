@@ -12,8 +12,8 @@ using Photography.Infrastructure.Data;
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    [Migration("20241208110242_SeedRolesAndUserRolesAddIsDeletedToUser")]
-    partial class SeedRolesAndUserRolesAddIsDeletedToUser
+    [Migration("20241208133125_seedPhotos")]
+    partial class seedPhotos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,7 +226,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 8, 13, 2, 40, 549, DateTimeKind.Local).AddTicks(3829))
+                        .HasDefaultValue(new DateTime(2024, 12, 8, 15, 31, 23, 219, DateTimeKind.Local).AddTicks(4534))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -284,17 +284,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dcdca3b3-f8d2-4662-b3b5-4b5557034f4a",
+                            ConcurrencyStamp = "abcf0aed-3741-4ad2-beb1-eb547237baea",
                             Email = "client_one@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 8, 13, 2, 40, 549, DateTimeKind.Local).AddTicks(5728),
+                            JoinedAt = new DateTime(2024, 12, 8, 15, 31, 23, 219, DateTimeKind.Local).AddTicks(6343),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                             NormalizedUserName = "CLIENTONE",
-                            PasswordHash = "AQAAAAIAAYagAAAAECv0toR1PViIOtTIbjaVkplYHM0sLJhOqavPTFUOyGiSTvIJV6N/j0vhf+j1g0/rOQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGoAvONH87P/cL+BB8CGZsHrDLQbV/v8THmBemDrYFBgF7fMl2yJSUD/E2RsrVVBdg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "27c98b2b-fae1-4f1c-a107-fe41abe03918",
+                            SecurityStamp = "e9faff98-446f-4ced-a0cf-f723633be0e7",
                             TwoFactorEnabled = false,
                             UserName = "ClientOne"
                         },
@@ -302,17 +302,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f29eff44-5902-45ba-b1af-12e8a5021bf0",
+                            ConcurrencyStamp = "12c70195-26bf-450e-9d70-8016a637f2a8",
                             Email = "client_two@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 8, 13, 2, 40, 549, DateTimeKind.Local).AddTicks(5753),
+                            JoinedAt = new DateTime(2024, 12, 8, 15, 31, 23, 219, DateTimeKind.Local).AddTicks(6371),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_TWO@GMAIL.COM",
                             NormalizedUserName = "CLIENTTWO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB8jAXXExdbNauwC3A+2hIhzKnm8vSskMSOLg9sldzEdrq0tBA6v107u0U1Rilt8Yw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENQJ8oFtQIeTYjUjwm3CuRRp3tIPZKIobsqWKgkZxlOyjWuY0U9Z0MdOUgzWpaCj5A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d05cbb40-a9d6-4fb6-80e7-374d9253b9c8",
+                            SecurityStamp = "ad1c08a8-63b8-4d73-b187-5e136e46536d",
                             TwoFactorEnabled = false,
                             UserName = "ClientTwo"
                         },
@@ -320,17 +320,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("0cea6e1c-0655-4c21-a14b-5b5932332ffd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cc8d4638-ebb0-4019-8ee1-7a8a10633dbf",
+                            ConcurrencyStamp = "3af3b00d-8dde-455a-8d74-3119c5c73783",
                             Email = "admin@photography.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 8, 13, 2, 40, 549, DateTimeKind.Local).AddTicks(5771),
+                            JoinedAt = new DateTime(2024, 12, 8, 15, 31, 23, 219, DateTimeKind.Local).AddTicks(6390),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PHOTOGRAPHY.COM",
                             NormalizedUserName = "АDMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGWxx3BweTpT2cFMkNmHAHkWxYCmFSAQEX1zq01ByxiBybVlfgVgg4H54ViJdXxMpQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGeGiqcnUCHE126TUV1lm+LH1JC7Sqpja0MH8kJ0/7BHfpwY5GTDj335SgIwhv4ApQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ddd77044-33c7-4087-8d1e-8b57ccbed951",
+                            SecurityStamp = "1f7c996c-2603-4366-8330-445b2d43080f",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -338,17 +338,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("95d458a7-115a-4db5-9319-809c7763d841"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2f8b8aa0-d472-4ab5-abb4-ef8224bc97bd",
+                            ConcurrencyStamp = "849201dd-2432-487b-a6e7-f3e543f40a29",
                             Email = "photographer@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 8, 13, 2, 40, 549, DateTimeKind.Local).AddTicks(5792),
+                            JoinedAt = new DateTime(2024, 12, 8, 15, 31, 23, 219, DateTimeKind.Local).AddTicks(6409),
                             LockoutEnabled = false,
                             NormalizedEmail = "PHOTOGRAPHER@GMAIL.COM",
                             NormalizedUserName = "PHOTOGRAPHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAELp22ufX0884WumsX//BOJevyCnUUt10x16/UQsxqSw9A5yAjl8zPvoXcQljUB5JHQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDT4hBUVG9KXMuw28i8c2UxMpviJ5fHKxxtdstt1JFlYz5rx/RzkKGxyjkouYJQYgw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d59862f2-6c21-47e0-834f-cceea2b7a638",
+                            SecurityStamp = "6d70faf7-8160-4c1a-94d2-4095ecc2ba9b",
                             TwoFactorEnabled = false,
                             UserName = "Photographer"
                         });
@@ -440,6 +440,12 @@ namespace Photography.Infrastructure.Migrations
                             Id = new Guid("c1f05508-2b56-46d8-86f9-027f5aaee67a"),
                             IsDeleted = false,
                             Name = "Пейзажи"
+                        },
+                        new
+                        {
+                            Id = new Guid("a5b3d93c-96d1-41ab-8d07-4cbf7754656f"),
+                            IsDeleted = false,
+                            Name = "Други"
                         });
                 });
 
@@ -475,8 +481,8 @@ namespace Photography.Infrastructure.Migrations
                         .HasComment("Date of photo uploading");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasComment("Description of the photo");
 
                     b.Property<string>("ImageUrl")
@@ -507,7 +513,9 @@ namespace Photography.Infrastructure.Migrations
                         .HasComment("Tag user");
 
                     b.Property<DateTime>("UploadedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 12, 8, 15, 31, 23, 817, DateTimeKind.Local).AddTicks(7126))
                         .HasComment("Date of photo uploading");
 
                     b.Property<Guid>("UserOwnerId")
@@ -521,6 +529,205 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("Photos", t =>
                         {
                             t.HasComment("Photo information");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f2f36f3c-44f2-433c-bc88-bda0af4a5b5c"),
+                            Description = "Розите са цветя, които говорят на сърцето, без да използват думи",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179261839_b223eaf533_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            TagUser = "Ниса",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("1d86b8c1-424a-464b-8582-edc8d1287125"),
+                            Description = "Началото на нов живот",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179405645_da2965d7af_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("2a4c4f88-6949-4b4a-bb4e-4227ec05a78e"),
+                            Description = "Книгите са вълшебни врати, през които можем да се пренесем в различни светове и реалности - Джим Хенсън",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179235863_ef79e9cd79.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("45bc9358-d7ec-41f8-9ea9-511e81306730"),
+                            Description = "The Tree",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179405720_de0340c35d_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("d8679b22-5cc2-4d0d-95e1-4f535dbdc56a"),
+                            Description = "Благодат",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179261934_74b915c632_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            TagUser = "Ниса",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("1932884a-dfdc-4acb-9334-ac88c1585170"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54179235838_98b592402f_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("2c9fbf60-4155-4777-a03f-3e7d5f01339b"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54178078662_c668a923ac_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("cf01d099-9925-490d-b1b7-ef30e24167bb"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54179405980_f9fb480fb0_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("938b99b9-25ff-4a6a-89b5-e9d625ab72b4"),
+                            Description = "Home, sweet home",
+                            ImageUrl = "https://live.staticflickr.com/65535/54178963106_6698d8a47b_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            TagUser = "Елмаз",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d")
+                        },
+                        new
+                        {
+                            Id = new Guid("8a009518-bb4a-4443-9e75-da259a75430a"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54178078787_53fe24ea4a_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("fba07170-9485-423b-93dd-6c9fc392fc71"),
+                            Description = "River road",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179262259_781ec3326b_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
+                        },
+                        new
+                        {
+                            Id = new Guid("f06e0640-1421-4303-87c3-8a9d6d815f38"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54179262309_60ce92ee0b_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            TagUser = "Микаел",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
+                        },
+                        new
+                        {
+                            Id = new Guid("1d2c011f-8eba-452a-a180-67349167774f"),
+                            Description = "Long way home",
+                            ImageUrl = "https://live.staticflickr.com/65535/54179236228_d084cd37fb_n.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            TagUser = "Микаел",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
+                        },
+                        new
+                        {
+                            Id = new Guid("92d706d4-5969-412b-a663-463c71865623"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54191040230_19726ab96d_w.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("451bff33-d4fc-4217-bdda-a67251b1a427"),
+                            Description = "Girlish",
+                            ImageUrl = "https://live.staticflickr.com/65535/54190853033_3552742834_w.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
+                        },
+                        new
+                        {
+                            Id = new Guid("af7ef5d0-c362-43f7-8418-5c20ff360141"),
+                            Description = "Всяко нещо крие своята красота",
+                            ImageUrl = "https://live.staticflickr.com/65535/54191040245_7864be5ce1_w.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
+                        },
+                        new
+                        {
+                            Id = new Guid("8787347e-dc88-411d-9acd-fdd5937197ad"),
+                            ImageUrl = "https://live.staticflickr.com/65535/54189701457_55e2a97488_w.jpg",
+                            IsDeleted = false,
+                            IsPrivate = true,
+                            Rating = 0,
+                            TagUser = "Мери",
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
+                        },
+                        new
+                        {
+                            Id = new Guid("b597a498-68d9-4883-b081-9f53d2237c2b"),
+                            Description = "Времето се променя и ние с него",
+                            ImageUrl = "https://live.staticflickr.com/65535/54189701467_958b69d5bc_w.jpg",
+                            IsDeleted = false,
+                            IsPrivate = false,
+                            Rating = 0,
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         });
                 });
 
@@ -541,6 +748,103 @@ namespace Photography.Infrastructure.Migrations
                     b.ToTable("PhotosCategories", t =>
                         {
                             t.HasComment("Photo Categories");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = new Guid("a5b3d93c-96d1-41ab-8d07-4cbf7754656f"),
+                            PhotoId = new Guid("f2f36f3c-44f2-433c-bc88-bda0af4a5b5c")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("1d86b8c1-424a-464b-8582-edc8d1287125")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("45bc9358-d7ec-41f8-9ea9-511e81306730")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("c1f05508-2b56-46d8-86f9-027f5aaee67a"),
+                            PhotoId = new Guid("45bc9358-d7ec-41f8-9ea9-511e81306730")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("d8679b22-5cc2-4d0d-95e1-4f535dbdc56a")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("1932884a-dfdc-4acb-9334-ac88c1585170")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("5d56e870-0080-4609-b189-94282ae97f31"),
+                            PhotoId = new Guid("1932884a-dfdc-4acb-9334-ac88c1585170")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("2c9fbf60-4155-4777-a03f-3e7d5f01339b")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("938b99b9-25ff-4a6a-89b5-e9d625ab72b4")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("aa25251b-6ddc-438b-b5f0-28b3341731e3"),
+                            PhotoId = new Guid("938b99b9-25ff-4a6a-89b5-e9d625ab72b4")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("8a009518-bb4a-4443-9e75-da259a75430a")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("fba07170-9485-423b-93dd-6c9fc392fc71")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("aa25251b-6ddc-438b-b5f0-28b3341731e3"),
+                            PhotoId = new Guid("f06e0640-1421-4303-87c3-8a9d6d815f38")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5fd2c2f-40a0-4a90-a89c-81ab099fa581"),
+                            PhotoId = new Guid("f06e0640-1421-4303-87c3-8a9d6d815f38")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("c7e699d1-fc73-459b-8f0f-11b7c4e101b5"),
+                            PhotoId = new Guid("451bff33-d4fc-4217-bdda-a67251b1a427")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5aedd38-0dc5-49e4-b51a-acf63fd991a8"),
+                            PhotoId = new Guid("451bff33-d4fc-4217-bdda-a67251b1a427")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e5aedd38-0dc5-49e4-b51a-acf63fd991a8"),
+                            PhotoId = new Guid("af7ef5d0-c362-43f7-8418-5c20ff360141")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("c7e699d1-fc73-459b-8f0f-11b7c4e101b5"),
+                            PhotoId = new Guid("8787347e-dc88-411d-9acd-fdd5937197ad")
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("13a08262-6477-40f9-8db7-d6ebd4178e47"),
+                            PhotoId = new Guid("b597a498-68d9-4883-b081-9f53d2237c2b")
                         });
                 });
 

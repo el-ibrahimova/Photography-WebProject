@@ -13,13 +13,10 @@
             public const int TagUserMinLength = 3;
             public const int TagUserMaxLength = 20;
             public const int DescriptionMinLength = 5;
-            public const int DescriptionMaxLength = 100;
+            public const int DescriptionMaxLength = 200;
             public const int ImageUrlMinLength = 10;
             public const int ImageUrlMaxLength = 100;
-            public const int RatingMinValue = 0;
-            public const int RatingMaxValue = 10;
             public const string DateRegexFormat = @"^(\d{2})\.(\d{4})\s\-\s(\d{2})\.(\d{4})$";
-
         }
 
         public static class User
