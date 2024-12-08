@@ -1,10 +1,10 @@
 ﻿@using Photography.Core.ViewModels.UserProfile
 @model UserProfileViewModel
 
-<div class="container mt-6">
+<div class="container mt-6" style="max-width: 600px;">
     <h2>Лична информация</h2>
     <hr />
-    
+
     @if (TempData["Success"] != null)
     {
         <div id="successAlert" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
@@ -17,19 +17,19 @@
         <div class="form-group mb-3">
             <label for="FirstName">Първо име</label>
             <input type="text" class="form-control form-control-sm" id="FirstName" asp-for="FirstName"
-                   placeholder="@(Model?.FirstName)" />
+                   placeholder="@(Model?.FirstName ?? "Въведете първо име")" />
             <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
         <div class="form-group mb-3">
             <label for="LastName">Фамилия</label>
             <input type="text" class="form-control form-control-sm" id="LastName" asp-for="LastName"
-                   placeholder="@(Model?.LastName)" />
+                   placeholder="@(Model?.LastName ?? "Въведете фамилия")" />
             <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
         <div class="form-group mb-3">
             <label for="Phone">Телефон</label>
             <input type="text" class="form-control form-control-sm" id="Phone" asp-for="Phone"
-                   placeholder="@(Model?.Phone)" />
+                   placeholder="@(Model?.Phone ?? "Въведете телефон")" />
             <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
 
@@ -37,26 +37,19 @@
     </form>
 </div>
 
-                      
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
-    @*  script for hiding alert after 3 seconds *@
+    @* Script for hiding alert after 3 seconds *@
     <script>
-        document.addEventListener("DOMContentLoaded",
-            function () {
-                var alert = document.getElementById("successAlert");
-                if (alert) {
-
-                    setTimeout(function () {
-                            var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
-                            bsAlert.close();
-                        },
-                        3000);
-                }
-            });
-
-
+        document.addEventListener("DOMContentLoaded", function () {
+            var alert = document.getElementById("successAlert");
+            if (alert) {
+                setTimeout(function () {
+                    var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
+                    bsAlert.close();
+                }, 3000);
+            }
+        });
     </script>
 }

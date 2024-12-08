@@ -22,20 +22,20 @@ namespace Photography.Extensions
             if (roleManager == null)
             {
                 throw new ArgumentNullException(
-                    nameof(roleManager), $"Service for {typeof(RoleManager<IdentityRole<Guid>>)} cannot be obtained!");
+                    nameof(roleManager), $"Услугата за {typeof(RoleManager<IdentityRole<Guid>>)} не може да бъде получена!!");
             }
 
             if (userStore == null)
             {
                 throw new ArgumentNullException(
-                    nameof(userStore), $"Service for {typeof(IUserStore<ApplicationUser>)} cannot be obtained!");
+                    nameof(userStore), $"Услугата за {typeof(IUserStore<ApplicationUser>)} не може да бъде получена!!");
             }
 
 
             if (userManager == null)
             {
                 throw new ArgumentNullException(
-                    nameof(userManager), $"Service for {typeof(UserManager<ApplicationUser>)} cannot be obtained!");
+                    nameof(userManager), $"Услугата за {typeof(UserManager<ApplicationUser>)} не може да бъде получена!");
             }
 
             

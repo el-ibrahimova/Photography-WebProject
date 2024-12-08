@@ -159,19 +159,16 @@ namespace Photography.Core.Services
                     .Take(model.EntitiesPerPage.Value);
             }
 
-            var viewModel = await context.Photos
-                .AsNoTracking()
-                .Select(p => new GalleryViewModel()
+            return await allPhotosQuery
+                .Select(p => new GalleryViewModel
                 {
                     Id = p.Id.ToString(),
                     TagUser = p.TagUser,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
-                    UserOwnerId = userId.ToString()
+                    Rating = p.Rating
                 })
                 .ToArrayAsync();
-
-            return viewModel;
         }
 
         public async Task<AddPhotoViewModel> GetAddPhotoAsync()
@@ -487,11 +484,65 @@ namespace Photography.Core.Services
             return user;
         }
 
-        public async Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync()
+        public async Task<ICollection<AllPhotosViewModel>> GetAllPhotosAsync(ManageWithSearchFilterViewModel model)
         {
-            var photos = await context.Photos
+            IQueryable<Photo> allPhotosQuery = context
+                .Photos
                 .Where(p => p.IsDeleted == false)
-                .OrderByDescending(p => p.UploadedAt)
+                .AsQueryable();
+
+
+            if (!String.IsNullOrWhiteSpace(model.SearchQuery))
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Where(p =>
+                        (p.TagUser ?? string.Empty).ToLower().Contains(model.SearchQuery.ToLower()));
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.CategoryFilter))
+            {
+                allPhotosQuery = allPhotosQuery.Where(p =>
+                    p.PhotosCategories.Any(pc => pc.Category.Name.ToLower() == model.CategoryFilter.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.DateFilter))
+            {
+                Match rangeMatch = Regex.Match(model.DateFilter, DateRegexFormat);
+
+                if (rangeMatch.Success)
+                {
+                    int startMonth = int.Parse(rangeMatch.Groups[1].Value);
+                    int startYear = int.Parse(rangeMatch.Groups[2].Value);
+                    int endMonth = int.Parse(rangeMatch.Groups[3].Value);
+                    int endYear = int.Parse(rangeMatch.Groups[4].Value);
+
+                    if (startYear < endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                            p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear);
+                    }
+                    else if (startYear == endYear)
+                    {
+                        allPhotosQuery = allPhotosQuery.Where(p =>
+                            (p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear) &&
+                            (p.UploadedAt.Month >= startMonth && p.UploadedAt.Month <= endMonth));
+                    }
+
+                }
+                else if (int.TryParse(model.DateFilter, out int date))
+                {
+                    allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
+                }
+            }
+
+            if (model.CurrentPage.HasValue && model.EntitiesPerPage.HasValue)
+            {
+                allPhotosQuery = allPhotosQuery
+                    .Skip(model.EntitiesPerPage.Value * (model.CurrentPage.Value - 1))
+                    .Take(model.EntitiesPerPage.Value);
+            }
+            
+            return await allPhotosQuery
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),
@@ -500,8 +551,6 @@ namespace Photography.Core.Services
                     Rating = p.Rating
                 })
                 .ToListAsync();
-
-            return photos;
         }
 
         public async Task<int> GetPhotosCountByFilterAsync(GalleryWithSearchFilterViewModel inputModel)
@@ -539,5 +588,22 @@ namespace Photography.Core.Services
 
             return photosCount;
         }
+
+        public async Task<int> GetManagePhotosCountByFilterAsync(ManageWithSearchFilterViewModel inputModel)
+        {
+            ManageWithSearchFilterViewModel inputModelCopy = new()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                SearchQuery = inputModel.SearchQuery,
+                CategoryFilter = inputModel.CategoryFilter,
+                DateFilter = inputModel.DateFilter
+            };
+
+            int photosCount = (await this.GetAllPhotosAsync(inputModelCopy)).Count();
+
+            return photosCount;
+        }
+
     }
 }

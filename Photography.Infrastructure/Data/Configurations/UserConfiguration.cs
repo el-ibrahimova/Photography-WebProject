@@ -12,6 +12,8 @@ namespace Photography.Infrastructure.Data.Configurations
         {
             builder.Property(u => u.JoinedAt)
                 .HasDefaultValue(DateTime.Now);
+            builder.Property(u => u.IsDeleted)
+                .HasDefaultValue(false);
            
             builder.HasData(SeedUsers());
         }
@@ -28,7 +30,7 @@ namespace Photography.Infrastructure.Data.Configurations
                 Email = "client_one@gmail.com",
                 NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
-                JoinedAt = DateTime.Now,
+                JoinedAt = DateTime.Now
             };
 
             ApplicationUser clientUserTwo = new ApplicationUser()

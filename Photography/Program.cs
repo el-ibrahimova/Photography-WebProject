@@ -13,7 +13,8 @@ namespace Photography
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration
+                .GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
           
             
             string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
@@ -69,6 +70,17 @@ namespace Photography
 
             app.SeedAdministrator(adminEmail, adminUsername, adminPassword);
 
+            // user Role User
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+                if (!roleManager.RoleExistsAsync("User").GetAwaiter().GetResult())
+                {
+                    roleManager.CreateAsync(new IdentityRole<Guid>("User")).GetAwaiter().GetResult();
+                }
+            }
+
             app.MapControllerRoute(
                 name: "Areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -79,7 +91,6 @@ namespace Photography
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
            
-            
             app.MapRazorPages();
 
             app.Run();

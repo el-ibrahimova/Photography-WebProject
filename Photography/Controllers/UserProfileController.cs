@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.UserProfile;
-using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
 
 namespace Photography.Controllers

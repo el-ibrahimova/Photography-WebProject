@@ -27,7 +27,8 @@ namespace Photography.Infrastructure.Data.Configurations
                 new Category() { Name = "Пътуваня и дестинации",IsDeleted = false },
                 new Category() { Name = "Черно-бяла фотография", IsDeleted = false},
                 new Category() { Name = "Мода", IsDeleted = false },
-                new Category() { Name = "Пейзажи",IsDeleted = false }
+                new Category() { Name = "Пейзажи",IsDeleted = false },
+                new Category() { Name = "Други",IsDeleted = false },
             };
 
             return categories;

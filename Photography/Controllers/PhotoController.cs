@@ -272,7 +272,7 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(ManageWithSearchFilterViewModel model)
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
@@ -281,9 +281,23 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            ICollection<AllPhotosViewModel> photos = await photoService.GetAllPhotosAsync();
+            ICollection<AllPhotosViewModel> photos = await photoService.GetAllPhotosAsync(model);
 
-            return View(photos);
+            int allPhotosCount = await this.photoService.GetManagePhotosCountByFilterAsync(model);
+
+            ManageWithSearchFilterViewModel viewModel = new()
+            {
+                AllPhotos = photos,
+                AllCategories = (await photoService.GetCategoriesAsync()).Select(c => c.Name)
+                    .ToList(),
+                SearchQuery = model.SearchQuery,
+                CategoryFilter = model.CategoryFilter,
+                DateFilter = model.DateFilter,
+                CurrentPage = model.CurrentPage,
+                TotalPages = (int)Math.Ceiling(((double)allPhotosCount / model.EntitiesPerPage!.Value))
+            };
+
+            return View(viewModel);
         }
 
 

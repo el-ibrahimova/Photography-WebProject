@@ -31,7 +31,9 @@ namespace Photography.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new UserRoleConfiguration());
             builder.ApplyConfiguration(new PhotographerConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new PhotoConfiguration());

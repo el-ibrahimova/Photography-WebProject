@@ -1,5 +1,5 @@
 ﻿@using Photography.Core.ViewModels.Photo
-@model ICollection<AllPhotosViewModel>
+@model ManageWithSearchFilterViewModel
 
 @{
     ViewBag.Title = "Управление на снимки";
@@ -8,42 +8,116 @@
 <h2 class="my-4 text-center">Управление на снимки</h2>
 
 
+<form method="get" asp-action="Manage" class="mb-4">
+    <div class="row">
+        <div class="col">
+            <input asp-for="SearchQuery" class="form-control" placeholder="Търси по таг..." />
+        </div>
+        <div class="col">
+            <select asp-for="CategoryFilter" class="form-control" placeholder="Търси по категория...">
+                @if (Model.AllCategories != null && Model.AllCategories.Any())
+                {
+                    <option value="">Филтрирай по категория...</option>
+                    @foreach (var category in Model.AllCategories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col">
+            <input asp-for="DateFilter" class="form-control" placeholder="мм.гггг - мм.гггг" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary btn-sm">Филтър</button>
+        </div>
+    </div>
+</form>
+
 <div class="d-flex justify-content-end mb-4">
     <a asp-action="Add" class="btn btn-success btn-lg">
         <i class="bi bi-plus-circle"></i> Добави нова снимка
     </a>
 </div>
 
-<table class="table table-hover table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th scope="col">Снимка</th>
-            <th scope="col">Притежател</th>
-            <th scope="col">Рейтинг</th>
-            <th scope="col" class="text-center">Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var photo in Model)
-        {
+@if (Model.AllPhotos != null)
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
             <tr>
-                <td>
-                    <img src="@photo.ImageUrl" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
-                </td>
-                <td>@photo.UserOwner</td>
-                <td>@photo.Rating</td>
-                <td class="text-center">
-                    <a asp-action="Details" asp-route-id="@photo.Id" class="btn btn-primary btn-sm me-2">
-                        <i class="bi bi-eye"></i> Детайли
-                    </a>
-                    <a asp-action="Edit" asp-route-id="@photo.Id" class="btn btn-warning btn-sm me-2">
-                        <i class="bi bi-pencil-square"></i> Редактирай
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@photo.Id" class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i> Изтрий
-                    </a>
-                </td>
+                <th scope="col">Снимка</th>
+                <th scope="col">Притежател</th>
+                <th scope="col">Рейтинг</th>
+                <th scope="col" class="text-center">Действия</th>
             </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var photo in Model.AllPhotos)
+            {
+                <tr>
+                    <td>
+                        <img src="@photo.ImageUrl" alt="Снимка" style="width: 100px; height: auto; object-fit: cover;" />
+                    </td>
+                    <td>@photo.UserOwner</td>
+                    <td>@photo.Rating</td>
+                    <td class="text-center">
+                        <a asp-action="Details" asp-route-id="@photo.Id" class="btn btn-primary btn-sm me-2">
+                            <i class="bi bi-eye"></i> Детайли
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@photo.Id" class="btn btn-warning btn-sm me-2">
+                            <i class="bi bi-pencil-square"></i> Редактирай
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@photo.Id" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Изтрий
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Manage"
+                   asp-route-currentPage="@(Model.CurrentPage-1)"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-dateFilter="@Model.DateFilter">
+                    Предишна
+                </a>
+            </li>
         }
-    </tbody>
-</table>
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Manage"
+                   asp-route-currentPage="@i"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-dateFilter="@Model.DateFilter">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Manage"
+                   asp-route-currentPage="@(Model.CurrentPage + 1 )"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-dateFilter="@Model.DateFilter">
+                    Следваща
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
