@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Photography.Infrastructure.Data.Configurations
 {
-    public class UserRoleConfiguration:IEntityTypeConfiguration<IdentityUserRole<Guid>>
+    public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
     {
         public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> builder)
         {
@@ -36,13 +36,6 @@ namespace Photography.Infrastructure.Data.Configurations
                     UserId = Guid.Parse("33386302-4EB2-4A2B-925C-819C1B92CC4D"),
                     RoleId = Guid.Parse("8246F96F-BD49-4DB2-69AE-08DD176D0F38")
                 },
-
-                // Admin
-                new IdentityUserRole<Guid>
-                {
-                    UserId = Guid.Parse("0CEA6E1C-0655-4C21-A14B-5B5932332FFD"),
-                    RoleId = Guid.Parse("34282161-754B-4C2A-2EC6-08DD12303248")
-                }
             };
 
             return usersRoles;

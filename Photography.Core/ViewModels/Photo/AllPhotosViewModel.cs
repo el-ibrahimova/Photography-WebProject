@@ -7,5 +7,7 @@
         public string ImageUrl { get; set; } = null!;
         public int Rating { get; set; }
         public ApplicationUser UserOwner { get; set; } = null!;
+        public ICollection<string> Categories { get; set; }= null!;
+        public bool IsPrivate { get; set; }
     }
 }

@@ -31,8 +31,8 @@
             public const int PasswordMaxLength = 20;
             public const int EmailMinLength = 10;
             public const int EmailMaxLength = 25;
-            public const int PhoneNumberMinLength = 8;
-            public const int PhoneNumberMaxLength = 15;
+            public const string PhoneNumberRegexFormat= "^\\d{10}$";
+         
         }
         public static class Photographer
         {
@@ -43,11 +43,11 @@
         public static class PhotoShoot
         {
             public const int NameMinLength = 2;
-            public const int NameMaxLength = 20;
+            public const int NameMaxLength = 60;
             public const int ImageUrlMinLength = 10;
             public const int ImageUrlMaxLength = 100;
             public const int DescriptionMinLength = 5;
-            public const int DescriptionMaxLength = 100;
+            public const int DescriptionMaxLength = 1000;
         }
     }
 }

@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Admin.UserManagement;
-using Photography.Core.ViewModels.Photo;
 using Photography.Core.ViewModels.Photographer;
-using Photography.Core.ViewModels.UserProfile;
 using Photography.Infrastructure.Data;
 using Photography.Infrastructure.Data.Models;
 

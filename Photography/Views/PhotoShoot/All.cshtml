@@ -12,7 +12,7 @@
     </div>
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center" style="font-size: 1.5rem;">@ViewBag.Title</h2>
 <hr />
 
 <div class="row">
@@ -20,37 +20,37 @@
     {
         <div class="card col-12 mb-4">
             <div class="card-header text-center bg-light">
-                <h3 class="fw-bold">@photoShoot.Name</h3>
+                <h3 class="fw-bold" style="font-size: 1.25rem;">@photoShoot.Name</h3>
             </div>
 
             <div class="card-body">
                 <div class="d-flex flex-row justify-content-center mb-3">
                     @if (!string.IsNullOrEmpty(photoShoot.ImageUrl1))
                     {
-                        <div class="me-3" style="width: 400px; height: 400px;">
+                        <div class="me-3" style="width: 500px; height: 500px;">
                             <img class="card-img-top" src="@photoShoot.ImageUrl1" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     }
                     @if (!string.IsNullOrEmpty(photoShoot.ImageUrl2))
                     {
-                        <div class="me-3" style="width: 400px; height: 400px;">
+                        <div class="me-3" style="width: 500px; height: 500px;">
                             <img class="card-img-top" src="@photoShoot.ImageUrl2" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     }
                     @if (!string.IsNullOrEmpty(photoShoot.ImageUrl3))
                     {
-                        <div class="me-3" style="width: 400px; height: 400px;">
+                        <div class="me-3" style="width: 500px; height: 500px;">
                             <img class="card-img-top" src="@photoShoot.ImageUrl3" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     }
                 </div>
                 <div class="mb-3 text-center">
                     <div class="border p-3 rounded bg-light">
-                        <p class="text-dark fs-4">@photoShoot.Description</p>
+                        <p class="text-dark" style="font-size: 1rem;">@photoShoot.Description</p>
                     </div>
                 </div>
 
-                @if (User.Identity?.IsAuthenticated ?? false )
+                @if (User.Identity?.IsAuthenticated ?? false)
                 {
                     @if (!await BaseService.IsUserPhotographerAsync(this.User.GetUserId()))
                     {
@@ -67,26 +67,19 @@
     }
 </div>
 
-            
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
-    @*  script for hiding alert after 3 seconds *@
+    @* Script for hiding alert after 3 seconds *@
     <script>
-        document.addEventListener("DOMContentLoaded",
-            function () {
-                var alert = document.getElementById("declarationAlert");
-                if (alert) {
-
-                    setTimeout(function () {
-                        var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
-                        bsAlert.close();
-                    },
-                        3000);
-                }
-            });
-
-
+        document.addEventListener("DOMContentLoaded", function () {
+            var alert = document.getElementById("declarationAlert");
+            if (alert) {
+                setTimeout(function () {
+                    var bsAlert = new bootstrap.Alert(alert); // Bootstrap alert
+                    bsAlert.close();
+                }, 3000);
+            }
+        });
     </script>
 }

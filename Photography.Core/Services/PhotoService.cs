@@ -34,7 +34,7 @@ namespace Photography.Core.Services
         {
             IQueryable<Photo> allPhotosQuery = context
                 .Photos
-                .Where(p => !p.IsPrivate && p.IsDeleted == false)
+                .Where(p => p.IsPrivate==false && p.IsDeleted == false)
                 .AsQueryable();
 
 
@@ -104,7 +104,7 @@ namespace Photography.Core.Services
         {
             IQueryable<Photo> allPhotosQuery = context
                 .Photos
-                .Where(p => !p.IsPrivate || p.UserOwnerId == userId && p.IsDeleted == false)
+                .Where(p => p.IsPrivate==true && p.UserOwnerId == userId && p.IsDeleted == false)
                 .AsQueryable();
 
 
@@ -166,7 +166,8 @@ namespace Photography.Core.Services
                     TagUser = p.TagUser,
                     ImageUrl = p.ImageUrl,
                     IsPrivate = p.IsPrivate,
-                    Rating = p.Rating
+                    Rating = p.Rating,
+                    UserOwnerId = userId.ToString()
                 })
                 .ToArrayAsync();
         }
@@ -281,8 +282,6 @@ namespace Photography.Core.Services
                 Rating = photo.Rating,
                 UserOwnerId = photo.UserOwnerId,
                 Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
-                Owner = photo.Owner,
-                PhotoOwner = photo.Owner!.UserName
             };
         }
 
@@ -543,12 +542,15 @@ namespace Photography.Core.Services
             }
             
             return await allPhotosQuery
+                .OrderByDescending(p=>p.Rating)
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),
                     ImageUrl = p.ImageUrl,
+                    IsPrivate = p.IsPrivate,
                     UserOwner = p.Owner,
-                    Rating = p.Rating
+                    Rating = p.Rating,
+                    Categories = p.PhotosCategories.Select(c=>c.Category.Name).ToList()
                 })
                 .ToListAsync();
         }

@@ -13,8 +13,8 @@ namespace Photography.Controllers
         {
             userManager = _userManager;
         }
-
-        [HttpGet]
+       
+    [HttpGet]
         public async Task<IActionResult> MyProfile()
         {
             string userId = GetUserId();

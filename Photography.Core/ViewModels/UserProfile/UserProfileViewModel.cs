@@ -23,9 +23,7 @@
 
 
         [Required(ErrorMessage = RequiredMessage)]
-        [StringLength(PhoneNumberMaxLength,
-            MinimumLength = PhoneNumberMinLength,
-            ErrorMessage = LengthMessage)]
+        [RegularExpression(PhoneNumberRegexFormat,ErrorMessage =PhoneNumberFormat)]
         [Display(Name = "Телефонен номер")]
         public string Phone { get; set; } = null!;
     }

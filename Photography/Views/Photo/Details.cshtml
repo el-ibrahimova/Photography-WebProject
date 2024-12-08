@@ -9,33 +9,38 @@
 @{
     ViewBag.Title = "Детайли";
     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
     <h2>@ViewData["Title"]</h2>
 </div>
 
+
 <div class="row justify-content-center" style="margin: 0 auto; max-width: 1200px;">
     <div class="col-md-12 text-center">
         <img src="@Model.ImageUrl" class="img-fluid" style="max-width: 100%; height: auto;" />
+
+        @if (!Model.IsPrivate)
+        {
+            <h2 class="mt-3" style="font-size: 2rem; font-weight: bold; margin-bottom: 20px;">
+                Рейтинг: @Model.Rating
+            </h2>
+        }
     </div>
 
-
     <div class="col-md-12">
-        <div class="card-body">
-            <h5 class="card-title">Таг: @Model.TagUser</h5>
-            <p class="card-text">Добавена на: @Model.UploadedAt</p> 
-            <p class="mb-0"><strong>Принадлежи на:</strong> @Model.Owner</p>
+        <div class="card-body" style="line-height: 1.8;">
+           
+            <h5 style="font-size: 1.5rem; margin-top: 15px; margin-bottom: 20px; line-height: 1.8;">
+                @Model.Description
+            </h5>
 
-            @if (!Model.IsPrivate)
+            @if (Model.TagUser != null)
             {
-                <h5 class="card-title">Рейтинг: @Model.Rating</h5>
+                <h5 class="card-title">Таг: @Model.TagUser</h5>
             }
 
-            <p class="card-title">@Model.Description</p>
-            <hr />
-      
+            <p class="card-text">Добавена на: @Model.UploadedAt</p>
         </div>
 
         <div>
@@ -55,19 +60,23 @@
             }
         </div>
 
-
         <div class="card-footer text-center">
             <div class="d-flex justify-content-between align-items-center">
-                <a asp-controller="Photo" asp-action="Gallery" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1">Върни се</a>
-
+                <a asp-controller="Photo" asp-action="Gallery" class="btn btn-warning d-flex justify-content-center align-items-center flex-fill mx-1">
+                    Върни се
+                </a>
 
                 @if (User?.Identity?.IsAuthenticated == true && currentUserId == @Model.UserOwnerId.ToString() && @Model.IsDeleted == false)
                 {
-                    <a asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">Изтрий</a>
+                    <a asp-controller="Photo" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger d-flex justify-content-center align-items-center flex-fill mx-1">
+                        Изтрий
+                    </a>
 
                     @if (await baseService.IsUserPhotographerAsync(this.User.GetUserId()))
                     {
-                        <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Редактирай</a>
+                        <a asp-controller="Photo" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">
+                            Редактирай
+                        </a>
                     }
 
                     <form asp-controller="Photo" asp-action="AddToFavorite" method="post" class="d-flex justify-content-center align-items-center flex-fill mx-1">
