@@ -34,12 +34,13 @@ namespace Photography.Controllers
 
             UserProfileViewModel model = new UserProfileViewModel()
             {
+                Id = userId,
                 FirstName = user.FirstName!,
                 LastName = user.LastName!,
                 Phone = user.PhoneNumber!
             };
 
-           return View();
+           return View(model);
         }
 
 
@@ -58,6 +59,7 @@ namespace Photography.Controllers
                 return NotFound();
             }
 
+            user.Id = Guid.Parse(model.Id);
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.PhoneNumber = model.Phone;

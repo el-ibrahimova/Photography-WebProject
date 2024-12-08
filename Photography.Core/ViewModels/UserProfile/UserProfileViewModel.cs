@@ -6,6 +6,8 @@
 
     public class UserProfileViewModel
     {
+        public string Id { get; set; }
+
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(FirstNameMaxLength,
             MinimumLength = FirstNameMinLength,
