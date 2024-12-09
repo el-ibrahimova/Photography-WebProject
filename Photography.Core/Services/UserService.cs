@@ -145,34 +145,27 @@ namespace Photography.Core.Services
             }
 
             // disconnect from photos
-            var photosToRemove = await context.Photos
+            List<Photo> photosToRemove = await context.Photos
                 .Where(p => p.UserOwnerId == user.Id)
                 .ToListAsync();
 
-            var photoIds = photosToRemove.Select(p => p.Id).ToList();
+            List<Guid> photoIds = photosToRemove.Select(p => p.Id).ToList();
 
             // disconect photos form categories
-            var photosCategoriesToDelete = await context.PhotosCategories
+            List<PhotoCategory> photosCategoriesToDelete = await context.PhotosCategories
                 .Where(pc => photoIds.Contains(pc.PhotoId))
                 .ToListAsync();
 
             context.PhotosCategories.RemoveRange(photosCategoriesToDelete);
             context.Photos.RemoveRange(photosToRemove);
+            
 
             // disconnect from photoShoots
             List<PhotoShoot> photoShootsToRemove = await context.PhotoShoots
-                .Include(ps => ps.Participants)
                 .Where(ps => ps.Participants.Any(p => p.UserId == user.Id))
                 .ToListAsync();
 
-            // disconnect from photoShootParticipants
-            List<PhotoShootParticipant> participantsToRemove = await context.PhotoShootParticipants
-                .Where(ps => ps.UserId == user.Id)
-                .ToListAsync();
-
-            context.PhotoShoots.RemoveRange(photoShootsToRemove);  
-            context.PhotoShootParticipants.RemoveRange(participantsToRemove);
-
+            context.PhotoShoots.RemoveRange(photoShootsToRemove);
 
             // disconnect from ratings
             List<PhotoRating> photosRatingsToRemove = await context.PhotosRatings
@@ -283,29 +276,29 @@ namespace Photography.Core.Services
             {
                 foreach (var photo in photosToRemove)
                 {
-                    if (photo.IsPrivate ==true)
-                    {
+                    //if (photo.IsPrivate ==true)
+                    //{
                         photo.Photographer = null;
                         await context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        photo.IsDeleted = true;
+                    //}
+                    //else
+                    //{
+                    //    photo.IsDeleted = true;
 
-                        // disconnect from ratings
-                        List<PhotoRating> photosRatingsToRemove = context.PhotosRatings
-                            .Where(p => p.PhotoId == photo.Id)
-                            .ToList();
-                        context.PhotosRatings.RemoveRange(photosRatingsToRemove);
+                    //    // disconnect from ratings
+                    //    List<PhotoRating> photosRatingsToRemove = context.PhotosRatings
+                    //        .Where(p => p.PhotoId == photo.Id)
+                    //        .ToList();
+                    //    context.PhotosRatings.RemoveRange(photosRatingsToRemove);
 
-                        // disconnect from favorites
-                        List<FavoritePhoto> favoritePhotoToRemove = context.FavoritePhotos
-                            .Where(p => p.PhotoId == photo.Id)
-                            .ToList();
-                        context.FavoritePhotos.RemoveRange(favoritePhotoToRemove);
+                    //    // disconnect from favorites
+                    //    List<FavoritePhoto> favoritePhotoToRemove = context.FavoritePhotos
+                    //        .Where(p => p.PhotoId == photo.Id)
+                    //        .ToList();
+                    //    context.FavoritePhotos.RemoveRange(favoritePhotoToRemove);
 
-                        await context.SaveChangesAsync();
-                    }
+                    //    await context.SaveChangesAsync();
+                    //}
                 }
             }
 

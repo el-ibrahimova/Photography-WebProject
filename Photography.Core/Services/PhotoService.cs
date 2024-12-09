@@ -550,7 +550,7 @@ namespace Photography.Core.Services
             }
 
             return await allPhotosQuery
-                .OrderByDescending(p => p.Rating)
+                .OrderBy(p => p.UploadedAt)
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),

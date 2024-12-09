@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Photography.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Photography.Infrastructure.Data;
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    partial class PhotographyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209104936_empty")]
+    partial class empty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,7 +221,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 13, 18, 56, 786, DateTimeKind.Local).AddTicks(6118))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 12, 49, 33, 871, DateTimeKind.Local).AddTicks(649))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -276,17 +279,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ff5eceef-470e-46cf-be40-37f30f2719d3",
+                            ConcurrencyStamp = "33ff8edd-cd3e-4000-829a-221707961624",
                             Email = "client_one@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 13, 18, 56, 786, DateTimeKind.Local).AddTicks(8539),
+                            JoinedAt = new DateTime(2024, 12, 9, 12, 49, 33, 871, DateTimeKind.Local).AddTicks(2398),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                             NormalizedUserName = "CLIENTONE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBfb5zBrgKYYyTIkgxuWGCpriPwiEMnQOviouEuzcJIJWQDhZOFKwgqxquWC9y8xrg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJcQUyFnQzrw2gk2nzglxJlStzpJKedlE+helYwwsBf33/PaHWdYoyr1ZGxJATcSPg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "be9a148f-7d2a-45d7-86cc-87f0b4eeb965",
+                            SecurityStamp = "1e7c0bf7-381b-456b-a4f0-20b3c6a124af",
                             TwoFactorEnabled = false,
                             UserName = "ClientOne"
                         },
@@ -294,17 +297,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c4ce12a-b7bb-41dd-b4e6-66b68de9fe10",
+                            ConcurrencyStamp = "6aac1232-b2ca-4fbc-99a6-6aa8279ad44e",
                             Email = "client_two@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 13, 18, 56, 786, DateTimeKind.Local).AddTicks(8563),
+                            JoinedAt = new DateTime(2024, 12, 9, 12, 49, 33, 871, DateTimeKind.Local).AddTicks(2423),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_TWO@GMAIL.COM",
                             NormalizedUserName = "CLIENTTWO",
-                            PasswordHash = "AQAAAAIAAYagAAAAELd+5gSzbEEzDPbjT6fTEzjdiv6Bt8WBQL0+viHOsPMKstkZGUAGyPL2AAdypqFQhg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE55zTkJ3qmv7optUX3lMuERGWxCxm06gmJ1410J41lewwRRyVRj4bgCTxWoIBHAqA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5fd1bc73-a3e0-49da-8f36-2de2b0af96c9",
+                            SecurityStamp = "ffcd1e3a-8816-4bb6-a59b-68ada687cf29",
                             TwoFactorEnabled = false,
                             UserName = "ClientTwo"
                         },
@@ -312,17 +315,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("0cea6e1c-0655-4c21-a14b-5b5932332ffd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e1e6c08-614d-4fd7-a4a7-e7bd8dbc8e7e",
+                            ConcurrencyStamp = "dbc6b8a1-b895-4932-98a3-7c959299e5f4",
                             Email = "admin@photography.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 13, 18, 56, 786, DateTimeKind.Local).AddTicks(8585),
+                            JoinedAt = new DateTime(2024, 12, 9, 12, 49, 33, 871, DateTimeKind.Local).AddTicks(2446),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PHOTOGRAPHY.COM",
                             NormalizedUserName = "АDMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHX7aiedf1Y2WdaPPavNYpkpwc83jk95g3bnEvXtH7x9ldNtM5XVOHXx+iODwjy72w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBXpXhIEDwmvo8g3pjvAuBe5eqJnqblgRQb1Vj4KnRy2DFAONYLn9C8ZPihtVVRbsA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e32212a-f415-4db3-bff5-c25f4e8d9cff",
+                            SecurityStamp = "d2119df6-d48a-4503-81a6-0b0b16795e9b",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -330,17 +333,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("95d458a7-115a-4db5-9319-809c7763d841"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dca1b0c7-0879-445f-b662-7d7f9b67d618",
+                            ConcurrencyStamp = "cb806d21-d4a9-4a49-8266-780e984e2333",
                             Email = "photographer@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 13, 18, 56, 786, DateTimeKind.Local).AddTicks(8606),
+                            JoinedAt = new DateTime(2024, 12, 9, 12, 49, 33, 871, DateTimeKind.Local).AddTicks(2469),
                             LockoutEnabled = false,
                             NormalizedEmail = "PHOTOGRAPHER@GMAIL.COM",
                             NormalizedUserName = "PHOTOGRAPHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIFGrkUhgg7kZgRkLxXI+sT5i+EOFS4O4C542CFzwiRrnrWzhu4vtmknIPHTLGZ4Xw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHFNq3zusMuLHxCBoW7rBJOCGK75GsvTUj8MwMcuwVrSAI8vpj99Bz40g1wSkEucyw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2ab86ce2-88f8-4c11-a756-d7ce7198c7ca",
+                            SecurityStamp = "770544f7-7468-4863-8647-7581e981b3cf",
                             TwoFactorEnabled = false,
                             UserName = "Photographer"
                         });
@@ -511,7 +514,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 13, 18, 57, 273, DateTimeKind.Local).AddTicks(3034))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 12, 49, 34, 363, DateTimeKind.Local).AddTicks(134))
                         .HasComment("Date of photo uploading");
 
                     b.Property<Guid?>("UserOwnerId")
@@ -883,7 +886,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 13, 18, 57, 276, DateTimeKind.Local).AddTicks(9258))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 12, 49, 34, 367, DateTimeKind.Local).AddTicks(2954))
                         .HasComment("Date of PhotoShoot creation");
 
                     b.Property<string>("Description")
@@ -936,7 +939,7 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("29858981-86ee-4ab7-b569-9f1e88141421"),
+                            Id = new Guid("c6b0ab96-f1b4-4931-b255-ae5c6f217a0a"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Потопи се в свят на свежи цветове, изпълнен с радост и уют! Декорът с балони и маргаритки е перфектен избор за всяко събитие, носещо усмивки и пролетно настроение.\n\n✨ Как изглежда декорът?\n\n🎈 Балони в нежни пастелни тонове или ярки цветове, подредени в елегантни арки, букети или гирлянди.\n🌼 Красиви маргаритки – естествени или декоративни, вплетени между балоните, създавайки хармонична и весела атмосфера.\n🌿 Малки зелени акценти за още повече природна свежест.\n🌟 Възможност за добавяне на персонализирани елементи – имена, надписи или специални фигури.\n💡 За какви събития е подходящ?\n\n🎂 Рождени дни и празненства с пролетна или лятна тематика.\n👶 Бебешки фотосесии или кръщенета.\n🥂 Романтични събития като годежи или сватбени фотосесии.\n📸 Тематични фотосесии на открито или в уютна студийна атмосфера.\n✨ Създай празник, изпълнен с нежност и красота!\nДекорът с балони и маргаритки ще добави неповторима топлина и стил към твоето събитие.",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601336_b62502c21a_w.jpg",
@@ -947,7 +950,7 @@ namespace Photography.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2a15bddc-1dba-457c-b501-ecadd60f2ba7"),
+                            Id = new Guid("22869b52-7969-4a0a-ad4e-8f8963947e78"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Потопи се в приказна атмосфера, изпълнена с ефирна нежност и радост! Декорът с балони и облаци е перфектният избор за създаване на незабравима фотосесия, парти или специално събитие.\n\n✨ Как изглежда декорът?\n\n🌥️ Нежни пухкави облаци, които създават усещане за лекота и безгрижие.\n🎈 Балони в пастелни или ярки цветове, красиво подредени в арки, букети или плаващи композиции.\n✨ Блясък и акценти – включваме светлинки или блестящи детайли за още повече магия.\n🌟 Персонализирани елементи – добавяме надписи, цифри или малки декорации, съобразени с темата на събитието.\n💡 За кого е подходящ този декор?\n\n👶 Бебешки фотосесии и рождени дни.\n💍 Романтични моменти като предложения за брак или годежи.\n🎉 Детски партита и тематични събития.\n📸 Уникални фотосесии за всеки, който иска да се почувства като в облаците.\nСъздай магия, която ще остави незабравими спомени! ✨\nПозволи на мечтите си да полетят с нашия декор от балони и облаци.",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601381_ee8cc95269_w.jpg",
@@ -958,7 +961,7 @@ namespace Photography.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0f71803c-c0db-4cb2-8c7e-a3a38679a176"),
+                            Id = new Guid("50bae432-dcb6-4029-bd4b-0cf17e5112d0"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Създай атмосфера, която впечатлява с минимализъм и съвършена хармония! Едноцветният декор е перфектният избор за всеки, който търси изтънченост и стил в детайлите.   Подходящ за всякакви събития:\n\n🎂 Рождени дни със стилна концепция.\n🥂 Романтични вечери, предложения за брак или годежи.\n📸 Професионални фотосесии, фокусирани върху елегантност и симетрия.\n🎉 Корпоративни събития с изискана атмосфера.\n✨ Защо да избереш едноцветен декор?\nЕдноцветната концепция носи усещане за изисканост и баланс, позволявайки на детайлите и емоциите да изпъкнат. 🎈 Направи събитието си незабравимо с простота, която говори сама за себе си!",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601391_f3b0a45080_w.jpg",
@@ -1162,7 +1165,7 @@ namespace Photography.Infrastructure.Migrations
                     b.HasOne("Photography.Infrastructure.Data.Models.PhotoShoot", "PhotoShoot")
                         .WithMany("Participants")
                         .HasForeignKey("PhotoShootId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "User")

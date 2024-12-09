@@ -10,8 +10,13 @@ namespace Photography.Infrastructure.Data.Configurations
         {
             builder.HasKey(pp => new { pp.PhotoShootId, pp.UserId });
 
-            builder.HasOne(pp => pp.PhotoShoot).WithMany(pp => pp.Participants).OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(pp => pp.User).WithMany(pp => pp.Participants).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(pp => pp.PhotoShoot)
+                .WithMany(pp => pp.Participants)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(pp => pp.User)
+                .WithMany(pp => pp.Participants)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

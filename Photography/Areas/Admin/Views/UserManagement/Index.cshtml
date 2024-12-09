@@ -33,81 +33,82 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>@user.Email</td>
-                    <td>
-                        @foreach (var role in user.Roles)
-                        {
-                            <span class="badge bg-secondary">@role</span>
-                        }
+        
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span class="badge bg-secondary">@role</span>
+                    }
 
-                        @if (await BaseService.IsUserPhotographerAsync(user.Id))
+                    @if (await BaseService.IsUserPhotographerAsync(user.Id))
+                    {
+                        foreach (var photographer in user.Photographers)
                         {
-                            foreach (var photographer in user.Photographers)
-                            {
-                                <div class="mt-2">
-                                    <span class="badge bg-success">Фотограф</span><br />
-                                    <span>@photographer.BrandName</span>
-                                </div>
-                            }
-                        }
-                    </td>
-                    <td>
-                        @if (!await BaseService.IsUserPhotographerAsync(user.Id))
-                        {
-                            <form method="post" asp-action="MakePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
-                                <input type="hidden" name="userId" value="@user.Id" />
-                                <input type="text" name="brandName" class="form-control d-inline w-auto me-2" placeholder="Марка на фотографа" required />
-                                <button type="submit" class="btn btn-primary btn-sm">Направи фотограф</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <form method="post" asp-action="RemovePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
-                                <input type="hidden" name="userId" value="@user.Id" />
-                                <button type="submit" class="btn btn-danger btn-sm">Изтрий фотограф</button>
-                            </form>
-                        }
-                    </td>
-                    <td>
-                        <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100 mb-2">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <div class="d-flex">
-                                <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
-                                    @foreach (string role in allRoles)
-                                    {
-                                        <option value="@role">@role</option>
-                                    }
-                                </select>
-                                <button type="submit" class="btn btn-primary" style="width: 100px;">Задай</button>
+                            <div class="mt-2">
+                                <span class="badge bg-success">Фотограф</span><br/>
+                                <span>@photographer.BrandName</span>
                             </div>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (!await BaseService.IsUserPhotographerAsync(user.Id))
+                    {
+                        <form method="post" asp-action="MakePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                            <input type="hidden" name="userId" value="@user.Id"/>
+                            <input type="text" name="brandName" class="form-control d-inline w-auto me-2" placeholder="Марка на фотографа" required/>
+                            <button type="submit" class="btn btn-primary btn-sm">Направи фотограф</button>
                         </form>
-
-                        <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <div class="d-flex">
-                                <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
-                                    @foreach (var role in user.Roles)
-                                    {
-                                        <option value="@role">@role</option>
-                                    }
-                                </select>
-                                <button type="submit" class="btn btn-warning" style="width: 100px;">Премахни</button>
-                            </div>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="RemovePhotographer" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                            <input type="hidden" name="userId" value="@user.Id"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Изтрий фотограф</button>
                         </form>
+                    }
+                </td>
+                <td>
+                    <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100 mb-2">
+                        <input type="hidden" name="userId" value="@user.Id"/>
+                        <div class="d-flex">
+                            <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
+                                @foreach (string role in allRoles)
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-primary" style="width: 100px;">Задай</button>
+                        </div>
+                    </form>
+
+                    <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline w-100">
+                        <input type="hidden" name="userId" value="@user.Id"/>
+                        <div class="d-flex">
+                            <select name="role" class="form-select flex-grow-1" style="width: calc(100% - 100px);">
+                                @foreach (var role in user.Roles)
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-warning" style="width: 100px;">Премахни</button>
+                        </div>
+                    </form>
 
 
-                    </td>
-                    <td>
-                        <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Изтрий</button>
-                        </form>
-                    </td>
-                </tr>
-            }
+                </td>
+                <td>
+                    <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                        <input type="hidden" name="userId" value="@user.Id"/>
+                        <button type="submit" class="btn btn-danger btn-sm">Изтрий</button>
+                    </form>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>
