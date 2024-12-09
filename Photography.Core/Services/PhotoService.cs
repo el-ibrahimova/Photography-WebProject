@@ -34,7 +34,7 @@ namespace Photography.Core.Services
         {
             IQueryable<Photo> allPhotosQuery = context
                 .Photos
-                .Where(p => p.IsPrivate==false && p.IsDeleted == false)
+                .Where(p => p.IsPrivate == false && p.IsDeleted == false)
                 .AsQueryable();
 
 
@@ -70,12 +70,12 @@ namespace Photography.Core.Services
                     else if (startYear == endYear)
                     {
                         allPhotosQuery = allPhotosQuery.Where(p =>
-                            (p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear) && 
-                            (p.UploadedAt.Month>= startMonth && p.UploadedAt.Month<=endMonth));
+                            (p.UploadedAt.Year >= startYear && p.UploadedAt.Year <= endYear) &&
+                            (p.UploadedAt.Month >= startMonth && p.UploadedAt.Month <= endMonth));
                     }
 
                 }
-                else if(int.TryParse(model.DateFilter, out int date))
+                else if (int.TryParse(model.DateFilter, out int date))
                 {
                     allPhotosQuery = allPhotosQuery.Where(m => m.UploadedAt.Year == date);
                 }
@@ -104,7 +104,7 @@ namespace Photography.Core.Services
         {
             IQueryable<Photo> allPhotosQuery = context
                 .Photos
-                .Where(p => p.IsPrivate==true && p.UserOwnerId == userId && p.IsDeleted == false)
+                .Where(p => p.IsPrivate == true && p.UserOwnerId == userId && p.IsDeleted == false)
                 .AsQueryable();
 
 
@@ -151,7 +151,7 @@ namespace Photography.Core.Services
                 }
             }
 
-            
+
             if (model.CurrentPage.HasValue && model.EntitiesPerPage.HasValue)
             {
                 allPhotosQuery = allPhotosQuery
@@ -198,16 +198,21 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            Guid userOwnerId = Guid.Empty;
+            Guid? userOwnerId = null;
 
-            if (!model.IsPrivate)
+            if (model.IsPrivate)
             {
-                userOwnerId = Guid.Parse(userId);
+                if (string.IsNullOrEmpty(model.UserOwnerId) || !Guid.TryParse(model.UserOwnerId, out var parsedGuid))
+                {
+                    return false;
+                }
+                userOwnerId = parsedGuid;
             }
-            else
-            {
-                userOwnerId = model.UserOwnerId;
-            }
+
+            Guid photographerId = await context.Photographers
+                .Where(p => p.UserId.ToString() == userId)
+                .Select(p => p.Id) 
+                .FirstOrDefaultAsync();
 
             var photo = new Photo
             {
@@ -217,6 +222,7 @@ namespace Photography.Core.Services
                 ImageUrl = model.ImageUrl,
                 IsPrivate = model.IsPrivate,
                 UserOwnerId = userOwnerId,
+                PhotographerId = photographerId,
                 PhotosCategories = model.SelectedCategoryIds.Select(id => new PhotoCategory() { CategoryId = id })
                     .ToList()
             };
@@ -265,6 +271,7 @@ namespace Photography.Core.Services
         {
             Photo? photo = await context.Photos
                 .Include(p => p.Owner)
+                 .Include(p=>p.Photographer)
                 .Include(p => p.PhotosCategories)
                 .ThenInclude(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == photoGuid && p.IsDeleted == false);
@@ -280,7 +287,8 @@ namespace Photography.Core.Services
                 IsPrivate = photo.IsPrivate,
                 IsDeleted = photo.IsDeleted,
                 Rating = photo.Rating,
-                UserOwnerId = photo.UserOwnerId,
+                UserOwnerId = photo.UserOwnerId.ToString(),
+                Photographer = photo.Photographer,
                 Categories = photo.PhotosCategories.Select(p => p.Category.Name).ToList(),
             };
         }
@@ -540,9 +548,9 @@ namespace Photography.Core.Services
                     .Skip(model.EntitiesPerPage.Value * (model.CurrentPage.Value - 1))
                     .Take(model.EntitiesPerPage.Value);
             }
-            
+
             return await allPhotosQuery
-                .OrderByDescending(p=>p.Rating)
+                .OrderByDescending(p => p.Rating)
                 .Select(p => new AllPhotosViewModel()
                 {
                     Id = p.Id.ToString(),
@@ -550,7 +558,8 @@ namespace Photography.Core.Services
                     IsPrivate = p.IsPrivate,
                     UserOwner = p.Owner,
                     Rating = p.Rating,
-                    Categories = p.PhotosCategories.Select(c=>c.Category.Name).ToList()
+                    Photographer = p.Photographer,
+                    Categories = p.PhotosCategories.Select(c => c.Category.Name).ToList()
                 })
                 .ToListAsync();
         }
@@ -585,7 +594,7 @@ namespace Photography.Core.Services
             var photos = await this.GetPrivateGalleryAsync(inputModel, userId);
 
             int photosCount = photos
-                .Where(p => p.IsPrivate && userId.ToString()==p.UserOwnerId)
+                .Where(p => p.IsPrivate && userId.ToString() == p.UserOwnerId)
                 .Count();
 
             return photosCount;

@@ -39,8 +39,7 @@
 
         public bool IsPrivate { get; set; }
 
-        [Required(ErrorMessage = RequiredMessage)]
-        public string UserOwnerId { get; set; } = null!;
+        public string? UserOwnerId { get; set; } = null!;
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();

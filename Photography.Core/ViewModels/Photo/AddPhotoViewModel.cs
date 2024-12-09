@@ -40,8 +40,8 @@
 
        public bool IsPrivate { get; set; }
 
-        [Required(ErrorMessage = RequiredMessage)]
-        public Guid UserOwnerId { get; set; }
+        public string UserOwnerId { get; set; } 
+        public string? PhotographerId { get; set; }
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
         public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>(); 

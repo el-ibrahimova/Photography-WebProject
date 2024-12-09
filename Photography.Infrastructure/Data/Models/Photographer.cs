@@ -25,5 +25,6 @@ namespace Photography.Infrastructure.Data.Models
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
         public ICollection<PhotoShoot> PhotoShoots { get; set; } = new HashSet<PhotoShoot>();
+        public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
     }
 }

@@ -39,7 +39,13 @@
             {
                 <h5 class="card-title">Таг: @Model.TagUser</h5>
             }
-
+            
+            <td>
+                @if (Model.Photographer != null)
+                {
+                    <p>@Model.Photographer.BrandName  </p>
+                }
+            </td>
             <p class="card-text">Добавена на: @Model.UploadedAt</p>
         </div>
 

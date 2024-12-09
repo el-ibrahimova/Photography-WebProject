@@ -7,6 +7,6 @@
         public string ImageUrl { get; set; } = null!;
         public int Rating { get; set; }
         public bool IsPrivate { get; set; }
-        public string UserOwnerId { get; set; } = null!;
+        public string? UserOwnerId { get; set; } = null!;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Photography.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Photography.Infrastructure.Data;
 namespace Photography.Infrastructure.Migrations
 {
     [DbContext(typeof(PhotographyDbContext))]
-    partial class PhotographyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209071112_PhotoUserOwnerIdIsNotRequiredActually")]
+    partial class PhotoUserOwnerIdIsNotRequiredActually
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,7 +221,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 11, 11, 22, 207, DateTimeKind.Local).AddTicks(7544))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 9, 11, 7, 773, DateTimeKind.Local).AddTicks(9828))
                         .HasComment("Date of user registration");
 
                     b.Property<string>("LastName")
@@ -276,17 +279,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f1c67b77-1941-4ace-b3d0-a3c8477d752c",
+                            ConcurrencyStamp = "b9cb823a-6ae1-4ba9-a815-a71166ac3056",
                             Email = "client_one@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 11, 11, 22, 208, DateTimeKind.Local).AddTicks(339),
+                            JoinedAt = new DateTime(2024, 12, 9, 9, 11, 7, 774, DateTimeKind.Local).AddTicks(2011),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                             NormalizedUserName = "CLIENTONE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIbEaQH/tsqIODe3UVhgt3/9/4fOTytFxGuTl/6bInpN6Tuzgp8Vqy4pRwkcADl8wQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPxdPU51Y3Prh6ObGAm44ZVBtaM9tEE9jBtuFM3HiuzLO/ltarwIH/DS0J8fdrGO4Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7e10325e-5b47-43e7-85cc-a78d450588d5",
+                            SecurityStamp = "e6bc0c17-e87c-4ef0-bf0e-0456a66df318",
                             TwoFactorEnabled = false,
                             UserName = "ClientOne"
                         },
@@ -294,17 +297,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("33386302-4eb2-4a2b-925c-819c1b92cc4d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "951dbbe6-7b0f-4d45-8b6c-f56b6371c329",
+                            ConcurrencyStamp = "e6fbbd2a-7b54-433f-af73-4f93fb3ba911",
                             Email = "client_two@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 11, 11, 22, 208, DateTimeKind.Local).AddTicks(368),
+                            JoinedAt = new DateTime(2024, 12, 9, 9, 11, 7, 774, DateTimeKind.Local).AddTicks(2048),
                             LockoutEnabled = false,
                             NormalizedEmail = "CLIENT_TWO@GMAIL.COM",
                             NormalizedUserName = "CLIENTTWO",
-                            PasswordHash = "AQAAAAIAAYagAAAAECnrhNHDMBHb5UMeV2MbUXfd1bmKLtyQQNaijQxMqmWVnpv5RKIQSm3/oYEOW3WJlQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKRwGflxhoOjxRF2d16oUHiaviV2XyudG0+qGF3mDy4yZciERlw5DDqPgWJ8NRmeYA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "55ab94e5-ebd0-4b4a-ab1a-0792e9e6a587",
+                            SecurityStamp = "204cd404-a8f9-4eaf-b526-6694ea164fe8",
                             TwoFactorEnabled = false,
                             UserName = "ClientTwo"
                         },
@@ -312,17 +315,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("0cea6e1c-0655-4c21-a14b-5b5932332ffd"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8e668c63-d717-48dd-b76c-27cff26a2213",
+                            ConcurrencyStamp = "8c639639-2647-4d9f-8d6f-b5f17771c3b9",
                             Email = "admin@photography.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 11, 11, 22, 208, DateTimeKind.Local).AddTicks(395),
+                            JoinedAt = new DateTime(2024, 12, 9, 9, 11, 7, 774, DateTimeKind.Local).AddTicks(2067),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PHOTOGRAPHY.COM",
                             NormalizedUserName = "АDMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECaC1lPkqGYCpOvZD4mdh/i1tTOuITELeJY5j1uOZFDosgfx7wrSRpB5d49eYyYAHQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKfq9sA0xTDy9amAHYRb+AT2JgUl1OUfTY41Nisx4Mz8PVf+ZAzLxV5t20wGylDCZQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "276bea7e-4383-4702-82dc-5a3554e40f9d",
+                            SecurityStamp = "f44eef33-ad6c-4f70-ade5-a1c51fe0375a",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -330,17 +333,17 @@ namespace Photography.Infrastructure.Migrations
                         {
                             Id = new Guid("95d458a7-115a-4db5-9319-809c7763d841"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d8acb18-b95e-4ff5-87ea-0b4ef1f5f6f8",
+                            ConcurrencyStamp = "8e6493db-d091-4935-8666-ea0c9f40c8cf",
                             Email = "photographer@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
-                            JoinedAt = new DateTime(2024, 12, 9, 11, 11, 22, 208, DateTimeKind.Local).AddTicks(412),
+                            JoinedAt = new DateTime(2024, 12, 9, 9, 11, 7, 774, DateTimeKind.Local).AddTicks(2087),
                             LockoutEnabled = false,
                             NormalizedEmail = "PHOTOGRAPHER@GMAIL.COM",
                             NormalizedUserName = "PHOTOGRAPHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGFPg3MLHYfXxdeSZFDhzVCrLBH7ej/Kx7uF+zx5PUQLPFigqVDGlPrYDOdNcR9Y0g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIDmE7zixII88h236HpJemIbOqCvQxVgNiExDmWMBJRr2YCXY3unH/VCw3A5XVGPnQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8bf54fa7-a4cf-4d6e-8f2c-195ab474b768",
+                            SecurityStamp = "12506a68-4caa-484e-bc01-624495c8856e",
                             TwoFactorEnabled = false,
                             UserName = "Photographer"
                         });
@@ -493,10 +496,6 @@ namespace Photography.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasComment("Is the photo private ot public");
 
-                    b.Property<Guid?>("PhotographerId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Photographer");
-
                     b.Property<int>("Rating")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -511,7 +510,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 11, 11, 22, 758, DateTimeKind.Local).AddTicks(9842))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 9, 11, 8, 411, DateTimeKind.Local).AddTicks(5659))
                         .HasComment("Date of photo uploading");
 
                     b.Property<Guid?>("UserOwnerId")
@@ -519,8 +518,6 @@ namespace Photography.Infrastructure.Migrations
                         .HasComment("Owner of photo");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PhotographerId");
 
                     b.HasIndex("UserOwnerId");
 
@@ -537,10 +534,10 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179261839_b223eaf533_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Ниса",
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -549,9 +546,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179405645_da2965d7af_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -560,9 +557,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179235863_ef79e9cd79.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -571,9 +568,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179405720_de0340c35d_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -582,10 +579,10 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179261934_74b915c632_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Ниса",
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -593,9 +590,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179235838_98b592402f_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -603,9 +600,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54178078662_c668a923ac_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -613,9 +610,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179405980_f9fb480fb0_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -624,7 +621,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54178963106_6698d8a47b_n.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Елмаз",
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -636,9 +632,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54178078787_53fe24ea4a_n.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -647,7 +643,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179262259_781ec3326b_n.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
@@ -658,7 +653,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179262309_60ce92ee0b_n.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Микаел",
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -671,7 +665,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54179236228_d084cd37fb_n.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Микаел",
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -683,7 +676,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54191040230_19726ab96d_w.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
@@ -695,7 +687,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54190853033_3552742834_w.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserOwnerId = new Guid("58d5d0e4-2bd2-477d-b94c-ff91ec025846")
@@ -707,9 +698,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54191040245_7864be5ce1_w.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         },
                         new
                         {
@@ -717,7 +708,6 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54189701457_55e2a97488_w.jpg",
                             IsDeleted = false,
                             IsPrivate = true,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
                             TagUser = "Мери",
                             UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -730,9 +720,9 @@ namespace Photography.Infrastructure.Migrations
                             ImageUrl = "https://live.staticflickr.com/65535/54189701467_958b69d5bc_w.jpg",
                             IsDeleted = false,
                             IsPrivate = false,
-                            PhotographerId = new Guid("d19b7253-a40e-4d28-8bd0-43410f6a3ca4"),
                             Rating = 0,
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserOwnerId = new Guid("95d458a7-115a-4db5-9319-809c7763d841")
                         });
                 });
 
@@ -883,7 +873,7 @@ namespace Photography.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 9, 11, 11, 22, 761, DateTimeKind.Local).AddTicks(9585))
+                        .HasDefaultValue(new DateTime(2024, 12, 9, 9, 11, 8, 417, DateTimeKind.Local).AddTicks(132))
                         .HasComment("Date of PhotoShoot creation");
 
                     b.Property<string>("Description")
@@ -936,7 +926,7 @@ namespace Photography.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c1674de4-64d9-439d-9cd3-2406819b4b34"),
+                            Id = new Guid("bb5fcac3-b920-4952-b5f5-0881ae253038"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Потопи се в свят на свежи цветове, изпълнен с радост и уют! Декорът с балони и маргаритки е перфектен избор за всяко събитие, носещо усмивки и пролетно настроение.\n\n✨ Как изглежда декорът?\n\n🎈 Балони в нежни пастелни тонове или ярки цветове, подредени в елегантни арки, букети или гирлянди.\n🌼 Красиви маргаритки – естествени или декоративни, вплетени между балоните, създавайки хармонична и весела атмосфера.\n🌿 Малки зелени акценти за още повече природна свежест.\n🌟 Възможност за добавяне на персонализирани елементи – имена, надписи или специални фигури.\n💡 За какви събития е подходящ?\n\n🎂 Рождени дни и празненства с пролетна или лятна тематика.\n👶 Бебешки фотосесии или кръщенета.\n🥂 Романтични събития като годежи или сватбени фотосесии.\n📸 Тематични фотосесии на открито или в уютна студийна атмосфера.\n✨ Създай празник, изпълнен с нежност и красота!\nДекорът с балони и маргаритки ще добави неповторима топлина и стил към твоето събитие.",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601336_b62502c21a_w.jpg",
@@ -947,7 +937,7 @@ namespace Photography.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e8b2aef1-ad03-4724-91ef-54b9771a0b8b"),
+                            Id = new Guid("e2f26603-8132-45d3-aade-be9dcee172e3"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Потопи се в приказна атмосфера, изпълнена с ефирна нежност и радост! Декорът с балони и облаци е перфектният избор за създаване на незабравима фотосесия, парти или специално събитие.\n\n✨ Как изглежда декорът?\n\n🌥️ Нежни пухкави облаци, които създават усещане за лекота и безгрижие.\n🎈 Балони в пастелни или ярки цветове, красиво подредени в арки, букети или плаващи композиции.\n✨ Блясък и акценти – включваме светлинки или блестящи детайли за още повече магия.\n🌟 Персонализирани елементи – добавяме надписи, цифри или малки декорации, съобразени с темата на събитието.\n💡 За кого е подходящ този декор?\n\n👶 Бебешки фотосесии и рождени дни.\n💍 Романтични моменти като предложения за брак или годежи.\n🎉 Детски партита и тематични събития.\n📸 Уникални фотосесии за всеки, който иска да се почувства като в облаците.\nСъздай магия, която ще остави незабравими спомени! ✨\nПозволи на мечтите си да полетят с нашия декор от балони и облаци.",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601381_ee8cc95269_w.jpg",
@@ -958,7 +948,7 @@ namespace Photography.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2618c65a-c3c8-4103-8010-31225449ce33"),
+                            Id = new Guid("e3b4365a-1ca2-4ffe-a3da-f7650ab2c7a0"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Създай атмосфера, която впечатлява с минимализъм и съвършена хармония! Едноцветният декор е перфектният избор за всеки, който търси изтънченост и стил в детайлите.   Подходящ за всякакви събития:\n\n🎂 Рождени дни със стилна концепция.\n🥂 Романтични вечери, предложения за брак или годежи.\n📸 Професионални фотосесии, фокусирани върху елегантност и симетрия.\n🎉 Корпоративни събития с изискана атмосфера.\n✨ Защо да избереш едноцветен декор?\nЕдноцветната концепция носи усещане за изисканост и баланс, позволявайки на детайлите и емоциите да изпъкнат. 🎈 Направи събитието си незабравимо с простота, която говори сама за себе си!",
                             ImageUrl1 = "https://live.staticflickr.com/65535/54190601391_f3b0a45080_w.jpg",
@@ -1097,17 +1087,11 @@ namespace Photography.Infrastructure.Migrations
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photo", b =>
                 {
-                    b.HasOne("Photography.Infrastructure.Data.Models.Photographer", "Photographer")
-                        .WithMany("Photos")
-                        .HasForeignKey("PhotographerId");
-
                     b.HasOne("Photography.Infrastructure.Data.Models.ApplicationUser", "Owner")
                         .WithMany("Photos")
                         .HasForeignKey("UserOwnerId");
 
                     b.Navigation("Owner");
-
-                    b.Navigation("Photographer");
                 });
 
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.PhotoCategory", b =>
@@ -1222,8 +1206,6 @@ namespace Photography.Infrastructure.Migrations
             modelBuilder.Entity("Photography.Infrastructure.Data.Models.Photographer", b =>
                 {
                     b.Navigation("PhotoShoots");
-
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

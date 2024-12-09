@@ -30,7 +30,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Розите са цветя, които говорят на сърцето, без да използват думи",
                     ImageUrl = "https://live.staticflickr.com/65535/54179261839_b223eaf533_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -39,7 +39,7 @@ namespace Photography.Infrastructure.Data.Configurations
                    Description = "Началото на нов живот",
                     ImageUrl = "https://live.staticflickr.com/65535/54179405645_da2965d7af_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -48,7 +48,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Книгите са вълшебни врати, през които можем да се пренесем в различни светове и реалности - Джим Хенсън",
                     ImageUrl = "https://live.staticflickr.com/65535/54179235863_ef79e9cd79.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -57,7 +57,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "The Tree",
                     ImageUrl = "https://live.staticflickr.com/65535/54179405720_de0340c35d_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -67,7 +67,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Благодат",
                     ImageUrl = "https://live.staticflickr.com/65535/54179261934_74b915c632_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                   },
 
                 new Photo()
@@ -75,7 +75,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Id = Guid.Parse("1932884A-DFDC-4ACB-9334-AC88C1585170"),
                     ImageUrl = "https://live.staticflickr.com/65535/54179235838_98b592402f_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -83,7 +83,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Id = Guid.Parse("2C9FBF60-4155-4777-A03F-3E7D5F01339B"),
                     ImageUrl = "https://live.staticflickr.com/65535/54178078662_c668a923ac_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -91,7 +91,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Id = Guid.Parse("CF01D099-9925-490D-B1B7-EF30E24167BB"),
                     ImageUrl = "https://live.staticflickr.com/65535/54179405980_f9fb480fb0_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841")
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -101,7 +101,8 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Home, sweet home",
                     ImageUrl = "https://live.staticflickr.com/65535/54178963106_6698d8a47b_n.jpg",
                     IsPrivate = true,
-                    UserOwnerId =Guid.Parse("33386302-4EB2-4A2B-925C-819C1B92CC4D")
+                    UserOwnerId =Guid.Parse("33386302-4EB2-4A2B-925C-819C1B92CC4D"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -109,7 +110,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Id = Guid.Parse("8A009518-BB4A-4443-9E75-DA259A75430A"),
                     ImageUrl = "https://live.staticflickr.com/65535/54178078787_53fe24ea4a_n.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -118,7 +119,8 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "River road",
                     ImageUrl = "https://live.staticflickr.com/65535/54179262259_781ec3326b_n.jpg",
                     IsPrivate = true,
-                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846")
+                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -127,7 +129,8 @@ namespace Photography.Infrastructure.Data.Configurations
                     TagUser = "Микаел",
                     ImageUrl = "https://live.staticflickr.com/65535/54179262309_60ce92ee0b_n.jpg",
                     IsPrivate = true,
-                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846")
+                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -137,7 +140,8 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Long way home",
                     ImageUrl = "https://live.staticflickr.com/65535/54179236228_d084cd37fb_n.jpg",
                     IsPrivate = true,
-                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846")
+                    UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -146,6 +150,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     ImageUrl = "https://live.staticflickr.com/65535/54191040230_19726ab96d_w.jpg",
                     IsPrivate = true,
                     UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -155,6 +160,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     ImageUrl = "https://live.staticflickr.com/65535/54190853033_3552742834_w.jpg",
                     IsPrivate = true,
                     UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -163,7 +169,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Всяко нещо крие своята красота",
                     ImageUrl = "https://live.staticflickr.com/65535/54191040245_7864be5ce1_w.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                  },
 
                 new Photo()
@@ -173,6 +179,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     ImageUrl = "https://live.staticflickr.com/65535/54189701457_55e2a97488_w.jpg",
                     IsPrivate = true,
                     UserOwnerId = Guid.Parse("58D5D0E4-2BD2-477D-B94C-FF91EC025846"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 },
 
                 new Photo()
@@ -181,7 +188,7 @@ namespace Photography.Infrastructure.Data.Configurations
                     Description = "Времето се променя и ние с него",
                     ImageUrl = "https://live.staticflickr.com/65535/54189701467_958b69d5bc_w.jpg",
                     IsPrivate = false,
-                    UserOwnerId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
+                    PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
                 }
 
             }; return photos;

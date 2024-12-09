@@ -41,20 +41,24 @@ namespace Photography.Infrastructure.Data.Models
         [Comment("Is the photo deleted or not")]
         public bool IsDeleted { get; set; }
 
-
+        [Required]
         [Comment("Is the photo private ot public")]
         public bool IsPrivate { get; set; }
 
-        [Required]
         [Comment("Owner of photo")]
-        public Guid UserOwnerId { get; set; }
+        public Guid? UserOwnerId { get; set; }
 
         [ForeignKey(nameof(UserOwnerId))] 
-        public ApplicationUser Owner { get; set; } = null!;
+        public ApplicationUser? Owner { get; set; }
 
+        [Comment("Photographer")]
+        public Guid? PhotographerId { get; set; }
+
+        [ForeignKey(nameof(PhotographerId))] 
+        public Photographer? Photographer { get; set; }
+        
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
-
         public ICollection<PhotoCategory> PhotosCategories { get; set; } = new HashSet<PhotoCategory>();
         public ICollection<PhotoRating> PhotosRatings { get; set; } = new HashSet<PhotoRating>();
     }

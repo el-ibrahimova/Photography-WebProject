@@ -11,7 +11,8 @@
         public string ImageUrl { get; set; } = null!;
         public bool IsDeleted { get; set; }
         public bool IsPrivate { get; set; }
-        public Guid UserOwnerId { get; set; }
+        public string? UserOwnerId { get; set; }
+        public Photographer Photographer { get; set; } = null!;
         public ICollection<string> Categories { get; set; } = new HashSet<string>();
     }
 }

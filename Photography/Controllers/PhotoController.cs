@@ -82,14 +82,15 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add(AddPhotoViewModel model)
         {
-            var userId = GetUserId() ?? String.Empty;
+            var userId = GetUserId();
 
-            if (!model.IsPrivate)
+            Guid userIdGuid = Guid.Empty;
+            if (!IsGuidValid(userId, ref userIdGuid))
             {
-                model.UserOwnerId = Guid.Parse(userId);
+                return BadRequest();
             }
 
-            if (!ModelState.IsValid)
+          if (!ModelState.IsValid)
             {
                 model = await photoService.GetAddPhotoAsync();
                 return View(model);
