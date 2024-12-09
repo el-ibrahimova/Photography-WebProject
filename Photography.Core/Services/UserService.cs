@@ -144,43 +144,46 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            // disconnect from photos 
-            List<Photo> photosToRemove = context.Photos
+            // disconnect from photos
+            var photosToRemove = await context.Photos
                 .Where(p => p.UserOwnerId == user.Id)
-                .ToList();
+                .ToListAsync();
 
-            foreach (var photo in photosToRemove)
-            {
-                List<PhotoCategory> photosCategoriesToDelete = context.PhotosCategories
-                    .Where(p => p.PhotoId == photo.Id).ToList();
-                context.PhotosCategories.RemoveRange(photosCategoriesToDelete);
-               await context.SaveChangesAsync();
-            }
+            var photoIds = photosToRemove.Select(p => p.Id).ToList();
+
+            // disconect photos form categories
+            var photosCategoriesToDelete = await context.PhotosCategories
+                .Where(pc => photoIds.Contains(pc.PhotoId))
+                .ToListAsync();
+
+            context.PhotosCategories.RemoveRange(photosCategoriesToDelete);
             context.Photos.RemoveRange(photosToRemove);
 
             // disconnect from photoShoots
-            List<PhotoShoot> photoShootsToRemove = context.PhotoShoots
+            List<PhotoShoot> photoShootsToRemove = await context.PhotoShoots
                 .Include(ps => ps.Participants)
                 .Where(ps => ps.Participants.Any(p => p.UserId == user.Id))
-                .ToList();
-            context.PhotoShoots.RemoveRange(photoShootsToRemove);
+                .ToListAsync();
 
-            // disconnest from PhotoShootParticipant
-            List<PhotoShootParticipant> participantsToRemove = context.PhotoShootParticipants
+            // disconnect from photoShootParticipants
+            List<PhotoShootParticipant> participantsToRemove = await context.PhotoShootParticipants
                 .Where(ps => ps.UserId == user.Id)
-                .ToList();
+                .ToListAsync();
+
+            context.PhotoShoots.RemoveRange(photoShootsToRemove);  
             context.PhotoShootParticipants.RemoveRange(participantsToRemove);
 
+
             // disconnect from ratings
-            List<PhotoRating> photosRatingsToRemove = context.PhotosRatings
+            List<PhotoRating> photosRatingsToRemove = await context.PhotosRatings
                 .Where(p => p.UserId == user.Id)
-                .ToList();
+                .ToListAsync();
             context.PhotosRatings.RemoveRange(photosRatingsToRemove);
 
             // disconnect from favorites
-            List<FavoritePhoto> favoritePhotoToRemove = context.FavoritePhotos
+            List<FavoritePhoto> favoritePhotoToRemove = await context.FavoritePhotos
                 .Where(p => p.UserId == user.Id)
-                .ToList();
+                .ToListAsync();
             context.FavoritePhotos.RemoveRange(favoritePhotoToRemove);
 
             await context.SaveChangesAsync();
