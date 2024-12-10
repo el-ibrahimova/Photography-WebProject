@@ -227,7 +227,12 @@ namespace Photography.Controllers
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
             bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(id, GetUserId());
 
-            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            if (!isPhotographer && !User.IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            if (isPhotographer && !isOwner)
             {
                 return Unauthorized();
             }
@@ -261,7 +266,12 @@ namespace Photography.Controllers
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
             bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(model.Id, GetUserId());
 
-            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            if (!isPhotographer && !User.IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            if (isPhotographer && !isOwner)
             {
                 return Unauthorized();
             }
@@ -321,12 +331,17 @@ namespace Photography.Controllers
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
             bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(id, GetUserId());
 
-            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            if (!isPhotographer && !User.IsAdmin())
             {
                 return Unauthorized();
             }
 
-          Guid photoGuid = Guid.Empty;
+            if (isPhotographer && !isOwner)
+            {
+                return Unauthorized();
+            }
+
+            Guid photoGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoGuid))
             {
                 return NotFound();
@@ -348,7 +363,12 @@ namespace Photography.Controllers
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
             bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(model.Id, GetUserId());
 
-            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            if (!isPhotographer && !User.IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            if (isPhotographer && !isOwner)
             {
                 return Unauthorized();
             }
