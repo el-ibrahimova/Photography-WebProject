@@ -14,7 +14,7 @@ namespace Photography.Infrastructure.Data.Configurations
                 .HasDefaultValue(DateTime.Now);
             builder.Property(u => u.IsDeleted)
                 .HasDefaultValue(false);
-           
+
             builder.HasData(SeedUsers());
         }
 

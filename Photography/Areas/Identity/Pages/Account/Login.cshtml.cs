@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Photography.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations;
+using static Photography.Common.EntityValidationMessages;
 
 namespace Photography.Areas.Identity.Pages.Account
 {
@@ -60,7 +61,7 @@ namespace Photography.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = RequiredMessage)]
             [EmailAddress]
             public string Email { get; set; }
 
@@ -68,7 +69,7 @@ namespace Photography.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = RequiredMessage)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 

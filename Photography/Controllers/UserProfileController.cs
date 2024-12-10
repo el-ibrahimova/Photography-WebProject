@@ -68,12 +68,7 @@ namespace Photography.Controllers
 
             if (!result.Succeeded)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-
-                return View(model);
+               return View(model);
             }
 
             TempData["Success"] = "Информацията беше успешно актуализирана!";

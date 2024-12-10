@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Category;
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
+    [Authorize(Roles = AdminRoleName)]
     public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
@@ -15,7 +18,6 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBeAdmin]
         public async Task<IActionResult> Manage()
         {
             var categories = await categoryService.GetAllCategoriesAsync();
@@ -25,14 +27,12 @@ namespace Photography.Controllers
 
 
         [HttpGet]
-        [MustBeAdmin]
         public async Task<IActionResult> Add()
         {
-            return this.View();
+            return View();
         }
 
         [HttpPost]
-        [MustBeAdmin]
         public async Task<IActionResult> Add(AddCategoryViewModel model)
         {
             if (!ModelState.IsValid)
@@ -46,7 +46,6 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBeAdmin]
         public async Task<IActionResult> Edit(string id)
         {
             Guid categoryGuid = Guid.Empty;
@@ -59,14 +58,13 @@ namespace Photography.Controllers
 
             if (model == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return View(model);
         }
 
         [HttpPost]
-        [MustBeAdmin]
         public async Task<IActionResult> Edit(CategoryFormViewModel model)
         {
             if (string.IsNullOrEmpty(model.Id))
@@ -85,7 +83,6 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBeAdmin]
         public async Task<IActionResult> Delete(string id)
         {
             Guid categoryIdGuid = Guid.Empty;
@@ -98,14 +95,13 @@ namespace Photography.Controllers
 
             if (model == null)
             {
-                return RedirectToAction("Manage", "Category");
+                return NotFound();
             }
 
             return View(model);
         }
 
         [HttpPost]
-        [MustBeAdmin]
         public async Task<IActionResult> Delete(CategoryFormViewModel model)
         {
             bool isDeleted = await categoryService.DeleteCategoryAsync(model.Id);

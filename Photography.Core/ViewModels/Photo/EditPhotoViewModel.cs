@@ -40,6 +40,7 @@
         public bool IsPrivate { get; set; }
 
         public string? UserOwnerId { get; set; } = null!;
+        public string UserPhotographerId { get; set; }
 
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();

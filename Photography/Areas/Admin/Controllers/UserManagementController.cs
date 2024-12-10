@@ -33,7 +33,7 @@ namespace Photography.Areas.Admin.Controllers
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return this.RedirectToAction(nameof(Index));
+                return Unauthorized();
             }
 
             bool userExist = await userService
@@ -41,7 +41,7 @@ namespace Photography.Areas.Admin.Controllers
 
             if (!userExist)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool assignResult = await userService
@@ -61,7 +61,7 @@ namespace Photography.Areas.Admin.Controllers
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return RedirectToAction(nameof(Index));
+                return Unauthorized();
             }
 
             bool userExist = await userService
@@ -69,7 +69,7 @@ namespace Photography.Areas.Admin.Controllers
 
             if (!userExist)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool removeResult = await userService
@@ -89,14 +89,14 @@ namespace Photography.Areas.Admin.Controllers
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return RedirectToAction(nameof(Index));
+                return Unauthorized();
             }
 
             bool userExists = await userService
                 .UserExistByIdAsync(userGuid);
             if (!userExists)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool isUserPhotographer = await userService.IsUserPhotographerAsync(userGuid);
@@ -139,7 +139,7 @@ namespace Photography.Areas.Admin.Controllers
             Guid userGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userGuid))
             {
-                return RedirectToAction(nameof(Index));
+                return Unauthorized();
             }
 
             bool userExist = await userService
@@ -147,7 +147,7 @@ namespace Photography.Areas.Admin.Controllers
 
             if (!userExist)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool removeResult = await userService

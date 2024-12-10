@@ -36,7 +36,7 @@ namespace Photography.Core.Services
         public async Task<CategoryFormViewModel?> GetCategoryToEditAsync(Guid categoryId)
         {
             Category? category = await context.Categories
-                .Where(c => c.IsDeleted == false && c.Id == categoryId)
+                .Where(c =>c.Id == categoryId && c.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             if (category == null)
@@ -87,7 +87,7 @@ namespace Photography.Core.Services
         {
             Category? category = await context.Categories
                 .Include(p => p.PhotosCategories)
-                .FirstOrDefaultAsync(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false);
+                .FirstOrDefaultAsync(c => c.IsDeleted == false&&  c.Id.ToString().ToLower() == categoryId.ToLower());
 
             if (category == null)
             {

@@ -12,6 +12,14 @@
         .ToArrayAsync();
 }
 
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="container mt-5">
     <h1 class="text-center mb-4">Управление на потребители</h1>
 

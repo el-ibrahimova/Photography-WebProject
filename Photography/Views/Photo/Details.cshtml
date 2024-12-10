@@ -30,20 +30,29 @@
 
     <div class="col-md-12">
         <div class="card-body" style="line-height: 1.8;">
-           
+
             <h5 style="font-size: 1.5rem; margin-top: 15px; margin-bottom: 20px; line-height: 1.8;">
                 @Model.Description
             </h5>
-
-            @if (Model.TagUser != null)
-            {
-                <h5 class="card-title">Таг: @Model.TagUser</h5>
-            }
             
+            <td>@if (Model.TagUser != null)
+            {
+                <p>Таг: @Model.TagUser </p>
+            }
+            else
+            {
+                <p>Таг: ---  </p>
+            }
+            </td>
+
             <td>
                 @if (Model.Photographer != null)
                 {
-                    <p>@Model.Photographer.BrandName  </p>
+                    <p>Фотограф: @Model.Photographer.BrandName  </p>
+                }
+                else
+                {
+                    <p>Фотограф: ---  </p>
                 }
             </td>
             <p class="card-text">Добавена на: @Model.UploadedAt</p>

@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Photography.Infrastructure\Photography.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Views\Shared\" />
-  </ItemGroup>
-
 </Project>

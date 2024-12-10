@@ -12,7 +12,6 @@
             this.UploadedAt = DateTime.UtcNow.ToString(EntityDateFormat);
         }
 
-
         [StringLength(TagUserMaxLength, 
             MinimumLength = TagUserMinLength, 
             ErrorMessage = LengthMessage)]
@@ -37,12 +36,9 @@
             ErrorMessage = LengthMessage)]
         [Display(Name = "URL на снимката")]
         public string ImageUrl { get; set; } = null!;
-
-       public bool IsPrivate { get; set; }
-
-        public string UserOwnerId { get; set; } 
-        public string? PhotographerId { get; set; }
-
+        public bool IsPrivate { get; set; }
+        public string? UserOwnerId { get; set; }
+        
         public ICollection<UserViewModel> UserPhotoOwners { get; set; } = new HashSet<UserViewModel>();
         public ICollection<Guid> SelectedCategoryIds { get; set; } = new HashSet<Guid>(); 
         public ICollection<CategoryViewModel> Categories { get; set; } = new HashSet<CategoryViewModel>();

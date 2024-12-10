@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Photography.Extensions;
 using Photography.Infrastructure.Data;
@@ -38,11 +39,14 @@ namespace Photography
                 .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddUserManager<UserManager<ApplicationUser>>();
 
-            
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
 
-            // add services from Extension method ServiceCollectionExtension
+            builder.Services.AddControllersWithViews(cfg =>
+            {
+                // very important security check
+                cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
+            builder.Services.AddRazorPages();
             builder.Services.AddServices();
 
             var app = builder.Build();
@@ -70,17 +74,7 @@ namespace Photography
 
             app.SeedAdministrator(adminEmail, adminUsername, adminPassword);
 
-            // user Role User
-            using (var scope = app.Services.CreateScope())
-            {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-
-                if (!roleManager.RoleExistsAsync("User").GetAwaiter().GetResult())
-                {
-                    roleManager.CreateAsync(new IdentityRole<Guid>("User")).GetAwaiter().GetResult();
-                }
-            }
-
+          
             app.MapControllerRoute(
                 name: "Areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Photography.Attributes;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Photography.Controllers;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photographer;
 using Photography.Extensions;
+using static Photography.Common.ApplicationConstants;
 using static Photography.Common.EntityValidationMessages;
 
-namespace Photography.Controllers
+namespace Photography.Areas.Admin.Controllers
 {
+    [Area(AdminRoleName)]
+    [Authorize(Roles = AdminRoleName)]
     public class PhotographerController : BaseController
     {
         private readonly IPhotographerService photographerService;
@@ -17,7 +21,6 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBeAdmin]
         public IActionResult Add()
         {
             var model = new AddPhotographerViewModel();
@@ -26,7 +29,6 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        [MustBeAdmin]
         public async Task<IActionResult> Add(AddPhotographerViewModel model)
         {
             if (await photographerService.UserWithBrandNameExistAsync(model.BrandName))
@@ -39,14 +41,14 @@ namespace Photography.Controllers
                 return View(model);
             }
 
-           bool result = await photographerService.CreateAsync(User.GetUserId()!, model.BrandName);
+            bool result = await photographerService.CreateAsync(User.GetUserId()!, model.BrandName);
 
-           if (result == false)
-           {
-               return BadRequest();
-           }
+            if (result == false)
+            {
+                return BadRequest();
+            }
 
-           return RedirectToAction("Index", "UserManagement");
+            return RedirectToAction("Index", "UserManagement");
         }
     }
 }

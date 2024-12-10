@@ -4,13 +4,14 @@ using Photography.Attributes;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Photo;
 using Photography.Extensions;
+using static Photography.Common.ApplicationConstants;
+
 namespace Photography.Controllers
 {
     public class PhotoController : BaseController
     {
         private readonly IPhotoService photoService;
-
-
+        
         public PhotoController(IPhotoService _photoService)
         {
             photoService = _photoService;
@@ -87,7 +88,7 @@ namespace Photography.Controllers
             Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userIdGuid))
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
           if (!ModelState.IsValid)
@@ -100,7 +101,7 @@ namespace Photography.Controllers
 
             if (result == false)
             {
-                return this.View(model);
+                return View(model);
             }
 
             return RedirectToAction(nameof(Manage));
@@ -115,7 +116,7 @@ namespace Photography.Controllers
             Guid photoIdGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoIdGuid))
             {
-                return BadRequest();
+                return NotFound();
             }
 
             Guid userIdGuid = Guid.Empty;
@@ -132,7 +133,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Gallery));
             }
 
-            await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
+          await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
 
             return RedirectToAction(nameof(Gallery));
         }
@@ -144,14 +145,14 @@ namespace Photography.Controllers
             Guid photoGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoGuid))
             {
-                return RedirectToAction("Gallery", "Photo");
+                return NotFound();
             }
-
+            
             DetailsViewModel? model = await photoService.GetPhotoDetailsAsync(photoGuid);
 
             if (model == null)
             {
-                return RedirectToAction(nameof(Gallery));
+                return NotFound();
             }
 
             return View(model);
@@ -160,12 +161,12 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Favorite()
         {
-            string userId = GetUserId() ?? String.Empty;
+            string userId = GetUserId();
 
             Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userIdGuid))
             {
-                return RedirectToAction(nameof(Gallery));
+                return Unauthorized();
             }
 
             ICollection<FavoriteViewModel> model = await photoService.GetFavoritePhotosAsync(userIdGuid);
@@ -176,25 +177,24 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToFavorite(string id)
         {
-            string? userId = GetUserId();
+            string userId = GetUserId();
 
             Guid photoIdGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoIdGuid))
             {
-                return RedirectToAction(nameof(Gallery));
+                return NotFound();
             }
 
             Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(userId, ref userIdGuid))
             {
-                return RedirectToAction(nameof(Gallery));
+                return Unauthorized();
             }
 
             bool isAdded = await photoService.AddPhotoToFavoritesAsync(userIdGuid, photoIdGuid);
 
             if (!isAdded)
             {
-                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше добавена в любими.";
                 return RedirectToAction(nameof(Gallery));
             }
 
@@ -204,7 +204,7 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromFavorite(string id)
         {
-            string userId = GetUserId() ?? String.Empty;
+            string userId = GetUserId();
 
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -215,7 +215,6 @@ namespace Photography.Controllers
 
             if (!isRemoved)
             {
-                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше премахната от любими.";
                 return RedirectToAction(nameof(Favorite));
             }
 
@@ -223,25 +222,32 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBePhotographer]
         public async Task<IActionResult> Edit(string id)
         {
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(id, GetUserId());
+
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            {
+                return Unauthorized();
+            }
+
             Guid photoGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoGuid))
             {
                 return RedirectToAction(nameof(Gallery));
-            }
+            } 
 
             var model = await photoService.GetPhotoToEditAsync(photoGuid);
             if (model == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             string userId = GetUserId() ?? String.Empty;
 
             Guid userIdGuid = Guid.Empty;
-            if (!IsGuidValid(userId, ref userIdGuid) || model.UserOwnerId != userIdGuid.ToString())
+            if (!IsGuidValid(userId, ref userIdGuid) && model.UserPhotographerId != userIdGuid.ToString())
             {
                 return Unauthorized();
             }
@@ -250,9 +256,15 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoViewModel model)
         {
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(model.Id, GetUserId());
+
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            {
+                return Unauthorized();
+            }
 
             bool result = await photoService.EditPhotoAsync(model);
 
@@ -277,6 +289,7 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
+          
             if (!User.IsAdmin() && !isPhotographer)
             {
                 return Unauthorized();
@@ -304,15 +317,16 @@ namespace Photography.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
-        {
+        { 
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(id, GetUserId());
 
-            if (!User.IsAdmin() && !isPhotographer)
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
             {
                 return Unauthorized();
             }
 
-            Guid photoGuid = Guid.Empty;
+          Guid photoGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoGuid))
             {
                 return NotFound();
@@ -332,8 +346,9 @@ namespace Photography.Controllers
         public async Task<IActionResult> Delete(DeleteViewModel model)
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(model.Id, GetUserId());
 
-            if (!(User.IsAdmin() || isPhotographer))
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
             {
                 return Unauthorized();
             }
@@ -342,7 +357,6 @@ namespace Photography.Controllers
 
             if (!isDeleted)
             {
-                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Снимктата не беше изтрита.";
                 return RedirectToAction(nameof(Manage));
             }
 

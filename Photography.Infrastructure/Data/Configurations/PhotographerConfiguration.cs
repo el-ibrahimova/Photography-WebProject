@@ -8,7 +8,6 @@ namespace Photography.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Photographer> builder)
         {
-
             builder.HasData(SeedPhotographers());
         }
 

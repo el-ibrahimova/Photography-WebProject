@@ -22,6 +22,6 @@ namespace Photography.Core.Interfaces
         Task<bool> DeletePhotoShootAsync(string photoShootId);
 
         Task <Guid> GetPhotographerIdByUserIdAsync(Guid userId);
-
+        Task <bool> IsPhotoShootOwnedByPhotographerAsync(string photoShootIs, string userId);
     }
 }

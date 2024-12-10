@@ -8,5 +8,6 @@
         public string? DeletedAt { get; set; }
         public string UserOwnerId { get; set; } = null!;
         public string Owner { get; set; } = null!;
+        public string UserPhotographerId { get; set; } = null!;
     }
 }

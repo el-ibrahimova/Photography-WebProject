@@ -21,8 +21,8 @@
             <div class="card-footer">
                 <form asp-action="Delete" method="post">
                     <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="TagUser" />
                     <input type="hidden" asp-for="UserOwnerId" />
+                    <input type="hidden" asp-for="@Model.UserPhotographerId" />
 
                     <button type="submit" class="btn btn-danger">Да</button>
                     <a asp-controller="Photo" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Отказ</a>

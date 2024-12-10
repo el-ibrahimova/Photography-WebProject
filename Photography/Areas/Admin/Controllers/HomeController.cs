@@ -1,8 +1,7 @@
 ﻿namespace Photography.Areas.Admin.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
+    using Microsoft.AspNetCore.Mvc;
     using static Common.ApplicationConstants;
 
     [Area(AdminRoleName)]

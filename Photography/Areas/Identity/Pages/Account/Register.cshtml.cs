@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Photography.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.CodeAnalysis;
+using static Photography.Common.EntityValidationMessages;
+using static Photography.Common.EntityConstants.User;
 
 namespace Photography.Areas.Identity.Pages.Account
 {
@@ -17,7 +18,7 @@ namespace Photography.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly ILogger<RegisterModel> _logger;
-
+        
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
@@ -53,13 +54,13 @@ namespace Photography.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = RequiredMessage)]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [Required(ErrorMessage = RequiredMessage)]
+            [StringLength(UsernameMaxLength, MinimumLength=UsernameMinLength, ErrorMessage = LengthMessage)]
             [Display(Name = "Потребителско име")]
             public string Username { get; set; }
 
@@ -67,8 +68,8 @@ namespace Photography.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = RequiredMessage)]
+            [StringLength(PasswordMaxLength, MinimumLength = PasswordMinLength, ErrorMessage = PasswordMessage)]
             [DataType(DataType.Password)]
             [Display(Name = "Парола")]
             public string Password { get; set; }
@@ -78,8 +79,8 @@ namespace Photography.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Потвърди паролата")]
+            [Compare("Password", ErrorMessage = "Паролите не съвпадат.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -105,12 +106,10 @@ namespace Photography.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-
+                    
 
                     await _userManager.AddToRoleAsync(user, "User");
-
-
+                    
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
+using Photography.Core.Services;
 using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
@@ -12,10 +13,12 @@ namespace Photography.Controllers
     public class PhotoShootController : BaseController
     {
         private readonly IPhotoShootService photoShootService;
+        private readonly IPhotoService photoService;
 
-        public PhotoShootController(IPhotoShootService _photoShootService)
+        public PhotoShootController(IPhotoShootService _photoShootService, IPhotoService _photoService)
         {
             photoShootService = _photoShootService;
+            photoService = _photoService;
         }
 
         [AllowAnonymous]
@@ -56,7 +59,6 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add(AddPhotoShootViewModel model)
         {
-          
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -73,7 +75,6 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> Manage()
         {
             bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
@@ -83,10 +84,8 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            var userId = GetUserId();
-
             Guid userIdGuid=Guid.Empty;
-            if (!IsGuidValid(userId, ref userIdGuid))
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
@@ -97,19 +96,24 @@ namespace Photography.Controllers
         }
 
         [HttpGet]
-        [MustBePhotographer]
         public async Task<IActionResult> Edit(string id)
         {
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoShootService.IsPhotoShootOwnedByPhotographerAsync(id, GetUserId());
+
+            if ((isPhotographer == false && isOwner == false) || User.IsAdmin() == false) 
+            {
+                return Unauthorized();
+            }
+
             Guid photoShootGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoShootGuid))
             {
                 return NotFound();
             }
 
-            string currentUserId = GetUserId();
-          
             Guid userIdGuid = Guid.Empty;
-            if (!IsGuidValid(currentUserId, ref userIdGuid))
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
@@ -131,9 +135,16 @@ namespace Photography.Controllers
         }
 
         [HttpPost]
-        [MustBePhotographer]
         public async Task<IActionResult> Edit(EditPhotoShootViewModel model)
         {
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoShootService.IsPhotoShootOwnedByPhotographerAsync(model.Id, GetUserId());
+
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
+            {
+                return Unauthorized();
+            }
+
             var result = await photoShootService.EditPhotoShootAsync(model);
 
             if (!result)
@@ -174,9 +185,10 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoShootService.IsPhotoShootOwnedByPhotographerAsync(id, GetUserId());
 
-            if (!User.IsAdmin() && !isPhotographer)
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
             {
                 return Unauthorized();
             }
@@ -200,15 +212,16 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeletePhotoShootViewModel model)
         {
-            bool isPhotographer = await photoShootService.IsUserPhotographerAsync(GetUserId());
+            bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
+            bool isOwner = await photoShootService.IsPhotoShootOwnedByPhotographerAsync(model.Id, GetUserId());
 
-            if (!(User.IsAdmin() || isPhotographer))
+            if ((!isPhotographer && !User.IsAdmin()) && !isOwner)
             {
                 return Unauthorized();
             }
 
-            
-          bool isDeleted= await photoShootService.DeletePhotoShootAsync(model.Id);
+
+            bool isDeleted= await photoShootService.DeletePhotoShootAsync(model.Id);
 
           if (!isDeleted)
           {
@@ -278,8 +291,7 @@ namespace Photography.Controllers
 
             return View(model);
         }
-
-
+        
         [HttpPost]
         public async Task<IActionResult> DeclineParticipation(string id)
         {
@@ -288,12 +300,10 @@ namespace Photography.Controllers
             var isRemoved = await photoShootService.RemoveUserFromParticipation(userId, id);
             if(isRemoved==false)
             {
-                //  TempData["ErrorMessage"] = "Възникна неочаквана грешка. Вашето участие не беше отказано..";
                 return RedirectToAction(nameof(UserPhotoShoots));
             }
 
             return RedirectToAction(nameof(UserPhotoShoots));
         }
-
     }
 }

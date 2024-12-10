@@ -52,10 +52,10 @@ namespace Photography.Infrastructure.Data.Models
         public ApplicationUser? Owner { get; set; }
 
         [Comment("Photographer")]
-        public Guid? PhotographerId { get; set; }
+        public Guid PhotographerId { get; set; }
 
         [ForeignKey(nameof(PhotographerId))] 
-        public Photographer? Photographer { get; set; }
+        public Photographer Photographer { get; set; } = null!;
         
 
         public ICollection<FavoritePhoto> FavoritePhotos { get; set; } = new HashSet<FavoritePhoto>();
