@@ -45,6 +45,7 @@
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
+
                     @if (!await BaseService.IsUserPhotographerAsync(User.GetUserId()))
                     {
                         <div class="text-center">

@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Photography.Attributes;
 using Photography.Core.Interfaces;
-using Photography.Core.Services;
 using Photography.Core.ViewModels.PhotoShoot;
 using Photography.Extensions;
 using Photography.Infrastructure.Data.Models;
-
+using static Photography.Common.ApplicationConstants;
 
 namespace Photography.Controllers
 {
@@ -71,6 +70,7 @@ namespace Photography.Controllers
                 return View(model);
             }
 
+            TempData[SuccessMessage] = "Успешно добавихте фотосесия";
             return RedirectToAction(nameof(Manage));
         }
 
@@ -110,8 +110,7 @@ namespace Photography.Controllers
             {
                 return Unauthorized();
             }
-
-
+            
             Guid photoShootGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoShootGuid))
             {
@@ -166,7 +165,6 @@ namespace Photography.Controllers
                     return NotFound();
                 }
 
-                string currentUserId = GetUserId();
                 Guid userIdGuid = Guid.Empty;
                 if (!IsGuidValid(model.Id, ref userIdGuid))
                 {
@@ -249,6 +247,7 @@ namespace Photography.Controllers
               return BadRequest();
           }
 
+          TempData[SuccessMessage] = "Успешно изтрихте фотосесия";
             return RedirectToAction("Manage", "PhotoShoot");
         }
 
@@ -324,6 +323,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(UserPhotoShoots));
             }
 
+            TempData[InfoMessage] = "Успешно отказахте участие във фотосесия";
             return RedirectToAction(nameof(UserPhotoShoots));
         }
     }

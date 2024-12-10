@@ -42,6 +42,7 @@ namespace Photography.Controllers
 
             await categoryService.AddCategoryAsync(model);
 
+            TempData[SuccessMessage] = "Успешно добавихте категория";
             return RedirectToAction(nameof(Manage));
         }
 
@@ -108,10 +109,11 @@ namespace Photography.Controllers
 
             if (!isDeleted)
             {
-                TempData["ErrorMessage"] = "Възникна неочаквана грешка. Категорията не беше изтрита.";
+                TempData[ErrorMessage] = "Възникна неочаквана грешка. Категорията не беше изтрита.";
                 return RedirectToAction(nameof(Delete), new { id = model.Id });
             }
 
+            TempData[SuccessMessage] = "Успешно изтрихте категория.";
             return RedirectToAction("Manage", "Category");
         }
     }

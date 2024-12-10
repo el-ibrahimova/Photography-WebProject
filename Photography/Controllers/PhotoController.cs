@@ -11,7 +11,7 @@ namespace Photography.Controllers
     public class PhotoController : BaseController
     {
         private readonly IPhotoService photoService;
-        
+
         public PhotoController(IPhotoService _photoService)
         {
             photoService = _photoService;
@@ -91,7 +91,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-          if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 model = await photoService.GetAddPhotoAsync();
                 return View(model);
@@ -101,9 +101,11 @@ namespace Photography.Controllers
 
             if (result == false)
             {
+                TempData[ErrorMessage] = "Възникна неочаквана грешка. Снимката не беше добавена";
                 return View(model);
             }
 
+            TempData[SuccessMessage] = "Успешно добавихте снимка.";
             return RedirectToAction(nameof(Manage));
         }
 
@@ -133,7 +135,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Gallery));
             }
 
-          await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
+            await photoService.IncreaseRatingAsync(photoIdGuid, userIdGuid);
 
             return RedirectToAction(nameof(Gallery));
         }
@@ -147,7 +149,7 @@ namespace Photography.Controllers
             {
                 return NotFound();
             }
-            
+
             DetailsViewModel? model = await photoService.GetPhotoDetailsAsync(photoGuid);
 
             if (model == null)
@@ -198,6 +200,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Gallery));
             }
 
+            TempData[SuccessMessage] = "Успешно добавихте снимка в любими";
             return RedirectToAction(nameof(Favorite));
         }
 
@@ -218,6 +221,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Favorite));
             }
 
+            TempData[SuccessMessage] = "Успешно премахнахте снимката от любими";
             return RedirectToAction(nameof(Favorite));
         }
 
@@ -241,7 +245,7 @@ namespace Photography.Controllers
             if (!IsGuidValid(id, ref photoGuid))
             {
                 return RedirectToAction(nameof(Gallery));
-            } 
+            }
 
             var model = await photoService.GetPhotoToEditAsync(photoGuid);
             if (model == null)
@@ -299,7 +303,6 @@ namespace Photography.Controllers
         {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
 
-          
             if (!User.IsAdmin() && !isPhotographer)
             {
                 return Unauthorized();
@@ -327,7 +330,7 @@ namespace Photography.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
-        { 
+        {
             bool isPhotographer = await photoService.IsUserPhotographerAsync(GetUserId());
             bool isOwner = await photoService.IsPhotoOwnedByPhotographerAsync(id, GetUserId());
 
@@ -380,6 +383,7 @@ namespace Photography.Controllers
                 return RedirectToAction(nameof(Manage));
             }
 
+            TempData[SuccessMessage] = "Успешно изтрихте снимка";
             return RedirectToAction(nameof(Manage));
         }
     }

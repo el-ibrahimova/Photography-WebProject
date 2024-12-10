@@ -1,4 +1,5 @@
-﻿using Photography.Controllers;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Photography.Controllers;
 using Photography.Core.Interfaces;
 using Photography.Core.ViewModels.Admin.UserManagement;
 
@@ -52,6 +53,7 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData[SuccessMessage] = "Успешно зададохте роля";
             return RedirectToAction(nameof(Index));
         }
 
@@ -80,6 +82,7 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData[SuccessMessage] = "Успешно премахнахте роля";
             return RedirectToAction(nameof(Index));
         }
 
@@ -114,9 +117,11 @@ namespace Photography.Areas.Admin.Controllers
                 .DeleteUserAsync(userGuid);
             if (!removeResult)
             {
+                TempData[ErrorMessage] = "Възникна неочаквана грешка. Потребителят не беше изтрит.";
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData[SuccessMessage] = "Успешно изтрихте потребител.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -130,6 +135,7 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData[SuccessMessage] = "Успешно направихте потребителя фотограф";
             return RedirectToAction(nameof(Index));
         }
 
@@ -158,6 +164,7 @@ namespace Photography.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData[SuccessMessage] = "Успешно премахнахте потребителя от роля на фотограф";
             return RedirectToAction(nameof(Index));
         }
     }

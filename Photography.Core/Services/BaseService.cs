@@ -39,7 +39,7 @@ namespace Photography.Core.Services
                 return false;
             }
 
-            bool result = await this.context.Photographers.AnyAsync(m => m.UserId.ToString().ToLower() == userId);
+            bool result = await this.context.Photographers.AnyAsync(m => m.UserId.ToString().ToLower() == userId.ToLower());
 
             return result;
         }
