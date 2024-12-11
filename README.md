@@ -33,7 +33,7 @@ The NIES Photography Web Application is a platform crafted to empower photograph
 ---
 
 ## 🗂️ Database Structure
-
+![Database Diagram ](images/diagram.jpg)
 The application is supported by a well-designed database that handles:
 - Users, roles, and permissions.
 - Photos, categories, tags, and visibility settings.
@@ -57,6 +57,10 @@ The application is supported by a well-designed database that handles:
 - **Input Validation**: Robust validation mechanisms to maintain data integrity.
 - **Soft Delete**: Supports recoverable deletion for critical data such as photos and categories.
 
+
+![Description of image](images/1.jpg)
+![Description of image](images/2.jpg)
+![Description of image](images/3.jpg)
 ---
 
 ## 📄 License
@@ -64,4 +68,4 @@ The Photography Services Web Application is licensed under the MIT License. Refe
 
 ---
 
-**The app is still under construction**
+## **    !!! The app is still under construction   !!!   **
