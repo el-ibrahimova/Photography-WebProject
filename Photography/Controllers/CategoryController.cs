@@ -68,7 +68,7 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryFormViewModel model)
         {
-            if (string.IsNullOrEmpty(model.Id))
+            if (string.IsNullOrWhiteSpace(model.Id))
             {
                 return Unauthorized();
             }

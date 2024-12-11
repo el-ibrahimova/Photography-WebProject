@@ -9,13 +9,11 @@
     public class CategoryService : BaseService, ICategoryService
     {
         private readonly PhotographyDbContext context;
-        private readonly IPhotoService photoService;
 
-        public CategoryService(PhotographyDbContext data, IPhotoService _photoService)
+        public CategoryService(PhotographyDbContext data)
             : base(data)
         {
             context = data;
-            photoService = _photoService;
         }
 
 

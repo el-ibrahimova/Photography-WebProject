@@ -19,53 +19,53 @@ namespace Photography.Test
         private ICategoryService categoryService;
 
         [SetUp]
-        public void SetUp()
+        public async Task Setup()
         {
             var options = new DbContextOptionsBuilder<PhotographyDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: "PhotographyInMemoryDb" + Guid.NewGuid().ToString())
                 .Options;
 
             context = new PhotographyDbContext(options);
-            categoryService = new CategoryService(context, null); // `null` for IPhotoService as it's not used in these tests
+            categoryService = new CategoryService(context);
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task Teardown()
         {
-            context.Dispose();
+            await context.DisposeAsync();
         }
 
-        //[Test]
-        //public async Task AddCategoryAsync_ShouldAddCategory()
-        //{
-        //    // Arrange
-        //    var model = new AddCategoryViewModel { Name = "Test Category" };
+        [Test]
+        public async Task AddCategoryAsync_ShouldAddCategory()
+        {
+            // Arrange
+            var model = new AddCategoryViewModel { Name = "Test Category" };
 
-        //    // Act
-        //    var result = await categoryService.AddCategoryAsync(model);
+            // Act
+            var result = await categoryService.AddCategoryAsync(model);
 
-        //    // Assert
-        //    Assert.IsTrue(result);
-        //    Assert.That(context.Categories.Count(), Is.EqualTo(1));
-        //    Assert.That(context.Categories.First().Name, Is.EqualTo("Test Category"));
-        //}
+            // Assert
+            Assert.IsTrue(result);
+            Assert.That(context.Categories.Count(), Is.EqualTo(1));
+            Assert.That(context.Categories.First().Name, Is.EqualTo("Test Category"));
+        }
 
-        //[Test]
-        //public async Task GetCategoryToEditAsync_ShouldReturnCategory()
-        //{
-        //    // Arrange
-        //    var category = new Category { Name = "Edit Test", IsDeleted = false };
-        //    await context.Categories.AddAsync(category);
-        //    await context.SaveChangesAsync();
+        [Test]
+        public async Task GetCategoryToEditAsync_ShouldReturnCategory()
+        {
+            // Arrange
+            var category = new Category { Name = "Edit Test", IsDeleted = false };
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
 
-        //    // Act
-        //    var result = await categoryService.GetCategoryToEditAsync(category.Id.ToString());
+            // Act
+            var result = await categoryService.GetCategoryToEditAsync(category.Id.ToString());
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.That(result.Id, Is.EqualTo(category.Id.ToString()));
-        //    Assert.That(result.Name, Is.EqualTo("Edit Test"));
-        //}
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Id, Is.EqualTo(category.Id.ToString()));
+            Assert.That(result.Name, Is.EqualTo("Edit Test"));
+        }
 
 
         [Test]
@@ -90,40 +90,84 @@ namespace Photography.Test
             Assert.That(context.Categories.First().Name, Is.EqualTo("New Name"));
         }
 
-        //[Test]
-        //public async Task DeleteCategoryAsync_ShouldMarkCategoryAsDeleted()
-        //{
-        //    // Arrange
-        //    var category = new Category { Name = "To Delete", IsDeleted = false };
-        //    await context.Categories.AddAsync(category);
-        //    await context.SaveChangesAsync();
 
-        //    // Act
-        //    var result = await categoryService.DeleteCategoryAsync(category.Id.ToString());
+        [Test]
+        public async Task GetCategoryDelete_ShouldReturnCategoryFormViewModel_WhenCategoryExistsAndIsNotDeleted()
+        {
+            // Arrange
+            var category = new Category
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestCategory",
+                IsDeleted = false
+            };
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
 
-        //    // Assert
-        //    Assert.IsTrue(result);
-        //    Assert.IsTrue(context.Categories.First().IsDeleted);
-        //}
+            // Act
+            var result = await categoryService.GetCategoryDelete(category.Id.ToString());
 
-        //[Test]
-        //public async Task GetAllCategoriesAsync_ShouldReturnAllCategories()
-        //{
-        //    // Arrange
-        //    await context.Categories.AddRangeAsync(
-        //        new Category { Name = "Category 1", IsDeleted = false },
-        //        new Category { Name = "Category 2", IsDeleted = false }
-        //    );
-        //    await context.SaveChangesAsync();
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Name, Is.EqualTo("TestCategory"));
+        }
 
-        //    // Act
-        //    var result = await categoryService.GetAllCategoriesAsync();
+        [Test]
+        public async Task GetCategoryDelete_ShouldReturnNull_WhenCategoryIsDeleted()
+        {
+            // Arrange
+            var category = new Category
+            {
+                Id = Guid.NewGuid(),
+                Name = "DeletedCategory",
+                IsDeleted = true
+            };
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
 
-        //    // Assert
-        //    Assert.AreEqual(2, result.Count);
-        //    Assert.IsTrue(result.Any(c => c.Name == "Category 1"));
-        //    Assert.IsTrue(result.Any(c => c.Name == "Category 2"));
-        //}
+            // Act
+            var result = await categoryService.GetCategoryDelete(category.Id.ToString());
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+
+        [Test]
+        public async Task DeleteCategoryAsync_ShouldMarkCategoryAsDeleted()
+        {
+            // Arrange
+            var category = new Category { Name = "To Delete", IsDeleted = false };
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = await categoryService.DeleteCategoryAsync(category.Id.ToString());
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsTrue(context.Categories.First().IsDeleted);
+        }
+
+
+        [Test]
+        public async Task GetAllCategoriesAsync_ShouldReturnAllCategories()
+        {
+            // Arrange
+            await context.Categories.AddRangeAsync(
+                new Category { Name = "Category 1", IsDeleted = false },
+                             new Category { Name = "Category 2", IsDeleted = false });
+
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = await categoryService.GetAllCategoriesAsync();
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.IsTrue(result.Any(c => c.Name == "Category 1"));
+            Assert.IsTrue(result.Any(c => c.Name == "Category 2"));
+        }
     }
 }
 
