@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photography.Infrastructure"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photography.Core", "Photography.Core\Photography.Core.csproj", "{2A219D8E-C1C1-4ECF-B1F3-E246D5EC9DF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photography.Test", "Photography.Test\Photography.Test.csproj", "{640DBA5C-7FA6-4954-8E1A-EE74F3CF1670}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2A219D8E-C1C1-4ECF-B1F3-E246D5EC9DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A219D8E-C1C1-4ECF-B1F3-E246D5EC9DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A219D8E-C1C1-4ECF-B1F3-E246D5EC9DF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{640DBA5C-7FA6-4954-8E1A-EE74F3CF1670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{640DBA5C-7FA6-4954-8E1A-EE74F3CF1670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{640DBA5C-7FA6-4954-8E1A-EE74F3CF1670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{640DBA5C-7FA6-4954-8E1A-EE74F3CF1670}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

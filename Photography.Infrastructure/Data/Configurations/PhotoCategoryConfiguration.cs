@@ -114,7 +114,12 @@ namespace Photography.Infrastructure.Data.Configurations
                 {
                     PhotoId = Guid.Parse("B597A498-68D9-4883-B081-9F53D2237C2B"),
                     CategoryId = Guid.Parse("13A08262-6477-40F9-8DB7-D6EBD4178E47")
-                }
+                },
+                new PhotoCategory()
+                {
+                    PhotoId = Guid.Parse("A9FD9095-0C36-4E99-AFAB-467263EF2445"),
+                    CategoryId = Guid.Parse("13A08262-6477-40F9-8DB7-D6EBD4178E47")
+                },
             };
             
             return photoCategory;

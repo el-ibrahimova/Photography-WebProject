@@ -22,7 +22,14 @@ namespace Photography.Infrastructure.Data.Configurations
                     UserId = Guid.Parse("95D458A7-115A-4DB5-9319-809C7763D841"),
                     RoleId = Guid.Parse("8246F96F-BD49-4DB2-69AE-08DD176D0F38")
                 },
-                
+              
+                //  photographer Miki
+                new IdentityUserRole<Guid>
+                {
+                    UserId = Guid.Parse("5DBF7705-08FA-472D-BF9C-1FAEAA220749"),
+                    RoleId = Guid.Parse("8246F96F-BD49-4DB2-69AE-08DD176D0F38")
+                },
+
                 //  clientOne
                 new IdentityUserRole<Guid>
                 {

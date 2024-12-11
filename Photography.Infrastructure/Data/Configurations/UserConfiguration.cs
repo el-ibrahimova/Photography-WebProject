@@ -66,12 +66,24 @@ namespace Photography.Infrastructure.Data.Configurations
                 JoinedAt = DateTime.Now,
             };
 
+            ApplicationUser photographerMiki = new ApplicationUser()
+            {
+                Id = Guid.Parse("5DBF7705-08FA-472D-BF9C-1FAEAA220749"),
+                UserName = "PhotographerMiki",
+                NormalizedUserName = "PHOTOGRAPHERMIKI",
+                Email = "photographerMiki@gmail.com",
+                NormalizedEmail = "PHOTOGRAPHERMIKI@GMAIL.COM",
+                SecurityStamp = Guid.NewGuid().ToString(),
+                JoinedAt = DateTime.Now,
+            };
+
             clientUserOne.PasswordHash = passwordHasher.HashPassword(clientUserOne, "Client123ONE");
             clientUserTwo.PasswordHash = passwordHasher.HashPassword(clientUserTwo, "Client123TWO");
             adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "ADMIN123admin");
             photographerUser.PasswordHash = passwordHasher.HashPassword(photographerUser, "Photographer123PH");
+            photographerMiki.PasswordHash = passwordHasher.HashPassword(photographerMiki, "PhotographerMiki");
 
-            List<ApplicationUser> users = new List<ApplicationUser>() { clientUserOne,clientUserTwo, adminUser, photographerUser };
+            List<ApplicationUser> users = new List<ApplicationUser>() { clientUserOne,clientUserTwo, adminUser, photographerUser, photographerMiki};
 
             return users;
         }

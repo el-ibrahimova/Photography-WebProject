@@ -189,7 +189,24 @@ namespace Photography.Infrastructure.Data.Configurations
                     ImageUrl = "https://live.staticflickr.com/65535/54189701467_958b69d5bc_w.jpg",
                     IsPrivate = false,
                     PhotographerId = Guid.Parse("D19B7253-A40E-4D28-8BD0-43410F6A3CA4")
-                }
+                },
+
+                new Photo()
+                {
+                    Id = Guid.Parse("9AE9BB85-BABE-43CA-8FF6-4EDE7DB51F96"),
+                    ImageUrl = "https://live.staticflickr.com/65535/54197310938_28a21d712c_m.jpg",
+                    IsPrivate = false,
+                    PhotographerId = Guid.Parse("01A0E6F6-DA36-4634-9533-E6BD4E861C11")
+                },
+
+                new Photo()
+                {
+                    Id = Guid.Parse("A9FD9095-0C36-4E99-AFAB-467263EF2445"),
+                    ImageUrl = "https://live.staticflickr.com/65535/54197075071_7a81a1ab99_m.jpg",
+                    IsPrivate = false,
+                    PhotographerId = Guid.Parse("01A0E6F6-DA36-4634-9533-E6BD4E861C11")
+                },
+
 
             }; return photos;
         }
