@@ -29,8 +29,6 @@
             public const int UsernameMaxLength = 30;
             public const int PasswordMinLength = 6;
             public const int PasswordMaxLength = 20;
-            public const int EmailMinLength = 10;
-            public const int EmailMaxLength = 25;
             public const string PhoneNumberRegexFormat= "^\\d{10}$";
          
         }

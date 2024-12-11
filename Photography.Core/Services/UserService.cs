@@ -242,19 +242,18 @@
             }
 
             // disconnect from linked photoShoots
-            List<PhotoShoot> relatedPhotoShoots = context.PhotoShoots
+            List<PhotoShoot> relatedPhotoShoots = await context.PhotoShoots
                 .Where(ps => ps.PhotographerId.ToString().ToLower() == photographer.Id.ToString().ToLower())
-                .ToList();
+                .ToListAsync();
             foreach (var photoShoot in relatedPhotoShoots)
             {
                 photoShoot.IsDeleted = true;
             }
-            
 
             // disconnect from linked photos
-            List<Photo> relatedPhotos = context.Photos
+            List<Photo> relatedPhotos = await context.Photos
                 .Where(p => p.PhotographerId.ToString().ToLower() == photographer.Id.ToString().ToLower())
-                .ToList();
+                .ToListAsync();
 
             foreach (var photo in relatedPhotos)
             {

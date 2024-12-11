@@ -30,7 +30,10 @@ namespace Photography.Infrastructure.Data.Configurations
                 Email = "client_one@gmail.com",
                 NormalizedEmail = "CLIENT_ONE@GMAIL.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
-                JoinedAt = DateTime.Now
+                JoinedAt = DateTime.Now,
+                FirstName = "Иво",
+                LastName = "Пенев",
+                PhoneNumber = "0889111111"
             };
 
             ApplicationUser clientUserTwo = new ApplicationUser()
@@ -42,6 +45,9 @@ namespace Photography.Infrastructure.Data.Configurations
                 NormalizedEmail = "CLIENT_TWO@GMAIL.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 JoinedAt = DateTime.Now,
+                FirstName = "Милена",
+                LastName = "Иванова",
+                PhoneNumber = "0889222222"
             };
 
             ApplicationUser adminUser = new ApplicationUser()
@@ -53,6 +59,9 @@ namespace Photography.Infrastructure.Data.Configurations
                 NormalizedEmail = "ADMIN@PHOTOGRAPHY.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 JoinedAt = DateTime.Now,
+                FirstName = "Администратор",
+                LastName = "Тодорова",
+                PhoneNumber = "0889333333"
             };
 
             ApplicationUser photographerUser = new ApplicationUser()
@@ -64,6 +73,9 @@ namespace Photography.Infrastructure.Data.Configurations
                 NormalizedEmail = "PHOTOGRAPHER@GMAIL.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 JoinedAt = DateTime.Now,
+                FirstName = "Ниса",
+                LastName = "Кехайова",
+                PhoneNumber = "0889444444"
             };
 
             ApplicationUser photographerMiki = new ApplicationUser()
@@ -75,6 +87,9 @@ namespace Photography.Infrastructure.Data.Configurations
                 NormalizedEmail = "PHOTOGRAPHERMIKI@GMAIL.COM",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 JoinedAt = DateTime.Now,
+                FirstName = "Микаел",
+                LastName = "Хаджиев",
+                PhoneNumber = "0889555555"
             };
 
             clientUserOne.PasswordHash = passwordHasher.HashPassword(clientUserOne, "Client123ONE");
