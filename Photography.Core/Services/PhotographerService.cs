@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Photography.Core.Interfaces;
-using Photography.Infrastructure.Data;
-using Photography.Infrastructure.Data.Models;
-
-namespace Photography.Core.Services
+﻿namespace Photography.Core.Services
 {
-    public class PhotographerService:BaseService,IPhotographerService
+    using Microsoft.EntityFrameworkCore;
+    using Interfaces;
+    using Infrastructure.Data;
+    using Infrastructure.Data.Models;
+    public class PhotographerService : BaseService, IPhotographerService
     {
-
         private readonly PhotographyDbContext context;
 
         public PhotographerService(PhotographyDbContext data)
@@ -19,7 +17,7 @@ namespace Photography.Core.Services
         public async Task<bool> ExistsByIdAsync(string userId)
         {
             return await context.Photographers
-                .AnyAsync(p=>p.UserId.ToString().ToLower()== userId.ToLower());
+                .AnyAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
         }
 
         public async Task<bool> CreateAsync(string userId, string brandName)
@@ -30,7 +28,7 @@ namespace Photography.Core.Services
             {
                 return false;
             }
-            
+
             var photographer = new Photographer
             {
                 BrandName = brandName,
@@ -44,7 +42,7 @@ namespace Photography.Core.Services
 
         public async Task<bool> UserWithBrandNameExistAsync(string brandName)
         {
-          return  await context.Photographers.AnyAsync(p => p.BrandName == brandName);
+            return await context.Photographers.AnyAsync(p => p.BrandName == brandName);
         }
     }
 }

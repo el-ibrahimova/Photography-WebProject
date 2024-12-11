@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Photography.Core.ViewModels.UserProfile;
-using Photography.Infrastructure.Data.Models;
-
-namespace Photography.Controllers
+﻿namespace Photography.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Core.ViewModels.UserProfile;
+    using Infrastructure.Data.Models;
     public class UserProfileController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -13,14 +12,14 @@ namespace Photography.Controllers
         {
             userManager = _userManager;
         }
-       
-    [HttpGet]
+
+        [HttpGet]
         public async Task<IActionResult> MyProfile()
         {
             string userId = GetUserId();
 
             Guid userIdGuid = Guid.Empty;
-            if (!IsGuidValid(userId, ref userIdGuid))
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
@@ -40,7 +39,7 @@ namespace Photography.Controllers
                 Phone = user.PhoneNumber!
             };
 
-           return View(model);
+            return View(model);
         }
 
 
@@ -68,7 +67,7 @@ namespace Photography.Controllers
 
             if (!result.Succeeded)
             {
-               return View(model);
+                return View(model);
             }
 
             TempData["Success"] = "Информацията беше успешно актуализирана!";

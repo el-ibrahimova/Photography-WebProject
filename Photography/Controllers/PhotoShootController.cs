@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Photography.Attributes;
-using Photography.Core.Interfaces;
-using Photography.Core.ViewModels.PhotoShoot;
-using Photography.Extensions;
-using Photography.Infrastructure.Data.Models;
-using static Photography.Common.ApplicationConstants;
-
-namespace Photography.Controllers
+﻿namespace Photography.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Attributes;
+    using Core.Interfaces;
+    using Core.ViewModels.PhotoShoot;
+    using Extensions;
+    using Infrastructure.Data.Models;
+    using static Common.ApplicationConstants;
     public class PhotoShootController : BaseController
     {
         private readonly IPhotoShootService photoShootService;
@@ -32,17 +31,15 @@ namespace Photography.Controllers
         [MustBePhotographer]
         public async Task<IActionResult> Add()
         {
-            string userId = GetUserId();
-
             Guid userIdGuid = Guid.NewGuid();
-            if (!IsGuidValid(userId, ref userIdGuid))
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
 
             var model = new AddPhotoShootViewModel();
 
-            Guid photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
+            Guid photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(GetUserId());
 
             if (photographerIdGuid == Guid.Empty)
             {
@@ -51,7 +48,7 @@ namespace Photography.Controllers
 
             model.PhotographerId = photographerIdGuid.ToString();
 
-            return this.View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -84,13 +81,13 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            Guid userIdGuid=Guid.Empty;
+            Guid userIdGuid = Guid.Empty;
             if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
 
-            IEnumerable<AllPhotoShootsViewModel> photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync(userIdGuid);
+            IEnumerable<AllPhotoShootsViewModel> photoShoots = await photoShootService.GetAllPhotoShootsForManageAsync();
 
             return View(photoShoots);
         }
@@ -110,7 +107,7 @@ namespace Photography.Controllers
             {
                 return Unauthorized();
             }
-            
+
             Guid photoShootGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoShootGuid))
             {
@@ -122,21 +119,14 @@ namespace Photography.Controllers
             {
                 return Unauthorized();
             }
-            
-            var photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
 
-            if (photographerIdGuid == Guid.Empty)
+            var model = await photoShootService.GetPhotoShootToEditAsync(id);
+            if (model == null)
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
-           var model  = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, photographerIdGuid);
-           if (model == null)
-           {
-               return BadRequest();
-           }
-
-           return View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -171,14 +161,7 @@ namespace Photography.Controllers
                     return Unauthorized();
                 }
 
-                Guid photographerIdGuid = await photoShootService.GetPhotographerIdByUserIdAsync(userIdGuid);
-
-                if (photographerIdGuid == Guid.Empty)
-                {
-                    return Unauthorized();
-                }
-
-                EditPhotoShootViewModel? photoShoot = await photoShootService.GetPhotoShootToEditAsync(photoShootGuid, photographerIdGuid);
+                EditPhotoShootViewModel? photoShoot = await photoShootService.GetPhotoShootToEditAsync(model.Id);
 
                 if (photoShoot == null)
                 {
@@ -213,7 +196,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            DeletePhotoShootViewModel? model = await photoShootService.GetPhotoShootToDelete(photoShootIdGuid);
+            DeletePhotoShootViewModel? model = await photoShootService.GetPhotoShootToDelete(id);
 
             if (model == null)
             {
@@ -240,14 +223,14 @@ namespace Photography.Controllers
             }
 
 
-            bool isDeleted= await photoShootService.DeletePhotoShootAsync(model.Id);
+            bool isDeleted = await photoShootService.DeletePhotoShootAsync(model.Id);
 
-          if (!isDeleted)
-          {
-              return BadRequest();
-          }
+            if (!isDeleted)
+            {
+                return BadRequest();
+            }
 
-          TempData[SuccessMessage] = "Успешно изтрихте фотосесия";
+            TempData[SuccessMessage] = "Успешно изтрихте фотосесия";
             return RedirectToAction("Manage", "PhotoShoot");
         }
 
@@ -255,27 +238,25 @@ namespace Photography.Controllers
         [HttpPost]
         public async Task<IActionResult> DeclareParticipation(string id)
         {
-            Guid photoShootIdGuid=Guid.Empty;
+            Guid photoShootIdGuid = Guid.Empty;
             if (!IsGuidValid(id, ref photoShootIdGuid))
             {
                 return NotFound();
             }
 
-            string currentUserId = GetUserId();
-
-            Guid userIdGuid=Guid.Empty;
-            if (!IsGuidValid(currentUserId, ref userIdGuid))
+            Guid userIdGuid = Guid.Empty;
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
 
-            PhotoShoot? photoShoot = await photoShootService.GetPhotoShootByIdAsync(photoShootIdGuid);
+            PhotoShoot? photoShoot = await photoShootService.GetPhotoShootByIdAsync(id);
             if (photoShoot == null)
             {
                 return NotFound();
             }
 
-            bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(photoShootIdGuid, userIdGuid);
+            bool hasUserDeclared = await photoShootService.HasUserDeclaredParticipationAsync(id, GetUserId());
 
             if (hasUserDeclared)
             {
@@ -286,7 +267,7 @@ namespace Photography.Controllers
                 TempData["Message"] = $"Вие успешно се записахте за фотосесия \"{photoShoot.Name}\"";
             }
 
-            bool result = await photoShootService.AddParticipantToPhotoShoot(photoShootIdGuid, userIdGuid);
+            bool result = await photoShootService.AddParticipantToPhotoShoot(id, GetUserId());
 
             if (result == false)
             {
@@ -299,26 +280,24 @@ namespace Photography.Controllers
         [HttpGet]
         public async Task<IActionResult> UserPhotoShoots()
         {
-            string userId = GetUserId();
-
-            Guid userIdGuid=Guid.Empty;
-            if (!IsGuidValid(userId, ref userIdGuid))
+            Guid userIdGuid = Guid.Empty;
+            if (!IsGuidValid(GetUserId(), ref userIdGuid))
             {
                 return Unauthorized();
             }
 
-            IEnumerable<UserPhotoShootsViewModel> model = await photoShootService.GetUserPhotoShootsAsync(userIdGuid);
+            IEnumerable<UserPhotoShootsViewModel> model = await photoShootService.GetUserPhotoShootsAsync(GetUserId());
 
             return View(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> DeclineParticipation(string id)
         {
             string userId = GetUserId();
 
             var isRemoved = await photoShootService.RemoveUserFromParticipation(userId, id);
-            if(isRemoved==false)
+            if (isRemoved == false)
             {
                 return RedirectToAction(nameof(UserPhotoShoots));
             }

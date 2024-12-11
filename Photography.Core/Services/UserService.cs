@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Photography.Core.Interfaces;
-using Photography.Core.ViewModels.Admin.UserManagement;
-using Photography.Core.ViewModels.Photographer;
-using Photography.Infrastructure.Data;
-using Photography.Infrastructure.Data.Models;
-
-namespace Photography.Core.Services
+﻿namespace Photography.Core.Services
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Interfaces;
+    using ViewModels.Admin.UserManagement;
+    using ViewModels.Photographer;
+    using Infrastructure.Data;
+    using Infrastructure.Data.Models;
+
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -26,7 +25,7 @@ namespace Photography.Core.Services
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
         {
             IEnumerable<ApplicationUser> allUsers = await userManager.Users
-                .Where(u=>u.IsDeleted==false)
+                .Where(u => u.IsDeleted == false)
                 .ToArrayAsync();
 
             ICollection<AllUsersViewModel> allUsersViewModel = new List<AllUsersViewModel>();
@@ -36,7 +35,7 @@ namespace Photography.Core.Services
                 IEnumerable<string> roles = await userManager.GetRolesAsync(user);
 
                 var photographer = await context
-                    .Photographers.FirstOrDefaultAsync(p => p.UserId == user.Id);
+                    .Photographers.FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == user.Id.ToString().ToLower());
 
                 List<PhotographerViewModel> userPhotographer;
 
@@ -69,25 +68,25 @@ namespace Photography.Core.Services
         }
 
 
-        public async Task<bool> UserExistByIdAsync(Guid userId)
+        public async Task<bool> UserExistByIdAsync(string userId)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             return user != null;
         }
 
-        public async Task<bool> IsUserPhotographerAsync(Guid userId)
+        public async Task<bool> IsUserPhotographerAsync(string userId)
         {
             Photographer? user = await context
                 .Photographers
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.UserId.ToString().ToLower() == userId.ToLower());
 
             return user != null;
         }
 
-        public async Task<bool> AssignUserToRoleAsync(Guid userId, string roleName)
+        public async Task<bool> AssignUserToRoleAsync(string userId, string roleName)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             bool roleExists = await roleManager.RoleExistsAsync(roleName);
 
@@ -111,9 +110,9 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<bool> RemoveUserRoleAsync(Guid userId, string roleName)
+        public async Task<bool> RemoveUserRoleAsync(string userId, string roleName)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             bool roleExists = await roleManager.RoleExistsAsync(roleName);
 
@@ -136,9 +135,9 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<bool> DeleteUserAsync(Guid userId)
+        public async Task<bool> DeleteUserAsync(string userId)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
@@ -149,7 +148,7 @@ namespace Photography.Core.Services
 
             // disconnect from photos
             List<Photo> photosToRemove = await context.Photos
-                .Where(p => p.UserOwnerId == user.Id)
+                .Where(p => p.UserOwnerId.ToString().ToLower() == user.Id.ToString().ToLower())
                 .ToListAsync();
             foreach (var photo in photosToRemove)
             {
@@ -157,55 +156,55 @@ namespace Photography.Core.Services
             }
 
             // disconect photos form categories
-            List<PhotoCategory> photosCategoriesToRemove = await context
+            List<PhotoCategory> relatedCategories = await context
                 .PhotosCategories
                 .Where(pc => photosToRemove.Select(p => p.Id).Contains(pc.PhotoId))
                 .ToListAsync();
+            context.RemoveRange(relatedCategories);
 
 
-            // disconnect from photoShoots
-            List<PhotoShoot> photoShootsToRemove = await context.PhotoShoots
-                .Where(ps => ps.Participants.Any(p => p.UserId == user.Id))
+            // disconnect from photoShootParticipant
+            List<PhotoShootParticipant> relatedParticipations = await context.PhotoShootParticipants
+                .Where(ps => ps.UserId.ToString().ToLower() == userId.ToLower())
                 .ToListAsync();
-            foreach (var photoShoot in photoShootsToRemove)
-            {
-                photoShoot.IsDeleted = true;
-            }
+            context.PhotoShootParticipants.RemoveRange(relatedParticipations);
 
             // disconnect from ratings
-            List<PhotoRating> photosRatingsToRemove = await context.PhotosRatings
-                .Where(p => p.UserId == user.Id)
+            List<PhotoRating> relatedRatings = await context.PhotosRatings
+                .Where(p => p.UserId.ToString().ToLower() == user.Id.ToString().ToLower())
                 .ToListAsync();
-            context.PhotosRatings.RemoveRange(photosRatingsToRemove);
+            context.PhotosRatings.RemoveRange(relatedRatings);
 
             // disconnect from favorites
-            List<FavoritePhoto> favoritePhotoToRemove = await context.FavoritePhotos
-                .Where(p => p.UserId == user.Id)
+            List<FavoritePhoto> favoritePhotos = await context.FavoritePhotos
+                .Where(p => p.UserId.ToString().ToLower() == user.Id.ToString().ToLower())
                 .ToListAsync();
-            context.FavoritePhotos.RemoveRange(favoritePhotoToRemove);
+            context.FavoritePhotos.RemoveRange(favoritePhotos);
 
             await context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<bool> MakeUserPhotographerAsync(Guid userId, string brandName)
+        public async Task<bool> MakeUserPhotographerAsync(string userId, string brandName)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
                 return false;
             }
 
-            bool isAlreadyPhotographer = await context.Photographers.AnyAsync(p => p.UserId == userId);
+            bool isAlreadyPhotographer = await context.Photographers
+                .AnyAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
 
             if (isAlreadyPhotographer)
             {
                 return false;
             }
 
-            bool isBrandNameAlreadyInUse = await context.Photographers.AnyAsync(n => n.BrandName == brandName);
+            bool isBrandNameAlreadyInUse = await context.Photographers
+                .AnyAsync(n => n.BrandName == brandName);
 
             if (isBrandNameAlreadyInUse)
             {
@@ -214,7 +213,7 @@ namespace Photography.Core.Services
 
             var photographer = new Photographer
             {
-                UserId = userId,
+                UserId = Guid.Parse(userId),
                 BrandName = brandName,
                 User = user
             };
@@ -225,45 +224,49 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<bool> RemoveUserFromPhotographerAsync(Guid userId)
+        public async Task<bool> RemoveUserFromPhotographerAsync(string userId)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId.ToString());
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
                 return false;
             }
 
-            bool isPhotographer = await context.Photographers.AnyAsync(p => p.UserId == userId);
+            Photographer? photographer = await context.Photographers
+                .FirstOrDefaultAsync(p => p.UserId.ToString().ToLower() == userId.ToLower());
 
-            if (!isPhotographer)
+            if (photographer == null)
             {
                 return false;
             }
 
-            Photographer photographer = await context
-                .Photographers.FirstAsync(p => p.UserId == userId);
-
             // disconnect from linked photoShoots
-            List<PhotoShoot> photoShootsToRemove = context.PhotoShoots
-                .Where(ps => ps.PhotographerId == photographer.Id)
+            List<PhotoShoot> relatedPhotoShoots = context.PhotoShoots
+                .Where(ps => ps.PhotographerId.ToString().ToLower() == photographer.Id.ToString().ToLower())
                 .ToList();
+            foreach (var photoShoot in relatedPhotoShoots)
+            {
+                photoShoot.IsDeleted = true;
+            }
+            
 
             // disconnect from linked photos
-            List<Photo> photosToRemove = context.Photos
-                .Where(p => p.PhotographerId == photographer.Id)
+            List<Photo> relatedPhotos = context.Photos
+                .Where(p => p.PhotographerId.ToString().ToLower() == photographer.Id.ToString().ToLower())
                 .ToList();
 
-            if (photosToRemove.Any())
+            foreach (var photo in relatedPhotos)
             {
-                foreach (var photo in photosToRemove)
-                {
-                    photo.Photographer = null;
-                    await context.SaveChangesAsync();
-                }
+                var relatedCategories = await context.PhotosCategories
+                    .Where(pc => pc.PhotoId == photo.Id)
+                    .ToListAsync();
+
+                context.PhotosCategories.RemoveRange(relatedCategories);
+
+                photo.IsDeleted = true;
             }
 
-            context.PhotoShoots.RemoveRange(photoShootsToRemove);
             context.Photographers.Remove(photographer);
             await context.SaveChangesAsync();
 

@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Photography.Controllers;
-using Photography.Core.Interfaces;
-using Photography.Core.ViewModels.Photographer;
-using Photography.Extensions;
-using static Photography.Common.ApplicationConstants;
-using static Photography.Common.EntityValidationMessages;
-
-namespace Photography.Areas.Admin.Controllers
+﻿namespace Photography.Areas.Admin.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Photography.Controllers;
+    using Core.Interfaces;
+    using Core.ViewModels.Photographer;
+    using Extensions;
+    using static Common.ApplicationConstants;
+    using static Common.EntityValidationMessages;
+
+
     [Area(AdminRoleName)]
     [Authorize(Roles = AdminRoleName)]
     public class PhotographerController : BaseController

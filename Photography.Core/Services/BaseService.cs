@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Photography.Core.Interfaces;
-using Photography.Infrastructure.Data;
-
-namespace Photography.Core.Services
+﻿namespace Photography.Core.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using Interfaces;
+    using Infrastructure.Data;
     public class BaseService : IBaseService
     {
         private readonly PhotographyDbContext context;

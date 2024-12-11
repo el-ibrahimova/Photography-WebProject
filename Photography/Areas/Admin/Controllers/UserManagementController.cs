@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Photography.Controllers;
-using Photography.Core.Interfaces;
-using Photography.Core.ViewModels.Admin.UserManagement;
-
-namespace Photography.Areas.Admin.Controllers
+﻿namespace Photography.Areas.Admin.Controllers
 {
+    using Photography.Controllers;
+    using Photography.Core.Interfaces;
+    using Photography.Core.ViewModels.Admin.UserManagement;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using static Common.ApplicationConstants;
@@ -37,16 +35,14 @@ namespace Photography.Areas.Admin.Controllers
                 return Unauthorized();
             }
 
-            bool userExist = await userService
-                .UserExistByIdAsync(userGuid);
+            bool userExist = await userService.UserExistByIdAsync(userId);
 
             if (!userExist)
             {
                 return NotFound();
             }
 
-            bool assignResult = await userService
-                .AssignUserToRoleAsync(userGuid, role);
+            bool assignResult = await userService.AssignUserToRoleAsync(userId, role);
 
             if (!assignResult)
             {
@@ -66,16 +62,14 @@ namespace Photography.Areas.Admin.Controllers
                 return Unauthorized();
             }
 
-            bool userExist = await userService
-                .UserExistByIdAsync(userGuid);
+            bool userExist = await userService.UserExistByIdAsync(userId);
 
             if (!userExist)
             {
                 return NotFound();
             }
 
-            bool removeResult = await userService
-                .RemoveUserRoleAsync(userGuid, role);
+            bool removeResult = await userService.RemoveUserRoleAsync(userId, role);
 
             if (!removeResult)
             {
@@ -95,26 +89,24 @@ namespace Photography.Areas.Admin.Controllers
                 return Unauthorized();
             }
 
-            bool userExists = await userService
-                .UserExistByIdAsync(userGuid);
+            bool userExists = await userService.UserExistByIdAsync(userId);
             if (!userExists)
             {
                 return NotFound();
             }
 
-            bool isUserPhotographer = await userService.IsUserPhotographerAsync(userGuid);
+            bool isUserPhotographer = await userService.IsUserPhotographerAsync(userId);
 
             if (isUserPhotographer)
             {
-                bool result = await userService.RemoveUserFromPhotographerAsync(userGuid);
+                bool result = await userService.RemoveUserFromPhotographerAsync(userId);
                 if (!result)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            bool removeResult = await userService
-                .DeleteUserAsync(userGuid);
+            bool removeResult = await userService.DeleteUserAsync(userId);
             if (!removeResult)
             {
                 TempData[ErrorMessage] = "Възникна неочаквана грешка. Потребителят не беше изтрит.";
@@ -126,7 +118,7 @@ namespace Photography.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MakePhotographer(Guid userId, string brandName)
+        public async Task<IActionResult> MakePhotographer(string userId, string brandName)
         {
             bool success = await userService.MakeUserPhotographerAsync(userId, brandName);
 
@@ -148,16 +140,14 @@ namespace Photography.Areas.Admin.Controllers
                 return Unauthorized();
             }
 
-            bool userExist = await userService
-                .UserExistByIdAsync(userGuid);
+            bool userExist = await userService.UserExistByIdAsync(userId);
 
             if (!userExist)
             {
                 return NotFound();
             }
 
-            bool removeResult = await userService
-                .RemoveUserFromPhotographerAsync(userGuid);
+            bool removeResult = await userService.RemoveUserFromPhotographerAsync(userId);
 
             if (!removeResult)
             {

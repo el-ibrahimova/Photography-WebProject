@@ -23,19 +23,19 @@ namespace Photography.Controllers
         {
             if (!statusCode.HasValue)
             {
-                return this.View();
+                return View();
             }
 
             if (statusCode == 404)
             {
-                return this.View("Error404");
+                return View("Error404");
             }
             else if (statusCode == 401 || statusCode == 403)
             {
-                return this.View("Error403");
+                return View("Error403");
             }
 
-            return this.View("Error500");
+            return View("Error500");
         }
     }
 }

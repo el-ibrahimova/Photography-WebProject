@@ -55,7 +55,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            var model = await categoryService.GetCategoryToEditAsync(categoryGuid);
+            var model = await categoryService.GetCategoryToEditAsync(id);
 
             if (model == null)
             {
@@ -92,7 +92,7 @@ namespace Photography.Controllers
                 return Unauthorized();
             }
 
-            var model = await categoryService.GetCategoryDelete(categoryIdGuid);
+            var model = await categoryService.GetCategoryDelete(id);
 
             if (model == null)
             {

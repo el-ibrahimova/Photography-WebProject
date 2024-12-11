@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Photography.Core.Interfaces;
-using Photography.Infrastructure.Data;
-using Photography.Infrastructure.Data.Models;
-
-
-namespace Photography.Core.Services
+﻿namespace Photography.Core.Services
 {
-    using Photography.Core.ViewModels.Category;
+    using Microsoft.EntityFrameworkCore;
+    using Interfaces;
+    using Infrastructure.Data;
+    using Infrastructure.Data.Models;
+    using ViewModels.Category;
 
     public class CategoryService : BaseService, ICategoryService
     {
@@ -33,17 +31,17 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<CategoryFormViewModel?> GetCategoryToEditAsync(Guid categoryId)
+        public async Task<CategoryFormViewModel?> GetCategoryToEditAsync(string categoryId)
         {
             Category? category = await context.Categories
-                .Where(c =>c.Id == categoryId && c.IsDeleted == false)
+                .Where(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             if (category == null)
             {
                 return null;
             }
-            
+
             var model = new CategoryFormViewModel()
             {
                 Id = category.Id.ToString(),
@@ -55,6 +53,11 @@ namespace Photography.Core.Services
 
         public async Task<bool> EditCategoryAsync(CategoryFormViewModel? model)
         {
+            if (model == null)
+            {
+                return false;
+            }
+
             Category? category = await context.Categories
                 .Where(c => c.IsDeleted == false && c.Id.ToString().ToLower() == model.Id.ToLower())
                 .FirstOrDefaultAsync();
@@ -71,11 +74,11 @@ namespace Photography.Core.Services
             return true;
         }
 
-        public async Task<CategoryFormViewModel?> GetCategoryDelete(Guid categoryId)
+        public async Task<CategoryFormViewModel?> GetCategoryDelete(string categoryId)
         {
             return await context.Categories
                 .AsNoTracking()
-                .Where(c => c.Id== categoryId && c.IsDeleted == false)
+                .Where(c => c.Id.ToString().ToLower() == categoryId.ToLower() && c.IsDeleted == false)
                 .Select(c => new CategoryFormViewModel()
                 {
                     Name = c.Name
@@ -87,7 +90,7 @@ namespace Photography.Core.Services
         {
             Category? category = await context.Categories
                 .Include(p => p.PhotosCategories)
-                .FirstOrDefaultAsync(c => c.IsDeleted == false&&  c.Id.ToString().ToLower() == categoryId.ToLower());
+                .FirstOrDefaultAsync(c => c.IsDeleted == false && c.Id.ToString().ToLower() == categoryId.ToLower());
 
             if (category == null)
             {
@@ -97,9 +100,9 @@ namespace Photography.Core.Services
             category.IsDeleted = true;
             await context.SaveChangesAsync();
 
-         List<PhotoCategory> photosCategoriesToRemove = context.PhotosCategories
-                .Where(pc => pc.CategoryId == category.Id)
-                .ToList();
+            List<PhotoCategory> photosCategoriesToRemove = context.PhotosCategories
+                   .Where(pc => pc.CategoryId.ToString().ToLower() == category.Id.ToString().ToLower())
+                   .ToList();
 
             if (photosCategoriesToRemove.Any())
             {
@@ -124,5 +127,4 @@ namespace Photography.Core.Services
                 .ToListAsync();
         }
     }
-
 }

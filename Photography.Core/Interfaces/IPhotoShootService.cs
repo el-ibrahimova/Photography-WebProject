@@ -6,22 +6,22 @@ namespace Photography.Core.Interfaces
     public interface IPhotoShootService:IBaseService
     {
         Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsAsync();
-        Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync(Guid userId);
+        Task<IEnumerable<AllPhotoShootsViewModel>> GetAllPhotoShootsForManageAsync();
         Task <bool> AddPhotoShootAsync(AddPhotoShootViewModel model);
-        Task<bool> HasUserDeclaredParticipationAsync(Guid photoShootIdGuid, Guid userIdGuid);
-        Task<bool> AddParticipantToPhotoShoot(Guid photoIdGuid, Guid userIdGuid);
-        Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(Guid userId);
+        Task<bool> HasUserDeclaredParticipationAsync(string photoShootId, string userId);
+        Task<bool> AddParticipantToPhotoShoot(string photoId, string userId);
+        Task<IEnumerable<UserPhotoShootsViewModel>> GetUserPhotoShootsAsync(string userId);
         Task<bool> RemoveUserFromParticipation(string userId, string photoId);
 
-        Task<EditPhotoShootViewModel?> GetPhotoShootToEditAsync(Guid photoShootId, Guid photographerId);
+        Task<EditPhotoShootViewModel?> GetPhotoShootToEditAsync(string photoShootId);
         Task<bool> EditPhotoShootAsync(EditPhotoShootViewModel model);
         
-        Task<PhotoShoot?> GetPhotoShootByIdAsync(Guid photoIdGuid);
+        Task<PhotoShoot?> GetPhotoShootByIdAsync(string photoShootId);
 
-        Task<DeletePhotoShootViewModel?> GetPhotoShootToDelete(Guid photoShootId);
+        Task<DeletePhotoShootViewModel?> GetPhotoShootToDelete(string photoShootId);
         Task<bool> DeletePhotoShootAsync(string photoShootId);
 
-        Task <Guid> GetPhotographerIdByUserIdAsync(Guid userId);
+        Task <Guid> GetPhotographerIdByUserIdAsync(string userId);
         Task <bool> IsPhotoShootOwnedByPhotographerAsync(string photoShootIs, string userId);
     }
 }
