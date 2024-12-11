@@ -30,7 +30,7 @@ namespace Photography.Test
                 ImageUrl1 = "image1.jpg",
                 ImageUrl2 = "image2.jpg",
                 ImageUrl3 = "image3.jpg",
-                Description = "Wedding photo shoot",
+                Description = "Wedding photoShoot",
                 PhotographerId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd")
             };
