@@ -13,7 +13,7 @@ namespace Photography.Test
         private IPhotographerService photographerService;
 
         [SetUp]
-        public async Task SetUp()
+        public void Setup()
         {
             var options = new DbContextOptionsBuilder<PhotographyDbContext>()
                 .UseInMemoryDatabase(databaseName: "PhotographyInMemoryDb" + Guid.NewGuid().ToString())

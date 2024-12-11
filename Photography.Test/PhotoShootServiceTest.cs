@@ -14,7 +14,7 @@ namespace Photography.Test
         private PhotoShootService photoShootService;
 
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             contextMock = new Mock<PhotographyDbContext>();
             photoShootService = new PhotoShootService(contextMock.Object);

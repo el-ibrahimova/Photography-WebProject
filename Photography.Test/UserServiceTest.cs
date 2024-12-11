@@ -15,7 +15,7 @@ namespace Photography.Test
         private UserService userService;
 
         [SetUp]
-        public async Task SetUp()
+        public void Setup()
         {
             userManagerMock = new Mock<UserManager<ApplicationUser>>(
                 new Mock<IUserStore<ApplicationUser>>().Object,
